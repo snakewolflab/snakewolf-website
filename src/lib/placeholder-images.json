@@ -15,7 +15,7 @@
     {
       "id": "news-2",
       "description": "Placeholder for second news article",
-      "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb3Jwb3JhdGUlMjBtZWV0aW5nfGVufDB8fHx8MTc2MDc0OTUxOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb3Jwb3JhdGUlMjBtZWV0aW5nfGVufDB8fHx8fDE3NjA3NDk1MTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "corporate meeting"
     },
     {
@@ -39,6 +39,46 @@
       "imageHint": "creative content",
       "width": 600,
       "height": 400
+    },
+    {
+      "id": "work-cosmic-explorer",
+      "description": "Cosmic Explorer game image",
+      "imageUrl": "https://images.unsplash.com/photo-1582567397638-559df60a4d24?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzcGFjZSUyMGV4cGxvcmF0aW9ufGVufDB8fHx8MTc2MDg0OTM2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "space exploration",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "work-taskmaster-pro",
+      "description": "TaskMaster Pro app image",
+      "imageUrl": "https://images.unsplash.com/photo-1603015269169-225cb700e29a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwcm9kdWN0aXZpdHklMjBhcHB8ZW58MHx8fHwxNzYwNzcwMTMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "productivity app",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "work-pixel-painters",
+      "description": "Pixel Painters game image",
+      "imageUrl": "https://images.unsplash.com/photo-1580195319388-1bea55742a42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXhlbCUyMGFydHxlbnwwfHx8fDE3NjA4NDU3OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pixel art",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "creator-alpha",
+      "description": "Alpha Creative creator image",
+      "imageUrl": "https://images.unsplash.com/photo-1635322966219-b75ed372eb01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkaWdpdGFsJTIwYXJ0fGVufDB8fHx8MTc2MDg0MTQ5Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital art",
+      "width": 500,
+      "height": 500
+    },
+    {
+      "id": "creator-beta",
+      "description": "Beta Illustrations creator image",
+      "imageUrl": "https://images.unsplash.com/photo-1598550476439-6847785fcea6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2FtaW5nJTIwc2V0dXB8ZW58MHx8fHwxNzYwNzYyMzM1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming setup",
+      "width": 500,
+      "height": 500
     }
   ]
 }

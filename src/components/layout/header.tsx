@@ -12,6 +12,8 @@ const navLinks = [
   { href: "/", label: "ホーム" },
   { href: "/news", label: "ニュース" },
   { href: "/services", label: "サービス" },
+  { href: "/works", label: "実績" },
+  { href: "/creators", label: "クリエイター" },
   { href: "/contact", label: "お問い合わせ" },
 ];
 

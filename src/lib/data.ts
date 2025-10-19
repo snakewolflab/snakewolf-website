@@ -17,6 +17,24 @@ export type ServiceItem = {
   icon: string;
 };
 
+export type WorkItem = {
+  id: number;
+  title: string;
+  category: 'App' | 'Game';
+  description: string;
+  platforms: string[];
+  imageId: string;
+  url: string;
+};
+
+export type CreatorItem = {
+  id: number;
+  name: string;
+  description: string;
+  imageId: string;
+  url: string;
+  tags: string[];
+};
 
 export const newsArticles: NewsArticle[] = [
   {
@@ -83,5 +101,54 @@ export const serviceItems: ServiceItem[] = [
     description: 'コンテンツ制作、ファンコミュニティ運営、収益化戦略など、クリエイター活動を包括的にサポートします。',
     imageId: 'service-creator-support',
     icon: 'Sparkles',
+  },
+];
+
+export const workItems: WorkItem[] = [
+  {
+    id: 1,
+    title: "Cosmic Explorer",
+    category: "Game",
+    description: "広大な宇宙を探索するオープンワールドRPG。未知の惑星を発見し、独自のストーリーを紡ぎます。",
+    platforms: ["PC", "Console"],
+    imageId: "work-cosmic-explorer",
+    url: "#"
+  },
+  {
+    id: 2,
+    title: "TaskMaster Pro",
+    category: "App",
+    description: "チームの生産性を最大化するためのプロジェクト管理ツール。直感的なUIでタスクを効率的に整理します。",
+    platforms: ["iOS", "Android", "Web"],
+    imageId: "work-taskmaster-pro",
+    url: "#"
+  },
+  {
+    id: 3,
+    title: "Pixel Painters",
+    category: "Game",
+    description: "友達と協力して楽しむ、お絵かきパズルゲーム。創造力を発揮して、数々のお題に挑戦しよう。",
+    platforms: ["Mobile", "Web"],
+    imageId: "work-pixel-painters",
+    url: "#"
+  },
+];
+
+export const creatorItems: CreatorItem[] = [
+  {
+    id: 1,
+    name: "Alpha Creative",
+    description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。キャラクターデザインやコンセプトアートを手掛ける。",
+    imageId: "creator-alpha",
+    url: "#",
+    tags: ["イラスト", "キャラクターデザイン"]
+  },
+  {
+    id: 2,
+    name: "Beta Illustrations",
+    description: "ゲーム実況を中心に活動する人気ストリーマー。視聴者との一体感あふれる配信が持ち味。",
+    imageId: "creator-beta",
+    url: "#",
+    tags: ["ストリーマー", "ゲーム実況"]
   },
 ];

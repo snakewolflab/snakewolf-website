@@ -25,34 +25,18 @@
       "imageHint": "data visualization"
     },
     {
-      "id": "service-1",
-      "description": "AI consulting service image",
-      "imageUrl": "https://picsum.photos/seed/service1/600/400",
-      "imageHint": "AI consulting",
+      "id": "service-app-game",
+      "description": "App and game development service image",
+      "imageUrl": "https://images.unsplash.com/photo-1585079542156-2755d9c8a094?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnYW1lJTIwZGV2ZWxvcG1lbnR8ZW58MHx8fHwxNzYwNzk3NjA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "game development",
       "width": 600,
       "height": 400
     },
     {
-      "id": "service-2",
-      "description": "Custom AI development service image",
-      "imageUrl": "https://images.unsplash.com/photo-1738003667850-a2fb736e31b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxBSSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTc2MDg2Nzg4MXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "AI development",
-      "width": 600,
-      "height": 400
-    },
-    {
-      "id": "service-3",
-      "description": "Data analysis platform service image",
-      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwYW5hbHlzaXN8ZW58MHx8fHwxNzYwODQxNzY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "data analysis",
-      "width": 600,
-      "height": 400
-    },
-    {
-      "id": "service-4",
-      "description": "DX support service image",
-      "imageUrl": "https://images.unsplash.com/photo-1644088379091-d574269d422f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwdHJhbnNmb3JtYXRpb258ZW58MHx8fHwxNzYwODAzODg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "digital transformation",
+      "id": "service-creator-support",
+      "description": "Creator support service image",
+      "imageUrl": "https://images.unsplash.com/photo-1619080270642-6af8d090b7d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjcmVhdGl2ZSUyMGNvbnRlbnR8ZW58MHx8fHwxNzYwODY4MDI5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "creative content",
       "width": 600,
       "height": 400
     }

@@ -72,30 +72,16 @@ export const newsArticles: NewsArticle[] = [
 export const serviceItems: ServiceItem[] = [
   {
     id: 1,
-    title: 'AIコンサルティング',
-    description: 'お客様のビジネス課題を解決するため、最新のAI技術を活用したコンサルティングサービスを提供します。',
-    imageId: 'service-1',
-    icon: 'BrainCircuit',
+    title: 'アプリ・ゲーム開発',
+    description: 'スマートフォン向けのアプリや、PC・コンソール向けのゲーム開発を行います。企画から開発、運用まで一貫してサポートします。',
+    imageId: 'service-app-game',
+    icon: 'Gamepad2',
   },
   {
     id: 2,
-    title: 'カスタムAI開発',
-    description: '独自の要求に応じた、オーダーメイドのAIシステムを開発します。企画から実装、運用まで一貫してサポートします。',
-    imageId: 'service-2',
-    icon: 'Code',
-  },
-  {
-    id: 3,
-    title: 'データ分析プラットフォーム',
-    description: 'ビッグデータを活用し、ビジネスの意思決定を支援するデータ分析プラットフォームを提供します。',
-    imageId: 'service-3',
-    icon: 'DatabaseZap',
-  },
-  {
-    id: 4,
-    title: 'DX支援',
-    description: 'デジタルトランスフォーメーションの実現に向けた戦略立案から実行まで、包括的に支援します。',
-    imageId: 'service-4',
-    icon: 'IterationCw',
+    title: 'クリエイター支援',
+    description: 'コンテンツ制作、ファンコミュニティ運営、収益化戦略など、クリエイター活動を包括的にサポートします。',
+    imageId: 'service-creator-support',
+    icon: 'Sparkles',
   },
 ];

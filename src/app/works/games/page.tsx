@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, AppWindow, Gamepad2 } from 'lucide-react';
+import { ArrowRight, Gamepad2 } from 'lucide-react';
 
 import { workItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -11,25 +11,25 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: '実績',
-  description: 'SnakeWolfが開発したアプリやゲームの実績一覧です。',
+  title: 'ゲーム実績',
+  description: 'SnakeWolfが開発したゲームの実績一覧です。',
 };
 
-export default function WorksPage() {
+export default function GamesPage() {
+  const gameWorks = workItems.filter(item => item.category === 'Game');
+
   return (
     <div className="container mx-auto px-4 py-16">
       <header className="text-center mb-12">
-        <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">実績</h1>
+        <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">ゲーム実績</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          私たちが情熱を注いで開発した、アプリやゲームの数々をご覧ください。
+          私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。
         </p>
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">
-        {workItems.map((item) => {
+        {gameWorks.map((item) => {
           const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
-          const Icon = item.category === 'App' ? AppWindow : Gamepad2;
-
           return (
             <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {itemImage && (
@@ -45,7 +45,7 @@ export default function WorksPage() {
               )}
               <CardHeader>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Icon className="h-4 w-4 text-primary" />
+                    <Gamepad2 className="h-4 w-4 text-primary" />
                     <span className='font-bold text-primary'>{item.category}</span>
                 </div>
                 <CardTitle className="font-headline text-2xl pt-2">{item.title}</CardTitle>

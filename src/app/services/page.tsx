@@ -1,15 +1,23 @@
+
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import * as LucideIcons from 'lucide-react';
-
+import Link from 'next/link';
 import { serviceItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'サービス',
   description: 'SnakeWolfが提供する最先端のテクノロジーサービス一覧です。',
 };
+
+const serviceLinks = {
+  'アプリ・ゲーム開発': '/services/app-game-development',
+  'クリエイター支援': '/services/creator-support',
+}
 
 export default function ServicesPage() {
   return (
@@ -25,22 +33,22 @@ export default function ServicesPage() {
         {serviceItems.map((item) => {
           const serviceImage = PlaceHolderImages.find(p => p.id === item.imageId);
           const Icon = LucideIcons[item.icon as keyof typeof LucideIcons] || LucideIcons.Wrench;
+          const serviceLink = serviceLinks[item.title as keyof typeof serviceLinks] || '/services';
 
           return (
-            <Card key={item.id} className="overflow-hidden transition-shadow duration-300 hover:shadow-xl flex flex-col sm:flex-row">
-              <div className="w-full sm:w-1/3">
+            <Card key={item.id} className="overflow-hidden transition-shadow duration-300 hover:shadow-xl flex flex-col">
+              <div className="w-full h-56 relative">
                 {serviceImage && (
                   <Image
                     src={serviceImage.imageUrl}
                     alt={item.title}
-                    width={serviceImage.width || 600}
-                    height={serviceImage.height || 400}
-                    className="object-cover w-full h-full"
+                    fill
+                    className="object-cover"
                     data-ai-hint={serviceImage.imageHint}
                   />
                 )}
               </div>
-              <div className="w-full sm:w-2/3 flex flex-col">
+              <div className="w-full flex flex-col flex-grow">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 p-3 rounded-full">
@@ -49,8 +57,13 @@ export default function ServicesPage() {
                     <CardTitle className="font-headline text-2xl">{item.title}</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="flex-grow">
-                  <CardDescription>{item.description}</CardDescription>
+                <CardContent className="flex-grow flex flex-col">
+                  <CardDescription className='flex-grow'>{item.description}</CardDescription>
+                   <Button asChild variant="link" className="p-0 mt-4 self-start">
+                      <Link href={serviceLink}>
+                          詳しく見る <ArrowRight className="ml-2" />
+                      </Link>
+                  </Button>
                 </CardContent>
               </div>
             </Card>

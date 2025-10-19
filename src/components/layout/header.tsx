@@ -72,14 +72,14 @@ export function Header() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
              <NavigationMenuItem>
-                <Link href="/" passHref legacyBehavior>
+                <Link href="/" legacyBehavior passHref>
                   <NavigationMenuLink active={pathname === "/"} className={navigationMenuTriggerStyle()}>
                     ホーム
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link href="/about" passHref legacyBehavior>
+                <Link href="/about" legacyBehavior passHref>
                   <NavigationMenuLink active={pathname === "/about"} className={navigationMenuTriggerStyle()}>
                     企業情報
                   </NavigationMenuLink>
@@ -120,14 +120,14 @@ export function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
              <NavigationMenuItem>
-                <Link href="/creators" passHref legacyBehavior>
+                <Link href="/creators" legacyBehavior passHref>
                   <NavigationMenuLink active={pathname === "/creators"} className={navigationMenuTriggerStyle()}>
                     クリエイター
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/news" passHref legacyBehavior>
+              <Link href="/news" legacyBehavior passHref>
                 <NavigationMenuLink active={pathname.startsWith('/news')} className={navigationMenuTriggerStyle()}>
                   ニュース
                 </NavigationMenuLink>

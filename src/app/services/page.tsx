@@ -1,23 +1,30 @@
 
-import Image from 'next/image';
 import type { Metadata } from 'next';
-import * as LucideIcons from 'lucide-react';
 import Link from 'next/link';
 import { serviceItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Gamepad2, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'サービス',
   description: 'SnakeWolfが提供する最先端のテクノロジーサービス一覧です。',
 };
 
-const serviceLinks = {
-  'アプリ・ゲーム開発': '/services/app-game-development',
-  'クリエイター支援': '/services/creator-support',
-}
+const serviceDetails = [
+  {
+    ...serviceItems[0],
+    icon: Gamepad2,
+    href: '/services/app-game-development',
+  },
+  {
+    ...serviceItems[1],
+    icon: Sparkles,
+    href: '/services/creator-support',
+  }
+];
 
 export default function ServicesPage() {
   return (
@@ -30,10 +37,9 @@ export default function ServicesPage() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {serviceItems.map((item) => {
+        {serviceDetails.map((item) => {
           const serviceImage = PlaceHolderImages.find(p => p.id === item.imageId);
-          const Icon = LucideIcons[item.icon as keyof typeof LucideIcons] || LucideIcons.Wrench;
-          const serviceLink = serviceLinks[item.title as keyof typeof serviceLinks] || '/services';
+          const Icon = item.icon;
 
           return (
             <Card key={item.id} className="overflow-hidden transition-shadow duration-300 hover:shadow-xl flex flex-col">
@@ -60,7 +66,7 @@ export default function ServicesPage() {
                 <CardContent className="flex-grow flex flex-col">
                   <CardDescription className='flex-grow'>{item.description}</CardDescription>
                    <Button asChild variant="link" className="p-0 mt-4 self-start">
-                      <Link href={serviceLink}>
+                      <Link href={item.href}>
                           詳しく見る <ArrowRight className="ml-2" />
                       </Link>
                   </Button>

@@ -1,141 +1,223 @@
-
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X, Wind, ChevronDown } from "lucide-react";
+import { Menu, Wind, Newspaper, Gamepad2, Sparkles, User, Wrench, AppWindow, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "ホーム" },
-  { href: "/news", label: "ニュース" },
+  { href: "/about", label: "企業情報", icon: Building },
+  { href: "/news", label: "ニュース", icon: Newspaper },
+  { href: "/creators", label: "クリエイター", icon: User },
+  { href: "/contact", label: "お問い合わせ" },
 ];
 
-const serviceLinks = [
-    { href: "/services", label: "サービス概要" },
-    { href: "/services/app-game", label: "アプリ・ゲーム開発" },
-    { href: "/services/creator-support", label: "クリエイター支援" },
+const servicesComponents: { title: string; href: string; description: string, icon: React.FC<any> }[] = [
+  {
+    title: "アプリ・ゲーム開発",
+    href: "/services/app-game-development",
+    description: "企画から開発、運用までワンストップでサポート。あなたのアイデアを形にします。",
+    icon: Gamepad2,
+  },
+  {
+    title: "クリエイター支援",
+    href: "/services/creator-support",
+    description: "コンテンツ制作から収益化まで、あなたのクリエイティブ活動を全面的にバックアップします。",
+    icon: Sparkles,
+  },
 ];
 
-const worksLinks = [
-    { href: "/works/apps", label: "アプリ一覧" },
-    { href: "/works/games", label: "ゲーム一覧" },
+const worksComponents: { title: string; href: string; description: string, icon: React.FC<any> }[] = [
+  {
+    title: "アプリ実績",
+    href: "/works/apps",
+    description: "私たちが開発した革新的なアプリケーションの数々をご覧ください。",
+    icon: AppWindow,
+  },
+  {
+    title: "ゲーム実績",
+    href: "/works/games",
+    description: "私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。",
+    icon: Gamepad2,
+  },
 ];
 
 
 export function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const NavLink = ({ href, children }: { href: string, children: React.ReactNode }) => (
-    <Link
-      href={href}
-      className={cn(
-        "transition-colors hover:text-primary",
-        pathname === href ? "text-primary" : "text-muted-foreground"
-      )}
-    >
-      {children}
-    </Link>
-  );
-  
-  const DropdownNavLink = ({ label, links }: { label: string, links: { href: string, label: string }[] }) => {
-    const isActive = links.some(link => pathname.startsWith(link.href));
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={cn(
-                    "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary p-0 h-auto",
-                    isActive ? "text-primary" : "text-muted-foreground",
-                    "hover:bg-transparent"
-                )}>
-                    {label}
-                    <ChevronDown className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-                {links.map((link) => (
-                    <DropdownMenuItem key={link.href} asChild>
-                        <Link href={link.href}>{link.label}</Link>
-                    </DropdownMenuItem>
-                ))}
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-};
-
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+      <div className="container flex h-16 items-center">
+        <Link href="/" className="mr-6 flex items-center gap-2 font-bold text-lg">
           <Wind className="h-6 w-6 text-primary" />
           <span className="font-headline">SnakeWolf</span>
         </Link>
-
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {navLinks.map((link) => (
-            <NavLink key={link.href} href={link.href}>{link.label}</NavLink>
-          ))}
-          <DropdownNavLink label="サービス" links={[
-              { href: "/services", label: "サービス概要"},
-              { href: "/services/app-game-development", label: "アプリ・ゲーム開発"},
-              { href: "/services/creator-support", label: "クリエイター支援"},
-          ]} />
-          <DropdownNavLink label="実績" links={worksLinks} />
-          <NavLink href="/creators">クリエイター</NavLink>
-          <NavLink href="/contact">お問い合わせ</NavLink>
-        </nav>
-
-        <div className="md:hidden">
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">メニューを開く</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col gap-6 p-6">
-                <Link href="/" className="flex items-center gap-2 font-bold text-lg" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Wind className="h-6 w-6 text-primary" />
-                  <span className="font-headline">SnakeWolf</span>
+        
+        {/* Desktop Navigation */}
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+             <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/" ? "text-primary" : "")}>
+                    ホーム
+                  </NavigationMenuLink>
                 </Link>
-                <nav className="flex flex-col gap-4 text-lg font-medium">
-                  {navLinks.map((link) => (
-                    <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
-                      {link.label}
-                    </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/about" legacyBehavior passHref>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/about" ? "text-primary" : "")}>
+                    企業情報
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className={cn(pathname.startsWith('/services') ? "text-primary" : "")}>サービス</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                  {servicesComponents.map((component) => (
+                    <ListItem
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
+                      icon={component.icon}
+                    >
+                      {component.description}
+                    </ListItem>
                   ))}
-                  <p className="text-muted-foreground">サービス</p>
-                  {serviceLinks.map((link) => (
-                      <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("pl-4 transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
-                          {link.label}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className={cn(pathname.startsWith('/works') ? "text-primary" : "")}>実績</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                  {worksComponents.map((component) => (
+                     <ListItem
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
+                      icon={component.icon}
+                    >
+                      {component.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+             <NavigationMenuItem>
+                <Link href="/creators" legacyBehavior passHref>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/creators" ? "text-primary" : "")}>
+                    クリエイター
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/news" legacyBehavior passHref>
+                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname.startsWith('/news') ? "text-primary" : "")}>
+                  ニュース
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        <div className="flex flex-1 items-center justify-end gap-4">
+           <Button asChild className="hidden md:flex">
+            <Link href="/contact">お問い合わせ</Link>
+          </Button>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">メニューを開く</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex flex-col gap-6 p-6">
+                  <Link href="/" className="flex items-center gap-2 font-bold text-lg" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Wind className="h-6 w-6 text-primary" />
+                    <span className="font-headline">SnakeWolf</span>
+                  </Link>
+                  <nav className="flex flex-col gap-4 text-lg font-medium">
+                    {navLinks.map((link) => (
+                      <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
+                        {link.label}
                       </Link>
-                  ))}
-                   <p className="text-muted-foreground">実績</p>
-                  {worksLinks.map((link) => (
-                      <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("pl-4 transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
-                          {link.label}
-                      </Link>
-                  ))}
-                  <Link href="/creators" onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === '/creators' ? "text-primary" : "text-foreground")}>クリエイター</Link>
-                  <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === '/contact' ? "text-primary" : "text-foreground")}>お問い合わせ</Link>
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
+                    ))}
+                    <div>
+                      <p className="text-muted-foreground mt-2">サービス</p>
+                      <div className="pl-4 flex flex-col gap-4 mt-2">
+                        {servicesComponents.map((link) => (
+                            <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
+                                {link.title}
+                            </Link>
+                        ))}
+                      </div>
+                    </div>
+                     <div>
+                      <p className="text-muted-foreground mt-2">実績</p>
+                       <div className="pl-4 flex flex-col gap-4 mt-2">
+                        {worksComponents.map((link) => (
+                            <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>
+                                {link.title}
+                            </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </nav>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
   );
 }
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a"> & { icon?: React.FC<any> }
+>(({ className, title, children, icon: Icon, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="flex items-center gap-2">
+            {Icon && <Icon className="h-5 w-5 text-primary" />}
+            <div className="text-sm font-medium leading-none">{title}</div>
+          </div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

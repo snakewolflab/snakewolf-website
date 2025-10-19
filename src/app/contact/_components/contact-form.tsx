@@ -18,8 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "./submit-button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "お名前は2文字以上で入力してください。" }),

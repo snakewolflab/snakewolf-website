@@ -3,10 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const LoadingSpinner = () => {
-    const suneuruImage = PlaceHolderImages.find(p => p.id === 'suneuru-kun-icon');
     const [characterImage, setCharacterImage] = useState<string | null>(null);
 
     useEffect(() => {
@@ -24,7 +22,8 @@ const LoadingSpinner = () => {
                         width={100} 
                         height={100}
                         className="h-24 w-24 text-primary"
-                        data-ai-hint="wolf mascot" 
+                        data-ai-hint="wolf mascot"
+                        unoptimized
                     />
                 )}
                 <span className="font-headline text-2xl font-bold">SnakeWolf</span>

@@ -1,3 +1,76 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Abstract modern background for hero section",
+      "imageUrl": "https://images.unsplash.com/photo-1691786320721-1f0832e97c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMG1vZGVybnxlbnwwfHx8fDE3NjA4NjcyNTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract modern"
+    },
+    {
+      "id": "news-1",
+      "description": "Placeholder for first news article",
+      "imageUrl": "https://images.unsplash.com/photo-1573757056004-065ad36e2cf4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0ZWNobm9sb2d5JTIwYnVzaW5lc3N8ZW58MHx8fHwxNzYwODE1MjY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "technology business"
+    },
+    {
+      "id": "news-2",
+      "description": "Placeholder for second news article",
+      "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb3Jwb3JhdGUlMjBtZWV0aW5nfGVufDB8fHx8MTc2MDc0OTUxOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "corporate meeting"
+    },
+    {
+      "id": "news-3",
+      "description": "Placeholder for third news article",
+      "imageUrl": "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXRhJTIwdmlzdWFsaXphdGlvbnxlbnwwfHx8fDE3NjA4NTA4MDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data visualization"
+    },
+    {
+      "id": "gallery-1",
+      "description": "Gallery image 1",
+      "imageUrl": "https://images.unsplash.com/photo-1600869009498-8d429f88d4f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm9kdWN0JTIwZGVzaWdufGVufDB8fHx8MTc2MDg1MjEzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "product design",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "gallery-2",
+      "description": "Gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1614792403436-ba5b3e747604?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxpbmR1c3RyaWFsJTIwZGVzaWdufGVufDB8fHx8MTc2MDg2NzI1OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "industrial design",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "gallery-3",
+      "description": "Gallery image 3",
+      "imageUrl": "https://images.unsplash.com/photo-1534094830444-3a1e21f7e3e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc2MDc0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "minimalist architecture",
+      "width": 400,
+      "height": 600
+    },
+    {
+      "id": "gallery-4",
+      "description": "Gallery image 4",
+      "imageUrl": "https://images.unsplash.com/photo-1587440871875-191322ee64b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx1c2VyJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2MDg1NDA0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "user interface",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "gallery-5",
+      "description": "Gallery image 5 - video thumbnail",
+      "imageUrl": "https://images.unsplash.com/photo-1676238560626-45d35b63b38f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtb3Rpb24lMjBncmFwaGljc3xlbnwwfHx8fDE3NjA3OTIyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "motion graphics",
+      "width": 600,
+      "height": 400
+    },
+    {
+      "id": "gallery-6",
+      "description": "Gallery image 6",
+      "imageUrl": "https://images.unsplash.com/photo-1646535179615-56a6f2ad56e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwcm9kdWN0JTIwc2tldGNofGVufDB8fHx8MTc2MDg2NzI1OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "product sketch",
+      "width": 400,
+      "height": 600
+    }
+  ]
 }

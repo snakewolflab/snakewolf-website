@@ -30,10 +30,10 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 p-4 max-w-4xl mx-auto animate-fade-in-up">
           <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-            SnakeWolf: テクノロジーの未来を創造する
+            革新的なデジタル体験で、未来を創造する
           </h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto">
-            革新的なソリューションを通じて、世界に新しい価値を提供します。私たちの使命とビジョンをご覧ください。
+            SnakeWolfは、最先端のテクノロジーと創造的なアイデアを融合させ、持続可能でより良い未来を築くことを目指しています。
           </p>
           <Button asChild size="lg" className="mt-8">
             <Link href="/contact">

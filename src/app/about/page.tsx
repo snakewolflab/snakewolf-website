@@ -36,7 +36,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 p-4 max-w-4xl mx-auto">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">企業情報</h1>
-          <p className="mt-4 text-lg md:text-xl">テクノロジーで未来を創造する</p>
+          <p className="mt-4 text-lg md:text-xl">革新的なデジタル体験で、未来を創造する</p>
         </div>
       </section>
 
@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div className="space-y-4">
               <h2 className="font-headline text-3xl font-bold tracking-tight">私たちのビジョン</h2>
               <p className="text-lg text-muted-foreground">
-                SnakeWolfは、最先端のテクノロジーと人間の創造性を融合させ、世界が直面する課題に対する革新的な解決策を提供することを使命としています。
+                SnakeWolfは、「革新的なデジタル体験で、未来を創造する」ことを目指しています。最先端のテクノロジーと人間の創造性を融合させ、世界が直面する課題に対する画期的な解決策を提供します。
               </p>
               <p className="text-muted-foreground">
                 私たちは、AI、ゲーム、クリエイティブ産業の境界を越え、人々がより豊かで、より繋がりのある生活を送れるような、新しい体験と価値を創造し続けます。

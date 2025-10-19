@@ -1,20 +1,30 @@
 
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const LoadingSpinner = () => {
     const suneuruImage = PlaceHolderImages.find(p => p.id === 'suneuru-kun-icon');
+    const [characterImage, setCharacterImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const randomIndex = Math.floor(Math.random() * 20) + 1;
+        setCharacterImage(`/character/${randomIndex}.png`);
+    }, []);
+
     return (
         <div className="flex flex-col items-center justify-center">
             <div className="flex items-center gap-4 text-primary">
-                {suneuruImage && (
+                {characterImage && (
                     <Image 
-                        src={suneuruImage.imageUrl} 
+                        src={characterImage} 
                         alt="Suneuru-kun" 
-                        width={suneuruImage.width} 
-                        height={suneuruImage.height} 
-                        className="h-12 w-12 text-primary"
-                        data-ai-hint={suneuruImage.imageHint} 
+                        width={100} 
+                        height={100}
+                        className="h-24 w-24 text-primary"
+                        data-ai-hint="wolf mascot" 
                     />
                 )}
                 <span className="font-headline text-2xl font-bold">SnakeWolf</span>

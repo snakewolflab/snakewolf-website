@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Newspaper, Camera } from "lucide-react";
+import { ArrowRight, Newspaper, Wrench } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,17 +108,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Media Gallery CTA */}
+      {/* Services CTA */}
       <section className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4 text-center">
-          <Camera className="mx-auto h-12 w-12 text-primary mb-4" />
-          <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">メディアギャラリー</h2>
+          <Wrench className="mx-auto h-12 w-12 text-primary mb-4" />
+          <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">サービス</h2>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            SnakeWolfの活動や製品を紹介する画像や動画をご覧ください。私たちの世界観を体験してください。
+            SnakeWolfが提供する最先端のテクノロジーサービスをご覧ください。
           </p>
           <Button asChild size="lg" className="mt-8">
-            <Link href="/gallery">
-              ギャラリーを見る <ArrowRight className="ml-2" />
+            <Link href="/services">
+              サービス一覧を見る <ArrowRight className="ml-2" />
             </Link>
           </Button>
         </div>

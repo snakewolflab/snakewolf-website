@@ -25,52 +25,36 @@
       "imageHint": "data visualization"
     },
     {
-      "id": "gallery-1",
-      "description": "Gallery image 1",
-      "imageUrl": "https://images.unsplash.com/photo-1600869009498-8d429f88d4f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm9kdWN0JTIwZGVzaWdufGVufDB8fHx8MTc2MDg1MjEzNHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "product design",
+      "id": "service-1",
+      "description": "AI consulting service image",
+      "imageUrl": "https://picsum.photos/seed/service1/600/400",
+      "imageHint": "AI consulting",
       "width": 600,
       "height": 400
     },
     {
-      "id": "gallery-2",
-      "description": "Gallery image 2",
-      "imageUrl": "https://images.unsplash.com/photo-1614792403436-ba5b3e747604?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxpbmR1c3RyaWFsJTIwZGVzaWdufGVufDB8fHx8MTc2MDg2NzI1OHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "industrial design",
+      "id": "service-2",
+      "description": "Custom AI development service image",
+      "imageUrl": "https://images.unsplash.com/photo-1738003667850-a2fb736e31b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxBSSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTc2MDg2Nzg4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "AI development",
       "width": 600,
       "height": 400
     },
     {
-      "id": "gallery-3",
-      "description": "Gallery image 3",
-      "imageUrl": "https://images.unsplash.com/photo-1534094830444-3a1e21f7e3e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc2MDc0NjYxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "minimalist architecture",
-      "width": 400,
-      "height": 600
-    },
-    {
-      "id": "gallery-4",
-      "description": "Gallery image 4",
-      "imageUrl": "https://images.unsplash.com/photo-1587440871875-191322ee64b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx1c2VyJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2MDg1NDA0MXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "user interface",
+      "id": "service-3",
+      "description": "Data analysis platform service image",
+      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwYW5hbHlzaXN8ZW58MHx8fHwxNzYwODQxNzY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data analysis",
       "width": 600,
       "height": 400
     },
     {
-      "id": "gallery-5",
-      "description": "Gallery image 5 - video thumbnail",
-      "imageUrl": "https://images.unsplash.com/photo-1676238560626-45d35b63b38f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtb3Rpb24lMjBncmFwaGljc3xlbnwwfHx8fDE3NjA3OTIyMDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "motion graphics",
+      "id": "service-4",
+      "description": "DX support service image",
+      "imageUrl": "https://images.unsplash.com/photo-1644088379091-d574269d422f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaWdpdGFsJTIwdHJhbnNmb3JtYXRpb258ZW58MHx8fHwxNzYwODAzODg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital transformation",
       "width": 600,
       "height": 400
-    },
-    {
-      "id": "gallery-6",
-      "description": "Gallery image 6",
-      "imageUrl": "https://images.unsplash.com/photo-1646535179615-56a6f2ad56e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwcm9kdWN0JTIwc2tldGNofGVufDB8fHx8MTc2MDg2NzI1OHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "product sketch",
-      "width": 400,
-      "height": 600
     }
   ]
 }

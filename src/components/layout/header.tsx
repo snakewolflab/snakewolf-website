@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/", label: "ホーム" },
   { href: "/news", label: "ニュース" },
-  { href: "/gallery", label: "ギャラリー" },
+  { href: "/services", label: "サービス" },
   { href: "/contact", label: "お問い合わせ" },
 ];
 

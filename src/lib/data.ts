@@ -9,15 +9,14 @@ export type NewsArticle = {
   imageId: string;
 };
 
-export type MediaItem = {
+export type ServiceItem = {
   id: number;
-  type: 'image' | 'video';
   title: string;
-  format: string;
-  size: string;
-  uploadDate: string;
+  description: string;
   imageId: string;
+  icon: string;
 };
+
 
 export const newsArticles: NewsArticle[] = [
   {
@@ -70,59 +69,33 @@ export const newsArticles: NewsArticle[] = [
   },
 ];
 
-export const mediaItems: MediaItem[] = [
+export const serviceItems: ServiceItem[] = [
   {
     id: 1,
-    type: 'image',
-    title: 'オフィス風景',
-    format: 'JPEG',
-    size: '3.2 MB',
-    uploadDate: '2024-07-10',
-    imageId: 'gallery-1',
+    title: 'AIコンサルティング',
+    description: 'お客様のビジネス課題を解決するため、最新のAI技術を活用したコンサルティングサービスを提供します。',
+    imageId: 'service-1',
+    icon: 'BrainCircuit',
   },
   {
     id: 2,
-    type: 'image',
-    title: '製品プロトタイプ',
-    format: 'JPEG',
-    size: '4.5 MB',
-    uploadDate: '2024-07-08',
-    imageId: 'gallery-2',
+    title: 'カスタムAI開発',
+    description: '独自の要求に応じた、オーダーメイドのAIシステムを開発します。企画から実装、運用まで一貫してサポートします。',
+    imageId: 'service-2',
+    icon: 'Code',
   },
   {
     id: 3,
-    type: 'image',
-    title: 'デザインスケッチ',
-    format: 'PNG',
-    size: '1.8 MB',
-    uploadDate: '2024-07-05',
-    imageId: 'gallery-3',
+    title: 'データ分析プラットフォーム',
+    description: 'ビッグデータを活用し、ビジネスの意思決定を支援するデータ分析プラットフォームを提供します。',
+    imageId: 'service-3',
+    icon: 'DatabaseZap',
   },
   {
     id: 4,
-    type: 'image',
-    title: 'チームミーティング',
-    format: 'JPEG',
-    size: '2.9 MB',
-    uploadDate: '2024-07-01',
-    imageId: 'gallery-4',
-  },
-  {
-    id: 5,
-    type: 'video',
-    title: '企業紹介ビデオ',
-    format: 'MP4',
-    size: '58.7 MB',
-    uploadDate: '2024-06-25',
-    imageId: 'gallery-5',
-  },
-  {
-    id: 6,
-    type: 'image',
-    title: 'イベントの様子',
-    format: 'PNG',
-    size: '5.1 MB',
-    uploadDate: '2024-06-20',
-    imageId: 'gallery-6',
+    title: 'DX支援',
+    description: 'デジタルトランスフォーメーションの実現に向けた戦略立案から実行まで、包括的に支援します。',
+    imageId: 'service-4',
+    icon: 'IterationCw',
   },
 ];

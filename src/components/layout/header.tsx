@@ -72,15 +72,15 @@ export function Header() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
              <NavigationMenuItem>
-                <Link href="/" passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/" ? "text-primary" : "")}>
+                <Link href="/" passHref legacyBehavior>
+                  <NavigationMenuLink active={pathname === "/"} className={navigationMenuTriggerStyle()}>
                     ホーム
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link href="/about" passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/about" ? "text-primary" : "")}>
+                <Link href="/about" passHref legacyBehavior>
+                  <NavigationMenuLink active={pathname === "/about"} className={navigationMenuTriggerStyle()}>
                     企業情報
                   </NavigationMenuLink>
                 </Link>
@@ -120,15 +120,15 @@ export function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
              <NavigationMenuItem>
-                <Link href="/creators" passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname === "/creators" ? "text-primary" : "")}>
+                <Link href="/creators" passHref legacyBehavior>
+                  <NavigationMenuLink active={pathname === "/creators"} className={navigationMenuTriggerStyle()}>
                     クリエイター
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/news" passHref>
-                <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), pathname.startsWith('/news') ? "text-primary" : "")}>
+              <Link href="/news" passHref legacyBehavior>
+                <NavigationMenuLink active={pathname.startsWith('/news')} className={navigationMenuTriggerStyle()}>
                   ニュース
                 </NavigationMenuLink>
               </Link>

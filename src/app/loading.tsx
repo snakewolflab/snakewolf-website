@@ -10,14 +10,14 @@ const LoadingSpinner = () => {
     useEffect(() => {
         // Generate a random number between 1 and 20
         const randomIndex = Math.floor(Math.random() * 20) + 1;
-        // Assuming image files are named 1.png, 2.png, etc.
-        setCharacterImage(`/character/${randomIndex}.png`);
+        // The route handler /character/[id]/route.ts will serve the image
+        setCharacterImage(`/character/${randomIndex}`);
     }, []);
 
     return (
         <div className="flex flex-col items-center justify-center">
             <div className="flex items-center gap-4 text-primary">
-                {characterImage && (
+                {characterImage ? (
                     <Image 
                         src={characterImage} 
                         alt="Suneuru-kun" 
@@ -27,6 +27,8 @@ const LoadingSpinner = () => {
                         data-ai-hint="wolf mascot"
                         unoptimized
                     />
+                ) : (
+                    <div className="h-24 w-24"></div>
                 )}
                 <span className="font-headline text-2xl font-bold">SnakeWolf</span>
             </div>

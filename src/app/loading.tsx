@@ -37,10 +37,10 @@ const LoadingSpinner = () => {
     const [dots, setDots] = useState('.');
 
     useEffect(() => {
-        // Generate a random number between 0 and 19
+        // This code runs only on the client, after hydration
         const randomIndex = Math.floor(Math.random() * characterImages.length);
         setCharacterImage(characterImages[randomIndex]);
-    }, []);
+    }, []); // Empty dependency array ensures this runs once on mount
 
     useEffect(() => {
         const interval = setInterval(() => {

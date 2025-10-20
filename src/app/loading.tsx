@@ -34,6 +34,7 @@ const characterImages = [
 
 const LoadingSpinner = () => {
     const [characterImage, setCharacterImage] = useState<StaticImageData | null>(null);
+    const [dots, setDots] = useState('.');
 
     useEffect(() => {
         // Generate a random number between 0 and 19
@@ -41,24 +42,38 @@ const LoadingSpinner = () => {
         setCharacterImage(characterImages[randomIndex]);
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDots(prev => {
+                if (prev === '...') return '.';
+                if (prev === '..') return '...';
+                return '..';
+            });
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="flex items-center gap-4 text-primary">
+        <div className="relative w-48 h-48">
+            <div className="absolute inset-0 flex items-center justify-center">
                 {characterImage ? (
                     <Image 
                         src={characterImage} 
                         alt="Suneuru-kun" 
-                        width={100} 
-                        height={100}
-                        className="h-24 w-24 text-primary"
+                        width={150} 
+                        height={150}
+                        className="object-contain"
                         data-ai-hint="wolf mascot"
+                        priority
                     />
                 ) : (
-                    <div className="h-24 w-24"></div>
+                    <div className="h-[150px] w-[150px]"></div>
                 )}
-                <span className="font-headline text-2xl font-bold">SnakeWolf</span>
             </div>
-            <p className="mt-4 text-muted-foreground">Loading...</p>
+            <p className="absolute bottom-0 right-0 text-muted-foreground animate-dots">
+                読み込み中{dots}
+            </p>
         </div>
     );
 };

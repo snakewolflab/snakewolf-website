@@ -8,7 +8,9 @@ const LoadingSpinner = () => {
     const [characterImage, setCharacterImage] = useState<string | null>(null);
 
     useEffect(() => {
+        // Generate a random number between 1 and 20
         const randomIndex = Math.floor(Math.random() * 20) + 1;
+        // Assuming image files are named 1.png, 2.png, etc.
         setCharacterImage(`/character/${randomIndex}.png`);
     }, []);
 

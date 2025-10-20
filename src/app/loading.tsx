@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -35,12 +34,13 @@ const characterImages = [
 const LoadingSpinner = () => {
     const [characterImage, setCharacterImage] = useState<StaticImageData | null>(null);
     const [dots, setDots] = useState('.');
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // This code runs only on the client, after hydration
+        setIsClient(true);
         const randomIndex = Math.floor(Math.random() * characterImages.length);
         setCharacterImage(characterImages[randomIndex]);
-    }, []); // Empty dependency array ensures this runs once on mount
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -53,25 +53,24 @@ const LoadingSpinner = () => {
 
         return () => clearInterval(interval);
     }, []);
-
+    
     return (
-        <div className="relative w-48 h-48">
-            <div className="absolute inset-0 flex items-center justify-center">
-                {characterImage ? (
+        <div className="w-full h-full flex items-center justify-center">
+             {isClient && characterImage ? (
+                <div className="relative w-3/4 aspect-square">
                     <Image 
                         src={characterImage} 
                         alt="Suneuru-kun" 
-                        width={150} 
-                        height={150}
+                        fill
                         className="object-contain"
                         data-ai-hint="wolf mascot"
                         priority
                     />
-                ) : (
-                    <div className="h-[150px] w-[150px]"></div>
-                )}
-            </div>
-            <p className="absolute bottom-0 right-0 text-muted-foreground animate-dots">
+                </div>
+            ) : (
+                <div className="w-3/4 aspect-square bg-muted/50 rounded-lg"></div>
+            )}
+            <p className="fixed bottom-4 right-4 text-muted-foreground animate-dots">
                 読み込み中{dots}
             </p>
         </div>
@@ -81,7 +80,7 @@ const LoadingSpinner = () => {
 
 export default function Loading() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-theme(spacing.32))]">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <LoadingSpinner />
     </div>
   );

@@ -58,7 +58,7 @@ const LoadingSpinner = () => {
     return (
         <div className="w-full h-full flex items-center justify-center">
              {isClient && characterImage ? (
-                <div className="relative w-3/4 aspect-square">
+                <div className="relative w-1/2 aspect-square">
                     <Image 
                         src={characterImage} 
                         alt="Suneuru-kun" 
@@ -69,7 +69,7 @@ const LoadingSpinner = () => {
                     />
                 </div>
             ) : (
-                <div className="w-3/4 aspect-square bg-muted/50 rounded-lg"></div>
+                <div className="w-1/2 aspect-square bg-muted/50 rounded-lg"></div>
             )}
             <p className="fixed bottom-4 right-4 text-muted-foreground animate-dots">
                 読み込み中{dots}

@@ -1,6 +1,7 @@
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Building, Globe, Target } from 'lucide-react';
+import { Building, Globe, Target, Gamepad2, Users, Mail } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -14,11 +15,17 @@ export default function AboutPage() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'about-hero');
 
   const companyInfo = [
-    { label: '会社名', value: '株式会社SnakeWolf' },
-    { label: '設立', value: '2023年4月1日' },
-    { label: '代表者', value: '代表取締役 山田 太郎' },
-    { label: '所在地', value: '東京都千代田区丸の内1-1-1' },
+    { label: '会社名', value: '非公開' },
+    { label: '設立', value: '非公開' },
+    { label: '代表者', value: '非公開' },
   ];
+
+  const projectInfo = [
+    { label: 'プロジェクト名', value: 'SnakeWolf' },
+    { label: 'ビジョン', value: '革新的なデジタル体験で、未来を創造する' },
+    { label: '活動内容', value: 'ゲーム開発、クリエイター支援など' },
+  ];
+
 
   return (
     <div>
@@ -101,6 +108,58 @@ export default function AboutPage() {
           </Card>
         </div>
       </section>
+
+      <Separator />
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">プロジェクト概要</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline">プロジェクト情報</CardTitle>
+                </CardHeader>
+                <CardContent>
+                <ul className="space-y-4">
+                    {projectInfo.map((info) => (
+                    <li key={info.label} className="flex flex-col">
+                        <span className="font-bold">{info.label}</span>
+                        <span className="text-muted-foreground">{info.value}</span>
+                    </li>
+                    ))}
+                </ul>
+                </CardContent>
+            </Card>
+             <div className="space-y-6">
+                 <Card>
+                    <CardHeader className="flex-row items-center gap-4">
+                        <Users className="w-8 h-8 text-primary" />
+                        <CardTitle className="font-headline">主な活動領域</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="list-disc list-inside space-y-1">
+                            <li>Unity, Unreal Engineによるゲーム開発</li>
+                            <li>AIを活用したアプリケーション開発</li>
+                            <li>クリエイターエコノミー支援</li>
+                        </ul>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex-row items-center gap-4">
+                        <Mail className="w-8 h-8 text-primary" />
+                        <CardTitle className="font-headline">連絡先</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p>プロジェクトに関するお問い合わせは、<a href="/contact" className="text-primary underline hover:no-underline">お問い合わせフォーム</a>よりご連絡ください。</p>
+                    </CardContent>
+                </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

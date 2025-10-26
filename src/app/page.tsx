@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper, Wrench } from "lucide-react";
@@ -11,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function HomePage() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-background');
+  const suneuruKunIcon = PlaceHolderImages.find(p => p.id === 'suneuru-kun-icon');
   const latestNews = newsArticles.slice(0, 3);
 
   return (
@@ -123,6 +125,37 @@ export default function HomePage() {
           </Button>
         </div>
       </section>
+
+      {/* Suneuru-kun Banner */}
+      <section className="py-16 md:py-24 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 bg-secondary p-8 md:p-12 rounded-lg">
+            {suneuruKunIcon && (
+              <div className="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+                <Image
+                  src={suneuruKunIcon.imageUrl}
+                  alt="スネウル君"
+                  fill
+                  className="object-contain"
+                  data-ai-hint={suneuruKunIcon.imageHint}
+                />
+              </div>
+            )}
+            <div className="text-center md:text-left">
+              <h2 className="font-headline text-2xl md:text-3xl font-bold tracking-tight">公式キャラクター「スネウル君」</h2>
+              <p className="mt-2 max-w-xl text-lg text-muted-foreground">
+                SnakeWolfの公式マスコット、スネウル君です！彼のプロフィールやストーリーをチェックしよう！
+              </p>
+              <Button asChild size="lg" className="mt-6">
+                <Link href="/suneuru-kun">
+                  スネウル君に会いにいく <ArrowRight className="ml-2" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

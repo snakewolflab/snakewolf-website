@@ -11,25 +11,23 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 
 import Snewol1 from '../character/1.png';
+import Wallpaper from './wallpaper.png';
 
 export default function HomePage() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-background');
   const latestNews = newsArticles.slice(0, 3);
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[400px] w-full flex items-center justify-center text-center text-white overflow-hidden">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
-            fill
-            className="object-cover"
-            data-ai-hint={heroImage.imageHint}
-            priority
-          />
-        )}
+        <Image
+          src={Wallpaper}
+          alt="ヒーロー背景画像"
+          fill
+          className="object-cover"
+          data-ai-hint="abstract modern"
+          priority
+        />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 p-4 max-w-4xl mx-auto animate-fade-in-up">
           <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight">
@@ -128,7 +126,7 @@ export default function HomePage() {
       </section>
 
       {/* Suneuru-kun Section */}
-       <section className="py-16 md:py-24 bg-card">
+       <section className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4 text-center">
           <div className="relative w-32 h-32 mx-auto mb-4">
               <Image

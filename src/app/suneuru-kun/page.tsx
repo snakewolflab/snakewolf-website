@@ -47,8 +47,8 @@ export default function SuneuruKunPage() {
     { label: '種族', value: 'デジタル生命体のオオカミ' },
     { label: '性格', value: '好奇心旺盛でいたずら好き。でも根は優しい。' },
     { label: '特技', value: 'コードの中を自由に移動できる。' },
-    { label: '好きなもの', value: '新しいテクノロジー、データの流れ、電気の味' },
-    { label: '苦手なもの', value: 'バグ、オフライン環境' },
+    { label: '好きなもの', value: 'SnakeWolfメンバー' },
+    { label: '苦手なもの', value: '寝起き' },
   ];
 
   return (
@@ -105,6 +105,9 @@ export default function SuneuruKunPage() {
               </p>
               <p className="text-muted-foreground">
                 フードを深くかぶっているのは、まだ少し恥ずかしがり屋だからかもしれません。もしあなたがSnakeWolfのプロダクトの中で彼を見かけたら、ラッキーなことがあるかも？
+              </p>
+              <p className="text-muted-foreground pt-4">
+                スネウル君は寝起きはオッドアイではありません(そういう特殊な子です)。
               </p>
             </div>
             <Card>

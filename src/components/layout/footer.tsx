@@ -1,6 +1,7 @@
 
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import Favicon from '@/app/favicon.png';
 
 export function Footer() {
   return (
@@ -8,7 +9,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <Sparkles className="h-6 w-6 text-primary" />
+            <Image src={Favicon} alt="SnakeWolf Logo" width={24} height={24} />
             <span className="font-headline font-bold text-lg">SnakeWolf</span>
           </div>
           <p className="text-sm text-muted-foreground">

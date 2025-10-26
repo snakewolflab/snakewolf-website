@@ -1,5 +1,6 @@
+
 import Link from 'next/link';
-import { Wind } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -7,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <Wind className="h-6 w-6 text-primary" />
+            <Sparkles className="h-6 w-6 text-primary" />
             <span className="font-headline font-bold text-lg">SnakeWolf</span>
           </div>
           <p className="text-sm text-muted-foreground">

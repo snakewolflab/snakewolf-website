@@ -4,7 +4,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Wind } from "lucide-react";
+import { Menu, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center gap-2 font-bold text-lg">
-          <Wind className="h-6 w-6 text-primary" />
+          <Sparkles className="h-6 w-6 text-primary" />
           <span className="font-headline">SnakeWolf</span>
         </Link>
         
@@ -71,7 +71,7 @@ export function Header() {
                 <SheetHeader>
                   <SheetTitle>
                     <Link href="/" className="flex items-center gap-2 font-bold text-lg" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Wind className="h-6 w-6 text-primary" />
+                      <Sparkles className="h-6 w-6 text-primary" />
                       <span className="font-headline">SnakeWolf</span>
                     </Link>
                   </SheetTitle>

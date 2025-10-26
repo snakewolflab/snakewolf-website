@@ -2,10 +2,10 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Heart, Mic, Users, DollarSign } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Wallpaper from '../../wallpaper.png';
 
 export const metadata: Metadata = {
     title: 'クリエイター支援',
@@ -13,8 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default function CreatorSupportPage() {
-    const heroImage = PlaceHolderImages.find(p => p.id === 'service-creator-support');
-    
     const supportMenu = [
         {
             icon: Mic,
@@ -41,16 +39,14 @@ export default function CreatorSupportPage() {
     return (
         <div>
             <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
-                {heroImage && (
-                    <Image
-                        src={heroImage.imageUrl}
-                        alt="クリエイター支援"
-                        fill
-                        className="object-cover"
-                        data-ai-hint="creative content"
-                        priority
-                    />
-                )}
+                <Image
+                    src={Wallpaper}
+                    alt="クリエイター支援"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="abstract modern"
+                    priority
+                />
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="relative z-10 p-4 max-w-4xl mx-auto">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold">クリエイター支援</h1>

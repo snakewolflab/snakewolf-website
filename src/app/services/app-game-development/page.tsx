@@ -2,9 +2,9 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { CheckCircle, Code, Gamepad2, Smartphone } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Wallpaper from '../../wallpaper.png';
 
 export const metadata: Metadata = {
     title: 'アプリ・ゲーム開発',
@@ -12,8 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function AppGameDevelopmentPage() {
-    const heroImage = PlaceHolderImages.find(p => p.id === 'service-app-game');
-    
     const features = [
         {
             icon: Smartphone,
@@ -35,16 +33,14 @@ export default function AppGameDevelopmentPage() {
     return (
         <div>
             <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
-                {heroImage && (
-                    <Image
-                        src={heroImage.imageUrl}
-                        alt="アプリ・ゲーム開発"
-                        fill
-                        className="object-cover"
-                        data-ai-hint="game development"
-                        priority
-                    />
-                )}
+                <Image
+                    src={Wallpaper}
+                    alt="アプリ・ゲーム開発"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="abstract modern"
+                    priority
+                />
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="relative z-10 p-4 max-w-4xl mx-auto">
                     <h1 className="font-headline text-4xl md:text-5xl font-bold">アプリ・ゲーム開発</h1>

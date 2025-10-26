@@ -2,9 +2,9 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Building, Globe, Target, Gamepad2, Users, Mail } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import Wallpaper from '../wallpaper.png';
 
 export const metadata: Metadata = {
   title: '企業情報',
@@ -12,8 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'about-hero');
-
   const companyInfo = [
     { label: '会社名', value: '非公開' },
     { label: '設立', value: '非公開' },
@@ -30,16 +28,14 @@ export default function AboutPage() {
   return (
     <div>
       <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt="企業情報"
-            fill
-            className="object-cover"
-            data-ai-hint={heroImage.imageHint}
-            priority
-          />
-        )}
+        <Image
+          src={Wallpaper}
+          alt="企業情報"
+          fill
+          className="object-cover"
+          data-ai-hint="abstract modern"
+          priority
+        />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 p-4 max-w-4xl mx-auto">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">企業情報</h1>

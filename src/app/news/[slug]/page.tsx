@@ -9,6 +9,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
+import { ShareButton } from './_components/share-button';
+import Wallpaper from '../../wallpaper.png';
 
 type Props = {
   params: { slug: string };
@@ -60,19 +62,22 @@ export default function NewsArticlePage({ params }: Props) {
 
       <header className="mb-8">
         <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4">{article.title}</h1>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{article.date}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4" />
-            <div className="flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">{tag}</Badge>
-              ))}
+        <div className="flex flex-wrap items-center justify-between gap-y-4">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
+                <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    <span>{article.date}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Tag className="h-4 w-4" />
+                    <div className="flex flex-wrap gap-2">
+                    {article.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                    ))}
+                    </div>
+                </div>
             </div>
-          </div>
+            <ShareButton title={article.title} />
         </div>
       </header>
 

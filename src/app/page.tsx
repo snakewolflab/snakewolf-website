@@ -126,7 +126,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Suneuru-kun Banner */}
+      {/* Suneuru-kun Section */}
       <section className="py-16 md:py-24 bg-card">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 bg-secondary p-8 md:p-12 rounded-lg">

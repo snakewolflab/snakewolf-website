@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -34,6 +35,11 @@ export function ShareButton({ title }: ShareButtonProps) {
           url: fullUrl,
         });
       } catch (error) {
+        // AbortError is thrown when the user cancels the share dialog.
+        // We don't want to show an error toast in that case.
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
         console.error('共有に失敗しました', error);
         toast({
             variant: "destructive",

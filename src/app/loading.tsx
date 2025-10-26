@@ -34,7 +34,7 @@ const characterImages = [
 
 const LoadingSpinner = () => {
     const [characterImage, setCharacterImage] = useState<StaticImageData | null>(null);
-    const [dots, setDots] = useState('.');
+    const [dots, setDots] = useState('');
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -46,9 +46,8 @@ const LoadingSpinner = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setDots(prev => {
-                if (prev === '...') return '.';
-                if (prev === '..') return '...';
-                return '..';
+                if (prev.length >= 3) return '';
+                return prev + '.';
             });
         }, 500);
 
@@ -71,7 +70,7 @@ const LoadingSpinner = () => {
             ) : (
                 <div className="w-1/2 aspect-square bg-muted/50 rounded-lg"></div>
             )}
-            <p className="fixed bottom-4 right-4 text-muted-foreground animate-dots">
+            <p className="fixed bottom-4 right-4 text-muted-foreground">
                 読み込み中{dots}
             </p>
         </div>

@@ -44,7 +44,7 @@ export function ShareButton({ title }: ShareButtonProps) {
         toast({
             variant: "destructive",
             title: "エラー",
-            description: "記事の共有に失敗しました。",
+            description: `記事の共有に失敗しました: ${error}`,
         });
       }
     }

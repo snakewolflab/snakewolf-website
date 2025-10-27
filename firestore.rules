@@ -2,35 +2,30 @@
  * @fileoverview Firestore Security Rules for SnakeWolf website.
  *
  * Core Philosophy:
- * This ruleset provides public read access to all data collections
- * ("news_articles", "work_items", "creator_items") while restricting
- * write access to prevent unauthorized modifications. This configuration
- * is suitable for a content-driven website where data is primarily managed
- * through a separate administrative interface.
+ * This ruleset allows public read access to all data (news articles, work items, creator items)
+ * while restricting write access to prevent unauthorized modifications. Write access is effectively disabled
+ * in this version, though placeholders exist for future authorization logic.
  *
  * Data Structure:
- * The Firestore database consists of three top-level collections:
- *   - /news_articles/{newsArticleId}: Stores news article data.
- *   - /work_items/{workItemId}: Stores portfolio work item data.
- *   - /creator_items/{creatorItemId}: Stores creator information.
+ * The database consists of three top-level collections:
+ * - /news_articles: Stores news article data.
+ * - /work_items: Stores portfolio work item data.
+ * - /creator_items: Stores creator information.
  *
  * Key Security Decisions:
- * - Public Read Access: All users, including unauthenticated users, can read
- *   data in all collections. This is enabled by the `allow get, list: if true;` rule.
- * - Restricted Writes: All write operations (create, update, delete) are
- *   explicitly denied. This is enforced by the `allow create, update, delete: if false;` rule.
- *   This is a security-first approach appropriate for the prototyping phase.
+ * - Public Read Access:  All documents are publicly readable.
+ * - Write Access Disabled: Write operations are currently denied.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to news articles, but restricts write access.
+     * @description Grants public read access to news articles, but restricts all write access.
      * @path /news_articles/{newsArticleId}
-     * @allow (get, list) Any user can read news articles.
-     * @deny (create, update, delete) No user can create, update, or delete news articles through the client.
-     * @principle Allows public reads and restricts writes for content management.
+     * @allow (get, list): Any user can read news articles.
+     * @deny (create, update, delete): No user can create, update, or delete news articles.
+     * @principle Public read, no write access
      */
     match /news_articles/{newsArticleId} {
       allow get, list: if true;
@@ -38,11 +33,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows public read access to work items, but restricts write access.
+     * @description Grants public read access to work items, but restricts all write access.
      * @path /work_items/{workItemId}
-     * @allow (get, list) Any user can read work items.
-     * @deny (create, update, delete) No user can create, update, or delete work items through the client.
-     * @principle Allows public reads and restricts writes for content management.
+     * @allow (get, list): Any user can read work items.
+     * @deny (create, update, delete): No user can create, update, or delete work items.
+     * @principle Public read, no write access
      */
     match /work_items/{workItemId} {
       allow get, list: if true;
@@ -50,11 +45,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows public read access to creator items, but restricts write access.
+     * @description Grants public read access to creator items, but restricts all write access.
      * @path /creator_items/{creatorItemId}
-     * @allow (get, list) Any user can read creator items.
-     * @deny (create, update, delete) No user can create, update, or delete creator items through the client.
-     * @principle Allows public reads and restricts writes for content management.
+     * @allow (get, list): Any user can read creator items.
+     * @deny (create, update, delete): No user can create, update, or delete creator items.
+     * @principle Public read, no write access
      */
     match /creator_items/{creatorItemId} {
       allow get, list: if true;

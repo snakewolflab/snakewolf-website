@@ -9,7 +9,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { ShareButton } from './_components/share-button';
+import { ShareMenu } from './_components/share-button';
 import Wallpaper from '../../wallpaper.png';
 
 type Props = {
@@ -77,7 +77,7 @@ export default function NewsArticlePage({ params }: Props) {
                     </div>
                 </div>
             </div>
-            <ShareButton title={article.title} />
+            <ShareMenu title={article.title} />
         </div>
       </header>
 

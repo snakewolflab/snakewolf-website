@@ -2,10 +2,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { collection, query, where, orderBy, doc } from 'firebase/firestore';
+import { collection, query, where, doc } from 'firebase/firestore';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { deleteDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+import type { WorkItem } from '@/lib/firebase-data';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PlusCircle, Edit, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
-import Image from 'next/image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +28,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { WorkForm, type WorkFormValues } from './work-form';
+import { ImageWithUrl } from './image-with-url';
 
 interface WorksAdminProps {
   category: 'App' | 'Game';
@@ -41,16 +41,12 @@ export function WorksAdmin({ category }: WorksAdminProps) {
     query(collection(firestore, 'works'), where('category', '==', category)), 
     [firestore, category]
   );
-  const { data: works, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
-  const mediaQuery = useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]);
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(mediaQuery);
+  const { data: works, isLoading } = useCollection<WorkItem>(worksQuery);
 
   const sortedWorks = useMemo(() => {
     if (!works) return [];
     return [...works].sort((a, b) => a.title.localeCompare(b.title));
   }, [works]);
-
-  const isLoading = worksLoading || mediaLoading;
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingWork, setEditingWork] = useState<WorkItem | null>(null);
@@ -103,10 +99,6 @@ export function WorksAdmin({ category }: WorksAdminProps) {
     setEditingWork(null);
   };
 
-  const getImageUrl = (imageId: string) => {
-    return mediaItems?.find(m => m.id === imageId)?.fileUrl || null;
-  }
-
   const categoryName = category === 'App' ? 'アプリ' : 'ゲーム';
 
   return (
@@ -140,16 +132,10 @@ export function WorksAdmin({ category }: WorksAdminProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedWorks?.map((work) => {
-                  const imageUrl = getImageUrl(work.imageId);
-                  return (
+                {sortedWorks?.map((work) => (
                     <TableRow key={work.id}>
                       <TableCell>
-                        <div className="w-16 h-10 relative bg-muted rounded-md overflow-hidden">
-                          {imageUrl ? (
-                            <Image src={imageUrl} alt={work.title} fill className="object-cover" />
-                          ) : <ImageIcon className="w-6 h-6 text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
-                        </div>
+                        <ImageWithUrl imageId={work.imageId} alt={work.title} />
                       </TableCell>
                       <TableCell className="font-medium">{work.title}</TableCell>
                       <TableCell className="text-muted-foreground text-xs">{work.platforms.map(p => p.name).join(', ')}</TableCell>
@@ -162,8 +148,7 @@ export function WorksAdmin({ category }: WorksAdminProps) {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  )
-                })}
+                ))}
               </TableBody>
             </Table>
           </div>

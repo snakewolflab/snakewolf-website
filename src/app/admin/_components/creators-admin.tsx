@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PlusCircle, Edit, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
-import Image from 'next/image';
+import { ImageWithUrl } from './image-with-url';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -67,7 +67,7 @@ export function CreatorsAdmin() {
     const id = editingCreator?.id || doc(collection(firestore, 'creators')).id;
     const docRef = doc(firestore, 'creators', id);
 
-    const creatorData: CreatorItem = {
+    const creatorData: Omit<CreatorItem, 'imageUrl'> = {
       id,
       name: data.name,
       description: data.description,
@@ -115,11 +115,7 @@ export function CreatorsAdmin() {
                 {creators?.map((creator) => (
                   <TableRow key={creator.id}>
                     <TableCell>
-                      <div className="w-12 h-12 relative bg-muted rounded-full overflow-hidden">
-                        {creator.imageUrl ? (
-                          <Image src={creator.imageUrl} alt={creator.name} fill className="object-cover" />
-                        ) : <ImageIcon className="w-6 h-6 text-muted-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
-                      </div>
+                      <ImageWithUrl imageId={creator.imageId} alt={creator.name} isAvatar />
                     </TableCell>
                     <TableCell className="font-medium">{creator.name}</TableCell>
                     <TableCell className="text-muted-foreground text-xs">{creator.tags.join(', ')}</TableCell>

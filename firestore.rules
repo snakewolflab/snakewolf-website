@@ -1,11 +1,36 @@
+/**
+ * @fileOverview Firestore Security Rules for SnakeWolf Website
+ *
+ * Core Philosophy:
+ * This ruleset prioritizes public read access for most content collections
+ * (`news_articles`, `tags`, `media_items`, `creators`, `works`) to allow
+ * unauthenticated users to freely browse the site. Write access is restricted
+ * to authenticated users, primarily for submitting contact form submissions.
+ *
+ * Data Structure:
+ * The Firestore database consists of several top-level collections, each
+ * representing a specific data entity. There is no user-specific data or
+ * subcollections.
+ *
+ * Key Security Decisions:
+ * - Public Read Access: `news_articles`, `tags`, `media_items`, `creators`,
+ *   and `works` collections are publicly readable.
+ * - Authenticated Writes: Only authenticated users can create documents in the
+ *   `contact_form_submissions` collection.
+ * - No User Listing: User listing is implicitly disallowed as there is no
+ *   user collection.
+ * - No Ownership: There is no user-based ownership, so no denormalization is
+ *   required.
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     /**
-     * @description Grants public read access to news articles and denies all write operations.
+     * @description Allows anyone to read news articles, but disallows all writes.
      * @path /news_articles/{newsArticleId}
-     * @allow (get, list) User can read any news article.
-     * @deny (create, update, delete) Users cannot create, update, or delete news articles.
+     * @allow get, list: Always allowed for any user.
+     * @deny create, update, delete: Never allowed.
      * @principle Allows public read access.
      */
     match /news_articles/{newsArticleId} {
@@ -14,10 +39,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to tags and denies all write operations.
+     * @description Allows anyone to read tags, but disallows all writes.
      * @path /tags/{tagId}
-     * @allow (get, list) User can read any tag.
-     * @deny (create, update, delete) Users cannot create, update, or delete tags.
+     * @allow get, list: Always allowed for any user.
+     * @deny create, update, delete: Never allowed.
      * @principle Allows public read access.
      */
     match /tags/{tagId} {
@@ -26,10 +51,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows authenticated users to create contact form submissions, but denies all other access.
+     * @description Allows authenticated users to create contact form submissions, but disallows reads and updates/deletes.
      * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow (create) User can create a contact form submission if signed in.
-     * @deny (get, list, update, delete) Users cannot read, list, update, or delete contact form submissions.
+     * @allow create: Only allowed for authenticated users.
+     * @deny get, list, update, delete: Never allowed.
      * @principle Requires authentication for writes.
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
@@ -38,10 +63,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to media items and denies all write operations.
+     * @description Allows anyone to read media items, but disallows all writes.
      * @path /media_items/{mediaItemId}
-     * @allow (get, list) User can read any media item.
-     * @deny (create, update, delete) Users cannot create, update, or delete media items.
+     * @allow get, list: Always allowed for any user.
+     * @deny create, update, delete: Never allowed.
      * @principle Allows public read access.
      */
     match /media_items/{mediaItemId} {
@@ -50,10 +75,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to creators and denies all write operations.
+     * @description Allows anyone to read creators, but disallows all writes.
      * @path /creators/{creatorId}
-     * @allow (get, list) User can read any creator.
-     * @deny (create, update, delete) Users cannot create, update, or delete creators.
+     * @allow get, list: Always allowed for any user.
+     * @deny create, update, delete: Never allowed.
      * @principle Allows public read access.
      */
     match /creators/{creatorId} {
@@ -62,10 +87,10 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to works and denies all write operations.
+     * @description Allows anyone to read works, but disallows all writes.
      * @path /works/{workId}
-     * @allow (get, list) User can read any work.
-     * @deny (create, update, delete) Users cannot create, update, or delete works.
+     * @allow get, list: Always allowed for any user.
+     * @deny create, update, delete: Never allowed.
      * @principle Allows public read access.
      */
     match /works/{workId} {
@@ -73,6 +98,10 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
+    /**
+     * @description Helper function to determine if a user is signed in.
+     * @returns {boolean} True if the user is signed in, false otherwise.
+     */
     function isSignedIn() {
       return request.auth != null;
     }

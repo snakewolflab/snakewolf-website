@@ -188,37 +188,27 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
             <FormField
               control={form.control}
               name="tagIds"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>タグ</FormLabel>
-                   <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {tags?.map((tag) => (
-                      <FormField
-                        key={tag.id}
-                        control={form.control}
-                        name="tagIds"
-                        render={({ field }) => {
-                          return (
-                            <FormItem key={tag.id} className="flex flex-row items-start space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(tag.id)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...(field.value || []), tag.id])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== tag.id
-                                          )
-                                        )
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">{tag.name}</FormLabel>
-                            </FormItem>
-                          )
-                        }}
-                      />
+                      <FormItem key={tag.id} className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(tag.id)}
+                            onCheckedChange={(checked) => {
+                              const currentTagIds = field.value || [];
+                              if (checked) {
+                                field.onChange([...currentTagIds, tag.id]);
+                              } else {
+                                field.onChange(currentTagIds.filter(value => value !== tag.id));
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">{tag.name}</FormLabel>
+                      </FormItem>
                     ))}
                   </div>
                   <FormMessage />

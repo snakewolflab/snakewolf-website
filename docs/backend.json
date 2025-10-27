@@ -6,57 +6,136 @@
       "type": "object",
       "description": "Represents a news article on the SnakeWolf website.",
       "properties": {
-        "slug": { "type": "string", "description": "URL-friendly slug for the article." },
-        "title": { "type": "string", "description": "Title of the news article." },
-        "date": { "type": "string", "description": "Publication date of the article." },
-        "tags": { "type": "array", "items": { "type": "string" }, "description": "Tags associated with the article." },
-        "summary": { "type": "string", "description": "A brief summary of the article." },
-        "content": { "type": "string", "description": "The full HTML content of the article." },
-        "imageId": { "type": "string", "description": "ID for the article's main image." }
-      },
-      "required": ["slug", "title", "date", "summary", "content", "imageId"]
-    },
-    "WorkItem": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "WorkItem",
-      "type": "object",
-      "description": "Represents a single work/project in the portfolio.",
-      "properties": {
-        "slug": { "type": "string", "description": "URL-friendly slug for the work item." },
-        "title": { "type": "string", "description": "Title of the work item." },
-        "category": { "type": "string", "enum": ["App", "Game"], "description": "Category of the work item." },
-        "description": { "type": "string", "description": "Short description of the work item." },
-        "longDescription": { "type": "string", "description": "Detailed HTML description of the work item." },
-        "platforms": { 
-          "type": "array", 
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string" },
-              "url": { "type": "string" }
-            },
-            "required": ["name", "url"]
-          },
-          "description": "Platforms the work is available on."
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the NewsArticle entity."
         },
-        "imageId": { "type": "string", "description": "ID for the work's main image." },
-        "galleryImageIds": { "type": "array", "items": { "type": "string" }, "description": "IDs for gallery images." }
+        "title": {
+          "type": "string",
+          "description": "Title of the news article."
+        },
+        "publicationDate": {
+          "type": "string",
+          "description": "Date and time when the news article was published.",
+          "format": "date-time"
+        },
+        "contentSummary": {
+          "type": "string",
+          "description": "A brief summary or excerpt of the news article's content."
+        },
+        "content": {
+          "type": "string",
+          "description": "The full content of the news article."
+        },
+        "tagIds": {
+          "type": "array",
+          "description": "References to Tags. (Relationship: Tag N:N NewsArticle)",
+          "items": {
+            "type": "string"
+          }
+        }
       },
-      "required": ["slug", "title", "category", "description", "longDescription", "platforms", "imageId", "galleryImageIds"]
+      "required": [
+        "id",
+        "title",
+        "publicationDate",
+        "contentSummary",
+        "content"
+      ]
     },
-    "CreatorItem": {
+    "Tag": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "CreatorItem",
+      "title": "Tag",
       "type": "object",
-      "description": "Represents a creator supported by SnakeWolf.",
+      "description": "Represents a tag or category associated with news articles.",
       "properties": {
-        "name": { "type": "string", "description": "Name of the creator." },
-        "description": { "type": "string", "description": "Description of the creator." },
-        "imageId": { "type": "string", "description": "ID for the creator's profile image." },
-        "url": { "type": "string", "description": "URL to the creator's page/social media." },
-        "tags": { "type": "array", "items": { "type": "string" }, "description": "Tags associated with the creator." }
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Tag entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tag (e.g., 'Announcement', 'Event')."
+        }
       },
-      "required": ["name", "description", "imageId", "url", "tags"]
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ContactFormSubmission": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContactFormSubmission",
+      "type": "object",
+      "description": "Represents a submission from the website's contact form.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ContactFormSubmission entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the person submitting the form."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the person submitting the form.",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "The message content submitted through the form."
+        },
+        "submissionDate": {
+          "type": "string",
+          "description": "Date and time when the form was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "message",
+        "submissionDate"
+      ]
+    },
+    "MediaItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MediaItem",
+      "type": "object",
+      "description": "Represents a media item (image or video) in the media gallery.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MediaItem entity."
+        },
+        "fileUrl": {
+          "type": "string",
+          "description": "URL of the media file.",
+          "format": "uri"
+        },
+        "fileType": {
+          "type": "string",
+          "description": "The type of file (e.g., 'image', 'video')."
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "Size of the file in bytes."
+        },
+        "uploadDate": {
+          "type": "string",
+          "description": "Date and time when the file was uploaded.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "fileUrl",
+        "fileType",
+        "fileSize",
+        "uploadDate"
+      ]
     }
   },
   "auth": {
@@ -66,17 +145,72 @@
     ]
   },
   "firestore": {
-    "/news_articles/{newsArticleId}": {
-      "schema": { "$ref": "#/entities/NewsArticle" },
-      "description": "Stores individual news articles."
-    },
-    "/work_items/{workItemId}": {
-      "schema": { "$ref": "#/entities/WorkItem" },
-      "description": "Stores individual portfolio work items."
-    },
-    "/creator_items/{creatorItemId}": {
-      "schema": { "$ref": "#/entities/CreatorItem" },
-      "description": "Stores information about supported creators."
-    }
+    "structure": [
+      {
+        "path": "/news_articles/{newsArticleId}",
+        "definition": {
+          "entityName": "NewsArticle",
+          "schema": {
+            "$ref": "#/backend/entities/NewsArticle"
+          },
+          "description": "Stores news articles. Publicly readable.",
+          "params": [
+            {
+              "name": "newsArticleId",
+              "description": "Unique identifier for the news article."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tags/{tagId}",
+        "definition": {
+          "entityName": "Tag",
+          "schema": {
+            "$ref": "#/backend/entities/Tag"
+          },
+          "description": "Stores tags for news articles. Publicly readable.",
+          "params": [
+            {
+              "name": "tagId",
+              "description": "Unique identifier for the tag."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/contact_form_submissions/{contactFormSubmissionId}",
+        "definition": {
+          "entityName": "ContactFormSubmission",
+          "schema": {
+            "$ref": "#/backend/entities/ContactFormSubmission"
+          },
+          "description": "Stores contact form submissions. Requires authentication to create.",
+          "params": [
+            {
+              "name": "contactFormSubmissionId",
+              "description": "Unique identifier for the contact form submission."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/media_items/{mediaItemId}",
+        "definition": {
+          "entityName": "MediaItem",
+          "schema": {
+            "$ref": "#/backend/entities/MediaItem"
+          },
+          "description": "Stores media items. Publicly readable.",
+          "params": [
+            {
+              "name": "mediaItemId",
+              "description": "Unique identifier for the media item."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "Given the requirement for public read access when `auth == null`, the structure is designed to allow unauthenticated users to read data while allowing authenticated users to write data (specifically for contact form submissions, which are likely the only writeable data).  The `news_articles`, `tags`, and `media_items` collections are publicly readable. `contact_form_submissions` requires authentication for writes.  This approach leverages structural segregation, placing data with different authorization requirements in separate collections. This simplifies security rules. There is no ownership, and therefore no need for denormalization in this application. The structure supports secure `list` operations by virtue of segregating based on access control needs (QAPs)."
   }
 }

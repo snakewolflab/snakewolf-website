@@ -1,55 +1,79 @@
 /**
- * @fileoverview Firestore Security Rules for the SnakeWolf website.
- *
- * Core Philosophy:
- * This ruleset prioritizes public read access for all data, enabling open consumption of news articles, work items, and creator information.
- * Write access is completely disallowed until an authentication mechanism is decided upon.
- *
- * Data Structure:
- * The database consists of three top-level collections: `news_articles`, `work_items`, and `creator_items`.
- *
- * Key Security Decisions:
- * - All collections are publicly readable.
- * - Write access is explicitly denied for all operations due to the lack of an authentication mechanism and defined roles/ownership.
+ * @description This ruleset enforces public read access for news articles, tags, and media items,
+ *              while requiring authentication to create contact form submissions.
+ * @dataStructure
+ *  /news_articles/{newsArticleId} - Publicly readable news articles.
+ *  /tags/{tagId} - Publicly readable tags for news articles.
+ *  /contact_form_submissions/{contactFormSubmissionId} - Contact form submissions, requiring authentication to create.
+ *  /media_items/{mediaItemId} - Publicly readable media items.
+ * @keySecurityDecisions
+ *  - Unauthenticated users can read news articles, tags, and media items.
+ *  - Only authenticated users can create contact form submissions.
+ *  - No data ownership is enforced in these rules.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to news articles. Write access is denied.
+     * @description Allows anyone to read news articles, but no one to create, update, or delete them.
      * @path /news_articles/{newsArticleId}
-     * @allow (get, list): Any user can read a news article.
-     * @deny (create, update, delete): No user can create, update, or delete a news article.
-     * @principle Public read, no write access.
+     * @allow (get, list) Any user, authenticated or not.
+     * @deny (create, update, delete) No one.
+     * @principle Public read access.
      */
     match /news_articles/{newsArticleId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to work items. Write access is denied.
-     * @path /work_items/{workItemId}
-     * @allow (get, list): Any user can read a work item.
-     * @deny (create, update, delete): No user can create, update, or delete a work item.
-     * @principle Public read, no write access.
+     * @description Allows anyone to read tags, but no one to create, update, or delete them.
+     * @path /tags/{tagId}
+     * @allow (get, list) Any user, authenticated or not.
+     * @deny (create, update, delete) No one.
+     * @principle Public read access.
      */
-    match /work_items/{workItemId} {
+    match /tags/{tagId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to creator items. Write access is denied.
-     * @path /creator_items/{creatorItemId}
-     * @allow (get, list): Any user can read a creator item.
-     * @deny (create, update, delete): No user can create, update, or delete a creator item.
-     * @principle Public read, no write access.
+     * @description Allows authenticated users to create contact form submissions, but no one to read, update, or delete them.
+     * @path /contact_form_submissions/{contactFormSubmissionId}
+     * @allow (create) Any authenticated user.
+     * @deny (get, list, update, delete) No one.
+     * @principle Requires authentication to create.
      */
-    match /creator_items/{creatorItemId} {
+    match /contact_form_submissions/{contactFormSubmissionId} {
+      allow get, list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Allows anyone to read media items, but no one to create, update, or delete them.
+     * @path /media_items/{mediaItemId}
+     * @allow (get, list) Any user, authenticated or not.
+     * @deny (create, update, delete) No one.
+     * @principle Public read access.
+     */
+    match /media_items/{mediaItemId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Helper function to determine if a user is signed in
+    function isSignedIn() {
+      return request.auth != null;
     }
   }
 }

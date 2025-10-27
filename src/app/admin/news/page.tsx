@@ -69,9 +69,9 @@ export default function NewsAdminPage() {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (articleToDelete && articleToDelete.id) {
-      deleteArticle(articleToDelete.id);
+      await deleteArticle(articleToDelete.id);
     }
     setDeleteDialogOpen(false);
     setArticleToDelete(null);

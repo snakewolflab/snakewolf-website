@@ -29,7 +29,7 @@ const allowedDomains = [
   'play.google.com',
   'apps.apple.com',
   'epicgames.com',
-  'fanme.jp',
+  'fanme.link',
 ];
 
 interface ExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {

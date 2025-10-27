@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Favicon from '@/app/favicon.png';
-import { Mail } from 'lucide-react';
 
 export function Footer() {
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
@@ -19,7 +18,7 @@ export function Footer() {
     { href: "/privacy", label: "プライバシーポリシー" },
     { href: "/defamation", label: "誹謗中傷について" },
     { href: "/request", label: "皆さんへのお願い" },
-    { href: "/letters", label: "書簡について", icon: Mail },
+    { href: "/letters", label: "書簡について" },
   ];
 
   return (

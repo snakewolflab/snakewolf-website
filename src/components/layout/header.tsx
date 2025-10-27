@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,14 +23,17 @@ const navLinks = [
 ];
 
 function SiteSearch() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [query, setQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!query.trim()) return;
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+    const searchQuery = query.trim();
+    if (!searchQuery) return;
+
+    const siteUrl = window.location.hostname;
+    const googleSearchUrl = `https://www.google.com/search?q=site:${siteUrl}+${encodeURIComponent(searchQuery)}`;
+    
+    window.open(googleSearchUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (

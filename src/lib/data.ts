@@ -1,6 +1,6 @@
 
 export type NewsArticle = {
-  id: number;
+  id?: string; // Firestore ID will be string
   slug: string;
   title: string;
   date: string;
@@ -24,7 +24,7 @@ export type Platform = {
 };
 
 export type WorkItem = {
-  id: number;
+  id?: string; // Firestore ID will be string
   slug: string;
   title: string;
   category: 'App' | 'Game';
@@ -36,7 +36,7 @@ export type WorkItem = {
 };
 
 export type CreatorItem = {
-  id: number;
+  id?: string; // Firestore ID will be string
   name: string;
   description: string;
   imageId: string;
@@ -44,9 +44,9 @@ export type CreatorItem = {
   tags: string[];
 };
 
-export const newsArticles: NewsArticle[] = [
+// This data will be seeded into Firestore.
+export const newsArticlesData: Omit<NewsArticle, 'id'>[] = [
   {
-    id: 1,
     slug: 'new-product-launch-2024',
     title: '革新的な新製品「Project G」を発表',
     date: '2024年7月15日',
@@ -66,7 +66,6 @@ export const newsArticles: NewsArticle[] = [
     imageId: 'news-1',
   },
   {
-    id: 2,
     slug: 'partnership-with-tech-giant',
     title: '大手テクノロジー企業との戦略的提携を発表',
     date: '2024年6月28日',
@@ -80,7 +79,6 @@ export const newsArticles: NewsArticle[] = [
     imageId: 'news-2',
   },
   {
-    id: 3,
     slug: 'annual-tech-conference-2024',
     title: '年次技術カンファレンス「Innovate 2024」開催',
     date: '2024年5月20日',
@@ -112,9 +110,8 @@ export const serviceItems: ServiceItem[] = [
   },
 ];
 
-export const workItems: WorkItem[] = [
+export const workItemsData: Omit<WorkItem, 'id'>[] = [
   {
-    id: 1,
     slug: 'cosmic-explorer',
     title: "Cosmic Explorer",
     category: "Game",
@@ -128,7 +125,6 @@ export const workItems: WorkItem[] = [
     galleryImageIds: ["work-cosmic-explorer", "work-pixel-painters", "news-1"],
   },
   {
-    id: 2,
     slug: 'taskmaster-pro',
     title: "TaskMaster Pro",
     category: "App",
@@ -143,7 +139,6 @@ export const workItems: WorkItem[] = [
     galleryImageIds: ["work-taskmaster-pro", "news-2", "news-3"],
   },
   {
-    id: 3,
     slug: 'pixel-painters',
     title: "Pixel Painters",
     category: "Game",
@@ -159,9 +154,8 @@ export const workItems: WorkItem[] = [
   },
 ];
 
-export const creatorItems: CreatorItem[] = [
+export const creatorItemsData: Omit<CreatorItem, 'id'>[] = [
   {
-    id: 1,
     name: "Alpha Creative",
     description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。FANMEにて限定コンテンツを公開中。",
     imageId: "creator-alpha",
@@ -169,7 +163,6 @@ export const creatorItems: CreatorItem[] = [
     tags: ["イラスト", "キャラクターデザイン"]
   },
   {
-    id: 2,
     name: "Beta Illustrations",
     description: "ゲーム実況を中心に活動する人気ストリーマー。FANMEにて会員限定配信やブログを更新中。",
     imageId: "creator-beta",

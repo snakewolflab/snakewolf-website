@@ -41,9 +41,7 @@ const LoadingSpinner = () => {
         setIsClient(true);
         const randomIndex = Math.floor(Math.random() * characterImages.length);
         setCharacterImage(characterImages[randomIndex]);
-    }, []);
 
-    useEffect(() => {
         const interval = setInterval(() => {
             setDots(prev => {
                 if (prev.length >= 3) return '';

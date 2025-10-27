@@ -1,9 +1,18 @@
 
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import Favicon from '@/app/favicon.png';
 
 export function Footer() {
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+  
   const footerLinks = [
     { href: "/terms", label: "利用規約" },
     { href: "/privacy", label: "プライバシーポリシー" },
@@ -27,7 +36,7 @@ export function Footer() {
               ))}
             </nav>
             <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} SnakeWolf. All Rights Reserved.
+              &copy; {currentYear} SnakeWolf. All Rights Reserved.
             </p>
           </div>
           <div className="w-24 hidden md:block"></div>

@@ -1,10 +1,12 @@
 
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Building, Globe, Target, Gamepad2, Users, Mail } from 'lucide-react';
+import { Building, Globe, Target, Gamepad2, Users, Mail, Briefcase, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Wallpaper from '../wallpaper.png';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: '企業情報',
@@ -129,19 +131,6 @@ export default function AboutPage() {
                 </CardContent>
             </Card>
              <div className="space-y-6">
-                 <Card>
-                    <CardHeader className="flex-row items-center gap-4">
-                        <Users className="w-8 h-8 text-primary" />
-                        <CardTitle className="font-headline">主な活動領域</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>Unity, Unreal Engineによるゲーム開発</li>
-                            <li>AIを活用したアプリケーション開発</li>
-                            <li>クリエイターエコノミー支援</li>
-                        </ul>
-                    </CardContent>
-                </Card>
                 <Card>
                     <CardHeader className="flex-row items-center gap-4">
                         <Mail className="w-8 h-8 text-primary" />
@@ -153,6 +142,30 @@ export default function AboutPage() {
                 </Card>
             </div>
           </div>
+        </div>
+      </section>
+
+      <Separator />
+
+      <section className="py-16 md:py-24 bg-secondary">
+        <div className="container mx-auto px-4 text-center">
+          <Briefcase className="mx-auto h-12 w-12 text-primary mb-4" />
+          <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">採用情報</h2>
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+            現在、採用活動は行っておりません。募集を開始する際は、本ページにてお知らせいたします。
+          </p>
+        </div>
+      </section>
+      
+      <Separator />
+
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4 text-center">
+           <TrendingUp className="mx-auto h-12 w-12 text-primary mb-4" />
+          <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">IR情報</h2>
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
+            非公開
+          </p>
         </div>
       </section>
 

@@ -1,9 +1,8 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
 import Image from 'next/image';
 
@@ -45,38 +44,11 @@ function Gamepad(props: any) {
     );
 }
 
-type Props = {
-  params: {
-    category: string;
-    slug: string;
-  };
-};
-
-// Metadata can't be generated in a client component.
-// We'll keep this commented for now or move it to a parent layout/page if needed.
-// export async function generateMetadata({ params }: Props): Promise<Metadata> {
-//   const item = workItems.find((w) => w.slug === params.slug);
-
-//   if (!item) {
-//     return { title: 'Not Found' };
-//   }
-//   const ctaText = item.category === 'App' ? 'を入手' : 'をプレイ';
-//   return {
-//     title: `${item.title}${ctaText}`,
-//     description: `${item.title} の配信プラットフォーム一覧です。`,
-//   };
-// }
-
-// export function generateStaticParams() {
-//     return workItems.map((item) => ({
-//       category: item.category.toLowerCase() + 's',
-//       slug: item.slug,
-//     }));
-// }
-
-
-export default function UsePage({ params }: Props) {
-  const item = workItems.find((w) => w.slug === params.slug);
+export default function UsePage() {
+  const params = useParams();
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const category = Array.isArray(params.category) ? params.category[0] : params.category;
+  const item = workItems.find((w) => w.slug === slug);
 
   if (!item) {
     notFound();
@@ -88,7 +60,7 @@ export default function UsePage({ params }: Props) {
     <div className="container mx-auto px-4 py-16 max-w-2xl">
        <div className="mb-8">
         <Button asChild variant="ghost">
-          <Link href={`/works/${params.category}/${params.slug}`}>
+          <Link href={`/works/${category}/${slug}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             詳細に戻る
           </Link>

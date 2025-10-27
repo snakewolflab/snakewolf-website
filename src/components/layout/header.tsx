@@ -1,15 +1,15 @@
+
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, User } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Favicon from "@/app/favicon.png";
-import { useUser } from "@/firebase";
 
 const navLinks = [
   { href: "/", label: "ホーム" },
@@ -24,7 +24,6 @@ const navLinks = [
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const pathname = usePathname();
-  const { user } = useUser();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -60,14 +59,6 @@ export function Header() {
               お問い合わせ
             </Link>
           </nav>
-          
-          <Button asChild variant="ghost" size="icon">
-            <Link href={user ? "/admin" : "/login"}>
-              <User />
-              <span className="sr-only">{user ? "Admin" : "Login"}</span>
-            </Link>
-          </Button>
-
 
           {/* Mobile Navigation */}
           <div className="flex items-center gap-2 md:hidden">

@@ -2,77 +2,58 @@
  * @fileoverview Firestore Security Rules for SnakeWolf website.
  *
  * Core Philosophy:
- * This ruleset allows public read access to news articles, work items, and creator items, but restricts write access to authenticated users only.
+ * This ruleset prioritizes public read access for content collections (news articles,
+ * work items, and creator items) while restricting write access to authorized users (not yet implemented).
  *
  * Data Structure:
- * - /news_articles/{newsArticleId}: Stores news articles.
- * - /work_items/{workItemId}: Stores portfolio work items.
- * - /creator_items/{creatorItemId}: Stores creator information.
+ * The data is organized into three top-level collections: `news_articles`, `work_items`,
+ * and `creator_items`. Each document in these collections represents a single content item.
  *
  * Key Security Decisions:
- * - Public read access for all collections.
- * - Authenticated user required for create, update, and delete operations.
- * - No specific role-based access control implemented in this version.
- * - No listing restrictions.
- *
- * Denormalization for Authorization:
- *  - No specific denormalization required, as write access is based solely on authentication status.
+ * - Public read access is granted to all content collections (`news_articles`, `work_items`,
+ *   `creator_items`) for both `get` and `list` operations.
+ * - Write access to all collections is currently denied, pending the implementation of an
+ *   authentication/authorization mechanism.
+ * - No schema validation is enforced during this prototyping phase, focusing on access control.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to news articles and restricts write access to authenticated users.
+     * @description Grants public read access to news articles while denying write access.
      * @path /news_articles/{newsArticleId}
      * @allow (get, list): Any user can read news articles.
-     * @allow (create, update, delete): Authenticated users can create, update, and delete news articles.
-     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete news articles.
-     * @principle Allows public read access with authenticated write access.
+     * @deny (create, update, delete): No user can create, update, or delete news articles (pending auth implementation).
+     * @principle Allows public reads, restricts writes.
      */
     match /news_articles/{newsArticleId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
+      allow get, list: if true;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows public read access to work items and restricts write access to authenticated users.
+     * @description Grants public read access to portfolio work items while denying write access.
      * @path /work_items/{workItemId}
      * @allow (get, list): Any user can read work items.
-     * @allow (create, update, delete): Authenticated users can create, update, and delete work items.
-     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete work items.
-     * @principle Allows public read access with authenticated write access.
+     * @deny (create, update, delete): No user can create, update, or delete work items (pending auth implementation).
+     * @principle Allows public reads, restricts writes.
      */
     match /work_items/{workItemId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
+      allow get, list: if true;
+      allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows public read access to creator items and restricts write access to authenticated users.
+     * @description Grants public read access to creator items while denying write access.
      * @path /creator_items/{creatorItemId}
      * @allow (get, list): Any user can read creator items.
-     * @allow (create, update, delete): Authenticated users can create, update, and delete creator items.
-     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete creator items.
-     * @principle Allows public read access with authenticated write access.
+     * @deny (create, update, delete): No user can create, update, or delete creator items (pending auth implementation).
+     * @principle Allows public reads, restricts writes.
      */
     match /creator_items/{creatorItemId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
-    }
-
-    // Helper function to check if the user is signed in
-    function isSignedIn() {
-      return request.auth != null;
+      allow get, list: if true;
+      allow create, update, delete: if false;
     }
   }
 }

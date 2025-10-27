@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 
@@ -8,10 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { ExternalLink } from '@/components/external-link';
 
-export const metadata: Metadata = {
-  title: 'クリエイター',
-  description: '私たちは、才能あふれるクリエイターの活動を支援しています。',
-};
+// export const metadata: Metadata = {
+//   title: 'クリエイター',
+//   description: '私たちは、才能あふれるクリエイターの活動を支援しています。',
+// };
 
 export default function CreatorsPage() {
   const creators: CreatorItem[] = creatorItemsData;

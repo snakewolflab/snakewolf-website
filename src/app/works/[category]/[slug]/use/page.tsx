@@ -1,7 +1,9 @@
 
+'use client';
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
 import Image from 'next/image';
 
@@ -50,25 +52,27 @@ type Props = {
   };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const item = workItems.find((w) => w.slug === params.slug);
+// Metadata can't be generated in a client component.
+// We'll keep this commented for now or move it to a parent layout/page if needed.
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+//   const item = workItems.find((w) => w.slug === params.slug);
 
-  if (!item) {
-    return { title: 'Not Found' };
-  }
-  const ctaText = item.category === 'App' ? 'を入手' : 'をプレイ';
-  return {
-    title: `${item.title}${ctaText}`,
-    description: `${item.title} の配信プラットフォーム一覧です。`,
-  };
-}
+//   if (!item) {
+//     return { title: 'Not Found' };
+//   }
+//   const ctaText = item.category === 'App' ? 'を入手' : 'をプレイ';
+//   return {
+//     title: `${item.title}${ctaText}`,
+//     description: `${item.title} の配信プラットフォーム一覧です。`,
+//   };
+// }
 
-export function generateStaticParams() {
-    return workItems.map((item) => ({
-      category: item.category.toLowerCase() + 's',
-      slug: item.slug,
-    }));
-}
+// export function generateStaticParams() {
+//     return workItems.map((item) => ({
+//       category: item.category.toLowerCase() + 's',
+//       slug: item.slug,
+//     }));
+// }
 
 
 export default function UsePage({ params }: Props) {

@@ -5,11 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const GITHUB_IMAGE_BASE_URL = 'https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/images/';
+const GITHUB_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/';
 
-export function getGitHubImageUrl(imageId: string | undefined | null): string {
+export function getGitHubImageUrl(imageId: string | undefined | null, slug?: string | undefined | null): string {
   if (!imageId) {
     return '';
   }
-  return `${GITHUB_IMAGE_BASE_URL}${imageId}`;
+  if (slug) {
+    return `${GITHUB_ASSETS_BASE_URL}${slug}/${imageId}`;
+  }
+  return `${GITHUB_ASSETS_BASE_URL}${imageId}`;
 }

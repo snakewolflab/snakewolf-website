@@ -4,15 +4,28 @@ import Image from 'next/image';
 import Favicon from '@/app/favicon.png';
 
 export function Footer() {
+  const footerLinks = [
+    { href: "/terms", label: "利用規約" },
+    { href: "/privacy", label: "プライバシーポリシー" },
+    { href: "/defamation", label: "誹謗中傷について" },
+  ];
+
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
             <Image src={Favicon} alt="SnakeWolf Logo" width={24} height={24} />
             <span className="font-headline font-bold text-lg">SnakeWolf</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            {footerLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-primary transition-colors">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <p className="text-sm text-muted-foreground text-center md:text-right">
             &copy; {new Date().getFullYear()} SnakeWolf. All Rights Reserved.
           </p>
         </div>

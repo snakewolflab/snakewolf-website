@@ -152,7 +152,7 @@ export const workItems: WorkItem[] = [
     platforms: [
         { name: "iOS", url: "#" },
         { name: "Android", url: "https://play.google.com/store" },
-        { name: "Web", url: "https://example.com" }
+        { name: "Web", url: "#" }
     ],
     imageId: "work-pixel-painters",
     galleryImageIds: ["work-pixel-painters", "work-cosmic-explorer", "creator-alpha"],
@@ -163,17 +163,17 @@ export const creatorItems: CreatorItem[] = [
   {
     id: 1,
     name: "Alpha Creative",
-    description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。キャラクターデザインやコンセプトアートを手掛ける。",
+    description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。FANMEにて限定コンテンツを公開中。",
     imageId: "creator-alpha",
-    url: "https://twitter.com",
+    url: "https://fanme.jp/alpha-creative",
     tags: ["イラスト", "キャラクターデザイン"]
   },
   {
     id: 2,
     name: "Beta Illustrations",
-    description: "ゲーム実況を中心に活動する人気ストリーマー。視聴者との一体感あふれる配信が持ち味。",
+    description: "ゲーム実況を中心に活動する人気ストリーマー。FANMEにて会員限定配信やブログを更新中。",
     imageId: "creator-beta",
-    url: "https://www.twitch.tv/example",
+    url: "https://fanme.jp/beta-illustrations",
     tags: ["ストリーマー", "ゲーム実況"]
   },
 ];

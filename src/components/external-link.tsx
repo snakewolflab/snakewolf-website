@@ -29,7 +29,7 @@ const allowedDomains = [
   'play.google.com',
   'apps.apple.com',
   'epicgames.com',
-  'example.com',
+  'fanme.jp',
 ];
 
 interface ExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -45,7 +45,9 @@ export function ExternalLink({ href, children, className, ...props }: ExternalLi
       const hostname = new URL(url).hostname;
       // Allow relative paths (same origin)
       if (!hostname) return true;
-      return allowedDomains.some(domain => hostname === domain || hostname.endsWith(`.${domain}`));
+      // Allow www. subdomain
+      const rootHostname = hostname.startsWith('www.') ? hostname.substring(4) : hostname;
+      return allowedDomains.some(domain => rootHostname === domain);
     } catch (e) {
       // Invalid URL, treat as not allowed
       return false;

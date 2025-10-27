@@ -27,8 +27,14 @@ export default function LettersPage() {
         <div>
             <h2 className="font-headline flex items-center gap-2"><Mail />封筒によるお知らせ</h2>
             <p>当プロジェクトから封筒によりお知らせを送付する場合がございます。それぞれの内容は以下の通りです。</p>
-            <ul className="list-disc list-inside">
-                <li>白色の封筒：通常のお知らせ</li>
+            <ul className="list-disc list-inside space-y-1">
+                <li><span className="font-bold">白色の封筒：</span>通常のお知らせ</li>
+                <li><span className="font-bold text-blue-500">水色の封筒：</span>社員・会員向け (例：株式総会のお知らせ)</li>
+                <li><span className="font-bold text-yellow-500">黄色の封筒：</span>警告レベル1 (誹謗中傷の警告1回目)</li>
+                <li><span className="font-bold text-red-600">赤色の封筒：</span>アカウントBANなどの通達 (BANなど)</li>
+                <li><span className="font-bold text-purple-600">紫色の封筒：</span>警告レベル2・緊急レベル1 (例：誹謗中傷の警告2回目)</li>
+                <li><span className="font-bold"><span className="text-purple-600">紫</span>＆<span className="text-red-600">赤</span>の封筒：</span>警告レベル3・緊急レベル2 (例：誹謗中傷の最終警告)</li>
+                <li><span className="font-bold">黒色の封筒：</span>緊急レベルMAX (例：情報開示請求)</li>
             </ul>
         </div>
 

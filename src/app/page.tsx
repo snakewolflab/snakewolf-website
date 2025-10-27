@@ -1,26 +1,43 @@
-
 'use client';
 
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper, Wrench } from "lucide-react";
+import { useEffect, useState, useMemo } from 'react';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
 
-import { newsArticlesData } from "@/lib/data";
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 
 import Snewol1 from '../character/1.png';
 import Wallpaper from './wallpaper.png';
-
+import type { NewsArticle, MediaItem, Tag } from "@/lib/firebase-data";
 
 export default function HomePage() {
-  const latestNews = [...newsArticlesData]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
+  const firestore = useFirestore();
+
+  const newsQuery = useMemoFirebase(() => 
+    query(collection(firestore, 'news_articles'), orderBy('publicationDate', 'desc'), limit(3)),
+    [firestore]
+  );
+  const { data: latestNews, isLoading: newsLoading } = useCollection<NewsArticle>(newsQuery);
+  
+  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
+  const { data: tags, isLoading: tagsLoading } = useCollection<Tag>(useMemoFirebase(() => collection(firestore, 'tags'), [firestore]));
+
+  const getArticleTags = (article: NewsArticle) => {
+    if (!article.tagIds || !tags) return [];
+    return tags.filter(tag => article.tagIds.includes(tag.id));
+  };
+  
+  const getMediaUrl = (imageId: string | undefined) => {
+      if(!imageId || !mediaItems) return '';
+      return mediaItems.find(m => m.id === imageId)?.fileUrl ?? '';
+  }
 
   return (
     <div className="flex flex-col">
@@ -74,16 +91,19 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {latestNews.length === 0 ? (
+            {newsLoading ? (
+                <p className="text-center col-span-full text-muted-foreground">読み込み中...</p>
+            ) : latestNews && latestNews.length === 0 ? (
               <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
-            ) : latestNews.map((article) => {
-              const articleImage = PlaceHolderImages.find(p => p.id === article.imageId);
+            ) : latestNews?.map((article) => {
+              const articleImage = mediaItems?.find(p => p.id === article.imageId);
+              const articleTags = getArticleTags(article);
               return (
                 <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                   {articleImage && (
                     <div className="relative h-48 w-full">
                       <Image
-                        src={articleImage.imageUrl}
+                        src={getMediaUrl(article.imageId)}
                         alt={article.title}
                         fill
                         className="object-cover"
@@ -94,7 +114,7 @@ export default function HomePage() {
                   <CardHeader>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Newspaper className="h-4 w-4" />
-                      <span>{article.date}</span>
+                      <span>{new Date(article.publicationDate).toLocaleDateString('ja-JP')}</span>
                     </div>
                     <CardTitle className="font-headline text-xl leading-snug pt-2">
                       <Link href={`/news/${article.slug}`} className="hover:text-primary transition-colors">
@@ -103,10 +123,10 @@ export default function HomePage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                    <p className="text-muted-foreground line-clamp-3">{article.summary}</p>
+                    <p className="text-muted-foreground line-clamp-3">{article.contentSummary}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {article.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      {articleTags.map((tag) => (
+                        <Badge key={tag.id} variant="secondary">{tag.name}</Badge>
                       ))}
                     </div>
                   </CardContent>

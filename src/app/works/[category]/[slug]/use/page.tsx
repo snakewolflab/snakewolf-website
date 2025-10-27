@@ -1,13 +1,16 @@
-
 'use client';
 
-import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
-import { workItemsData, type WorkItem } from '@/lib/data';
+import { collection, query, where, limit } from 'firebase/firestore';
+
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { WorkItem } from '@/lib/firebase-data';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Platform icons mapping
 const platformIcons: { [key: string]: React.ElementType } = {
@@ -41,42 +44,34 @@ function Gamepad(props: any) {
     );
 }
 
-type Props = {
-  params: {
-    category: 'apps' | 'games';
-    slug: string;
-  };
-};
-
-// export async function generateMetadata(
-//   { params }: Props,
-//   parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//   const item = workItemsData.find(i => i.slug === params.slug);
-
-//   if (!item) {
-//     return {
-//       title: '見つかりません',
-//     };
-//   }
-
-//   const ctaText = item.category === 'App' ? 'を入手する' : 'をプレイする';
-//   return {
-//     title: `${item.title} ${ctaText}`,
-//     description: `${item.title}の利用・ダウンロードはこちらから。`,
-//   };
-// }
-
-// export async function generateStaticParams() {
-//   return workItemsData.map((item) => ({
-//     category: `${item.category.toLowerCase()}s`,
-//     slug: item.slug,
-//   }));
-// }
-
 export default function UsePage() {
   const params = useParams<{ category: 'apps' | 'games'; slug: string }>();
-  const item = workItemsData.find(i => i.slug === params.slug);
+  const firestore = useFirestore();
+
+  const itemQuery = useMemoFirebase(() => 
+    query(collection(firestore, 'works'), where('slug', '==', params.slug), limit(1)),
+    [firestore, params.slug]
+  );
+  const { data: items, isLoading } = useCollection<WorkItem>(itemQuery);
+  const item = items?.[0];
+
+
+  if(isLoading) {
+      return (
+        <div className="container mx-auto px-4 py-16 max-w-2xl">
+            <Skeleton className="h-10 w-36 mb-8" />
+            <header className="text-center mb-12 space-y-4">
+                <Skeleton className="h-10 w-3/4 mx-auto" />
+                <Skeleton className="h-6 w-1/2 mx-auto" />
+            </header>
+            <div className="grid grid-cols-1 gap-4">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+            </div>
+        </div>
+      )
+  }
 
   if (!item) {
     notFound();

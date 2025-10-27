@@ -1,61 +1,57 @@
-
 'use client';
 
-import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
+import { collection, query, where, limit } from 'firebase/firestore';
 
-import { workItemsData, type WorkItem } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
-type Props = {
-  params: {
-    category: 'apps' | 'games';
-    slug: string;
-  };
-};
-
-// export async function generateMetadata(
-//   { params }: Props,
-//   parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//   const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
-
-//   if (!item) {
-//     return {
-//       title: '作品が見つかりません',
-//     };
-//   }
-
-//   return {
-//     title: item.title,
-//     description: item.description,
-//   };
-// }
-
-// export async function generateStaticParams() {
-//   return workItemsData.map((item) => ({
-//     category: `${item.category.toLowerCase()}s`,
-//     slug: item.slug,
-//   }));
-// }
 
 export default function WorkDetailPage() {
   const params = useParams<{ category: 'apps' | 'games'; slug: string }>();
-  const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
+  const firestore = useFirestore();
+
+  const itemQuery = useMemoFirebase(() => 
+    query(collection(firestore, 'works'), where('slug', '==', params.slug), where('category', '==', params.category === 'apps' ? 'App' : 'Game'), limit(1)),
+    [firestore, params.slug, params.category]
+  );
+
+  const { data: items, isLoading: itemLoading } = useCollection<WorkItem>(itemQuery);
+  const item = items?.[0];
+
+  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
+
+  const isLoading = itemLoading || mediaLoading;
+  
+  if(isLoading) {
+      return (
+        <div className="container mx-auto px-4 py-16 max-w-5xl">
+            <Skeleton className="h-10 w-48 mb-8" />
+            <div className="mb-8 space-y-4">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-6 w-1/2" />
+            </div>
+             <Skeleton className="w-full aspect-video mb-8" />
+             <Separator className="my-8" />
+             <div className="space-y-4">
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-6 w-5/6" />
+             </div>
+        </div>
+      );
+  }
 
   if (!item) {
     notFound();
@@ -66,7 +62,7 @@ export default function WorkDetailPage() {
   const Icon = item.category === 'App' ? AppWindow : Gamepad2;
   const ctaText = item.category === 'App' ? 'アプリを入手する' : 'ゲームをプレイする';
 
-  const galleryImages = item.galleryImageIds.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean);
+  const galleryImages = item.galleryImageIds?.map(id => mediaItems?.find(p => p.id === id)).filter(Boolean) as MediaItem[];
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-5xl">
@@ -105,7 +101,7 @@ export default function WorkDetailPage() {
         </div>
       </header>
 
-      {galleryImages.length > 0 && (
+      {galleryImages && galleryImages.length > 0 && (
         <Carousel className="w-full mb-8" opts={{ loop: true }}>
           <CarouselContent>
             {galleryImages.map((img, index) => (
@@ -115,7 +111,7 @@ export default function WorkDetailPage() {
                     <CardContent className="flex aspect-video items-center justify-center p-0">
                        {img && (
                          <Image
-                          src={img.imageUrl}
+                          src={img.fileUrl}
                           alt={`${item.title} gallery image ${index + 1}`}
                           fill
                           className="object-cover"

@@ -1,15 +1,17 @@
-
 'use client';
 
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { collection } from 'firebase/firestore';
 
-import { creatorItemsData, type CreatorItem } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { CreatorItem, MediaItem } from '@/lib/firebase-data';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { ExternalLink } from '@/components/external-link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // export const metadata: Metadata = {
 //   title: 'クリエイター',
@@ -17,8 +19,13 @@ import { ExternalLink } from '@/components/external-link';
 // };
 
 export default function CreatorsPage() {
-  const creators: CreatorItem[] = creatorItemsData;
+  const firestore = useFirestore();
+
+  const { data: creators, isLoading: creatorsLoading } = useCollection<CreatorItem>(useMemoFirebase(() => collection(firestore, 'creators'), [firestore]));
+  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
   
+  const isLoading = creatorsLoading || mediaLoading;
+
   return (
     <div className="container mx-auto px-4 py-16">
       <header className="text-center mb-12">
@@ -29,10 +36,29 @@ export default function CreatorsPage() {
       </header>
       
       <div className="grid gap-12 md:grid-cols-2">
-        {creators.length === 0 ? (
+        {isLoading ? (
+          Array.from({ length: 2 }).map((_, i) => (
+            <Card key={i} className="overflow-hidden">
+              <div className="md:flex">
+                <div className="md:w-1/3 p-4">
+                  <Skeleton className="aspect-square rounded-full" />
+                </div>
+                <div className="md:w-2/3 p-4 space-y-4">
+                  <Skeleton className="h-8 w-3/4" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-6 w-16" />
+                    <Skeleton className="h-6 w-20" />
+                  </div>
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-6 w-24" />
+                </div>
+              </div>
+            </Card>
+          ))
+        ) : creators && creators.length === 0 ? (
           <p className='text-center col-span-2 text-muted-foreground'>クリエイターがいません。</p>
-        ) : creators.map((item) => {
-          const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
+        ) : creators?.map((item) => {
+          const itemImage = mediaItems?.find(p => p.id === item.imageId);
           return (
             <Card key={item.id} className="overflow-hidden group">
                 <div className="md:flex">
@@ -40,7 +66,7 @@ export default function CreatorsPage() {
                         {itemImage && (
                         <div className="relative aspect-square">
                             <Image
-                                src={itemImage.imageUrl}
+                                src={itemImage.fileUrl}
                                 alt={item.name}
                                 fill
                                 className="object-cover rounded-full border-4 border-primary/20 group-hover:scale-105 transition-transform duration-300"

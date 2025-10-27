@@ -1,16 +1,18 @@
-
 'use client';
 
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Gamepad2 } from 'lucide-react';
+import { collection, query, where } from 'firebase/firestore';
 
-import { workItemsData, type WorkItem } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // export const metadata: Metadata = {
 //   title: 'ゲーム実績',
@@ -18,7 +20,16 @@ import { Button } from '@/components/ui/button';
 // };
 
 export default function GamesPage() {
-  const gameWorks = workItemsData.filter(item => item.category === 'Game');
+  const firestore = useFirestore();
+
+  const worksQuery = useMemoFirebase(() => 
+    query(collection(firestore, 'works'), where('category', '==', 'Game')),
+    [firestore]
+  );
+  const { data: gameWorks, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
+  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
+
+  const isLoading = worksLoading || mediaLoading;
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -30,17 +41,37 @@ export default function GamesPage() {
       </header>
       
       <div className="grid gap-8 md:grid-cols-2">
-        {gameWorks.length === 0 ? (
+        {isLoading ? (
+            Array.from({length: 2}).map((_, i) => (
+                <Card key={i} className="flex flex-col overflow-hidden">
+                    <Skeleton className="h-64 w-full" />
+                    <CardHeader>
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-8 w-3/4 mt-2" />
+                    </CardHeader>
+                    <CardContent className="flex-grow flex flex-col">
+                        <Skeleton className="h-12 w-full flex-grow" />
+                        <div className="mt-4 flex flex-wrap items-center justify-between">
+                            <div className='flex flex-wrap gap-2'>
+                                <Skeleton className="h-6 w-20" />
+                                <Skeleton className="h-6 w-24" />
+                            </div>
+                            <Skeleton className="h-8 w-28 mt-4 sm:mt-0" />
+                        </div>
+                    </CardContent>
+                </Card>
+            ))
+        ) : gameWorks && gameWorks.length === 0 ? (
           <p className="text-center col-span-full text-muted-foreground">ゲームがありません。</p>
-        ) : gameWorks.map((item) => {
-          const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
+        ) : gameWorks?.map((item) => {
+          const itemImage = mediaItems?.find(p => p.id === item.imageId);
           return (
             <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {itemImage && (
                  <Link href={`/works/games/${item.slug}`}>
                     <div className="relative h-64 w-full">
                     <Image
-                        src={itemImage.imageUrl}
+                        src={itemImage.fileUrl}
                         alt={item.title}
                         fill
                         className="object-cover"

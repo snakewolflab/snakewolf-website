@@ -45,6 +45,7 @@ export function WorksAdmin({ category }: WorksAdminProps) {
 
   const sortedWorks = useMemo(() => {
     if (!works) return [];
+    // Firestoreの複合インデックスを回避するため、クライアントサイドでソート
     return [...works].sort((a, b) => a.title.localeCompare(b.title));
   }, [works]);
 

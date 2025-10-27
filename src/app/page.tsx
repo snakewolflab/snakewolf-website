@@ -145,7 +145,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center">
           <div className="relative w-32 h-32 mx-auto mb-4">
               <Image
-                src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/suneuru-kun/1.png"
+                src="https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/character/1.png"
                 alt="スネウル君"
                 fill
                 className="object-contain"

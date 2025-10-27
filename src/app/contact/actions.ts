@@ -40,6 +40,8 @@ export async function submitContactForm(
 
   if (discordWebhookUrl) {
     const discordPayload = {
+      content: "新しいお問い合わせが来ています",
+      username: "お問い合わせフォーム",
       embeds: [
         {
           title: "ウェブサイトから新しいお問い合わせ",

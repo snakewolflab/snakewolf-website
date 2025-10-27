@@ -19,7 +19,6 @@ const navLinks = [
   { href: "/works/games", label: "ゲーム実績" },
   { href: "/creators", label: "クリエイター" },
   { href: "/news", label: "ニュース" },
-  { href: "/admin/news", label: "管理画面" },
 ];
 
 export function Header() {

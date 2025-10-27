@@ -2,8 +2,9 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, orderBy, query, Firestore } from 'firebase/firestore';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, orderBy, query } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
+import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { type NewsArticle } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,8 +35,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { LoadingScreen } from '@/components/layout/loading-screen';
 
 export default function NewsAdminPage() {
+  useAuthRedirect();
+  const { user, isUserLoading } = useUser();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -77,6 +81,10 @@ export default function NewsAdminPage() {
     setDialogOpen(false);
     setSelectedArticle(null);
   };
+  
+  if (isUserLoading || !user) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-16">

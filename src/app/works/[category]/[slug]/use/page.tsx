@@ -13,10 +13,9 @@ import { cn } from '@/lib/utils';
 
 // Platform icons mapping
 const platformIcons: { [key: string]: React.ElementType } = {
-  'App Store': Smartphone,
-  'Google Play': Smartphone,
-  'Steam': Server,
-  'Epic Games Store': Server,
+  'iOS': Smartphone,
+  'Android': Smartphone,
+  'PC': Server,
   'Console': Gamepad,
   'Web': Globe,
 };

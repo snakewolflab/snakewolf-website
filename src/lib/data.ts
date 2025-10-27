@@ -165,7 +165,7 @@ export const creatorItems: CreatorItem[] = [
     name: "Alpha Creative",
     description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。FANMEにて限定コンテンツを公開中。",
     imageId: "creator-alpha",
-    url: "https://fanme.link/alpha-creative",
+    url: "https://example.com",
     tags: ["イラスト", "キャラクターデザイン"]
   },
   {

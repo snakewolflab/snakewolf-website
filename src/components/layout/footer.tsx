@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Favicon from '@/app/favicon.png';
+import { Mail } from 'lucide-react';
 
 export function Footer() {
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
@@ -17,6 +18,8 @@ export function Footer() {
     { href: "/terms", label: "利用規約" },
     { href: "/privacy", label: "プライバシーポリシー" },
     { href: "/defamation", label: "誹謗中傷について" },
+    { href: "/request", label: "皆さんへのお願い" },
+    { href: "/letters", label: "書簡について", icon: Mail },
   ];
 
   return (
@@ -30,7 +33,8 @@ export function Footer() {
           <div className="flex flex-col gap-4 items-center">
             <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
               {footerLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="hover:text-primary transition-colors">
+                <Link key={link.href} href={link.href} className="flex items-center hover:text-primary transition-colors">
+                  {link.icon && <link.icon className="mr-1.5 h-4 w-4" />}
                   {link.label}
                 </Link>
               ))}

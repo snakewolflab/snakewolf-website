@@ -1,16 +1,10 @@
-
-'use client';
-
-import { notFound, useParams } from 'next/navigation';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
-
-import { type WorkItem } from '@/lib/data';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { workItemsData, type WorkItem } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
 
 // Platform icons mapping
 const platformIcons: { [key: string]: React.ElementType } = {
@@ -44,37 +38,41 @@ function Gamepad(props: any) {
     );
 }
 
-export default function UsePage() {
-  const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  const category = Array.isArray(params.category) ? params.category[0] : params.category;
-  
-  const firestore = useFirestore();
+type Props = {
+  params: {
+    category: 'apps' | 'games';
+    slug: string;
+  };
+};
 
-  const itemQuery = useMemoFirebase(() => {
-    if (!firestore || !slug) return null;
-    return query(collection(firestore, 'work_items'), where('slug', '==', slug), limit(1));
-  }, [firestore, slug]);
-  
-  const { data: items, isLoading } = useCollection<WorkItem>(itemQuery);
-  const item = items?.[0];
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const item = workItemsData.find(i => i.slug === params.slug);
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-16 max-w-2xl">
-        <div className="mb-8"><Skeleton className="h-10 w-40" /></div>
-        <header className="text-center mb-12">
-            <Skeleton className="h-10 w-3/4 mx-auto mb-4" />
-            <Skeleton className="h-6 w-1/2 mx-auto" />
-        </header>
-        <div className="grid grid-cols-1 gap-4">
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-        </div>
-      </div>
-    );
+  if (!item) {
+    return {
+      title: '見つかりません',
+    };
   }
+
+  const ctaText = item.category === 'App' ? 'を入手する' : 'をプレイする';
+  return {
+    title: `${item.title} ${ctaText}`,
+    description: `${item.title}の利用・ダウンロードはこちらから。`,
+  };
+}
+
+export async function generateStaticParams() {
+  return workItemsData.map((item) => ({
+    category: `${item.category.toLowerCase()}s`,
+    slug: item.slug,
+  }));
+}
+
+export default function UsePage({ params }: Props) {
+  const item = workItemsData.find(i => i.slug === params.slug);
 
   if (!item) {
     notFound();
@@ -86,7 +84,7 @@ export default function UsePage() {
     <div className="container mx-auto px-4 py-16 max-w-2xl">
        <div className="mb-8">
         <Button asChild variant="ghost">
-          <Link href={`/works/${category}/${slug}`}>
+          <Link href={`/works/${params.category}/${params.slug}`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             詳細に戻る
           </Link>

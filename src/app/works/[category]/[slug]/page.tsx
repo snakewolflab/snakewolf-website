@@ -1,14 +1,10 @@
-
-'use client';
-
-import { notFound, useParams } from 'next/navigation';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
 
-import { type WorkItem } from '@/lib/data';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { workItemsData, type WorkItem } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,53 +17,43 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 
-export default function WorkDetailPage() {
-  const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  const categoryParam = Array.isArray(params.category) ? params.category[0] : params.category;
-  
-  const firestore = useFirestore();
-
-  const itemQuery = useMemoFirebase(() => {
-    if (!firestore || !slug) return null;
-    return query(collection(firestore, 'work_items'), where('slug', '==', slug), limit(1));
-  }, [firestore, slug]);
-  
-  const { data: items, isLoading } = useCollection<WorkItem>(itemQuery);
-  const item = items?.[0];
-
-  const categoryMap = {
-    apps: 'App',
-    games: 'Game',
+type Props = {
+  params: {
+    category: 'apps' | 'games';
+    slug: string;
   };
-  const category = categoryMap[categoryParam as keyof typeof categoryMap] || '';
+};
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-16 max-w-5xl">
-        <div className="mb-8"><Skeleton className="h-10 w-56" /></div>
-        <header className="mb-8">
-            <Skeleton className="h-6 w-24 mb-2" />
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <Skeleton className="h-12 w-3/5" />
-                <Skeleton className="h-12 w-48" />
-            </div>
-            <div className="mt-4"><Skeleton className="h-6 w-48" /></div>
-        </header>
-        <Skeleton className="w-full aspect-video mb-8" />
-        <Separator className="my-8" />
-        <div className="space-y-4">
-            <Skeleton className="h-6 w-full" />
-            <Skeleton className="h-6 w-full" />
-            <Skeleton className="h-6 w-2/3" />
-        </div>
-      </div>
-    );
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
+
+  if (!item) {
+    return {
+      title: '作品が見つかりません',
+    };
   }
 
-  if (!item || item.category.toLowerCase() !== categoryParam.slice(0, -1)) {
+  return {
+    title: item.title,
+    description: item.description,
+  };
+}
+
+export async function generateStaticParams() {
+  return workItemsData.map((item) => ({
+    category: `${item.category.toLowerCase()}s`,
+    slug: item.slug,
+  }));
+}
+
+export default function WorkDetailPage({ params }: Props) {
+  const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
+
+  if (!item) {
     notFound();
   }
 
@@ -97,7 +83,7 @@ export default function WorkDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">{item.title}</h1>
             <Button asChild size="lg">
-                <Link href={`/works/${categoryParam}/${params.slug}/use`}>
+                <Link href={`/works/${params.category}/${params.slug}/use`}>
                     <Download className="mr-2 h-5 w-5" />
                     {ctaText}
                 </Link>

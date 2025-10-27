@@ -1,34 +1,23 @@
-
-'use client';
-
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper, Wrench } from "lucide-react";
-import { collection, query, orderBy, limit } from 'firebase/firestore';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { type NewsArticle } from '@/lib/data';
+import { newsArticlesData } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import Snewol1 from '../character/1.png';
 import Wallpaper from './wallpaper.png';
 
 
 export default function HomePage() {
-  const firestore = useFirestore();
-
-  const latestNewsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'news_articles'), orderBy('date', 'desc'), limit(3));
-  }, [firestore]);
-
-  const { data: latestNews, isLoading: isLoadingNews } = useCollection<NewsArticle>(latestNewsQuery);
+  const latestNews = [...newsArticlesData]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
   return (
     <div className="flex flex-col">
@@ -81,69 +70,47 @@ export default function HomePage() {
               </Link>
             </Button>
           </div>
-          {isLoadingNews && (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(3)].map((_, i) => (
-                <Card key={i} className="flex flex-col overflow-hidden">
-                  <Skeleton className="h-48 w-full" />
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {latestNews.length === 0 ? (
+              <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
+            ) : latestNews.map((article) => {
+              const articleImage = PlaceHolderImages.find(p => p.id === article.imageId);
+              return (
+                <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                  {articleImage && (
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={articleImage.imageUrl}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={articleImage.imageHint}
+                      />
+                    </div>
+                  )}
                   <CardHeader>
-                      <Skeleton className="h-5 w-32 mb-2" />
-                      <Skeleton className="h-6 w-full" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Newspaper className="h-4 w-4" />
+                      <span>{article.date}</span>
+                    </div>
+                    <CardTitle className="font-headline text-xl leading-snug pt-2">
+                      <Link href={`/news/${article.slug}`} className="hover:text-primary transition-colors">
+                        {article.title}
+                      </Link>
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow">
-                      <Skeleton className="h-4 w-full mb-2" />
-                      <Skeleton className="h-4 w-5/6 mb-4" />
-                      <div className="flex flex-wrap gap-2">
-                          <Skeleton className="h-6 w-16" />
-                      </div>
+                    <p className="text-muted-foreground line-clamp-3">{article.summary}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {article.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          )}
-          {!isLoadingNews && latestNews && (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {latestNews.length === 0 ? (
-                <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
-              ) : latestNews.map((article) => {
-                const articleImage = PlaceHolderImages.find(p => p.id === article.imageId);
-                return (
-                  <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                    {articleImage ? (
-                      <div className="relative h-48 w-full">
-                        <Image
-                          src={articleImage.imageUrl}
-                          alt={article.title}
-                          fill
-                          className="object-cover"
-                          data-ai-hint={articleImage.imageHint}
-                        />
-                      </div>
-                    ) : <Skeleton className="h-48 w-full" />}
-                    <CardHeader>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Newspaper className="h-4 w-4" />
-                        <span>{article.date}</span>
-                      </div>
-                      <CardTitle className="font-headline text-xl leading-snug pt-2">
-                        <Link href={`/news/${article.slug}`} className="hover:text-primary transition-colors">
-                          {article.title}
-                        </Link>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <p className="text-muted-foreground line-clamp-3">{article.summary}</p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {article.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary">{tag}</Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </div>
       </section>
 

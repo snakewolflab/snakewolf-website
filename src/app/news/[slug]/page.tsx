@@ -1,65 +1,46 @@
-
-'use client';
-
-import { notFound, useParams } from 'next/navigation';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Tag, ArrowLeft } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
 
-import { type NewsArticle } from '@/lib/data';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { newsArticlesData, type NewsArticle } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ShareMenu } from './_components/share-button';
-import { Skeleton } from '@/components/ui/skeleton';
 
-export default function NewsArticlePage() {
-  const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
-  const firestore = useFirestore();
+type Props = {
+  params: { slug: string };
+};
 
-  const articleQuery = useMemoFirebase(() => {
-    if (!firestore || !slug) return null;
-    return query(collection(firestore, 'news_articles'), where('slug', '==', slug), limit(1));
-  }, [firestore, slug]);
-  
-  const { data: articles, isLoading } = useCollection<NewsArticle>(articleQuery);
-  const article = articles?.[0];
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const article = newsArticlesData.find((a) => a.slug === params.slug);
 
-  if (isLoading) {
-    return (
-        <article className="container mx-auto px-4 py-16 max-w-4xl">
-            <div className="mb-8">
-              <Skeleton className="h-10 w-48" />
-            </div>
-
-            <header className="mb-8">
-              <Skeleton className="h-12 w-full mb-4" />
-              <Skeleton className="h-8 w-3/4 mb-6" />
-              <div className="flex flex-wrap items-center justify-between gap-y-4">
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                      <Skeleton className="h-6 w-32" />
-                      <Skeleton className="h-6 w-48" />
-                  </div>
-                  <Skeleton className="h-10 w-36" />
-              </div>
-            </header>
-
-            <Skeleton className="relative h-64 md:h-96 w-full rounded-lg mb-8" />
-            
-            <Separator className="my-8" />
-
-            <div className="space-y-4">
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-2/3" />
-            </div>
-        </article>
-    );
+  if (!article) {
+    return {
+      title: '記事が見つかりません',
+    };
   }
+
+  return {
+    title: article.title,
+    description: article.summary,
+  };
+}
+
+export async function generateStaticParams() {
+  return newsArticlesData.map((article) => ({
+    slug: article.slug,
+  }));
+}
+
+export default function NewsArticlePage({ params }: Props) {
+  const article = newsArticlesData.find((a) => a.slug === params.slug);
 
   if (!article) {
     notFound();

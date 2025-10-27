@@ -1,28 +1,21 @@
-
-'use client';
-
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Gamepad2 } from 'lucide-react';
-import { collection, query, where, orderBy } from 'firebase/firestore';
 
-import { type WorkItem } from '@/lib/data';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { workItemsData, type WorkItem } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+
+export const metadata: Metadata = {
+  title: 'ゲーム実績',
+  description: '私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。',
+};
 
 export default function GamesPage() {
-  const firestore = useFirestore();
-
-  const gamesQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'work_items'), where('category', '==', 'Game'), orderBy('title', 'asc'));
-  }, [firestore]);
-
-  const { data: gameWorks, isLoading } = useCollection<WorkItem>(gamesQuery);
+  const gameWorks = workItemsData.filter(item => item.category === 'Game');
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -32,85 +25,57 @@ export default function GamesPage() {
           私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。
         </p>
       </header>
-
-      {isLoading && (
-        <div className="grid gap-8 md:grid-cols-2">
-            {[...Array(2)].map((_, i) => (
-                <Card key={i} className="flex flex-col overflow-hidden">
-                    <Skeleton className="h-64 w-full" />
-                    <CardHeader>
-                        <Skeleton className="h-5 w-24 mb-2" />
-                        <Skeleton className="h-8 w-4/5" />
-                    </CardHeader>
-                    <CardContent className="flex-grow flex flex-col">
-                        <div className="space-y-2 flex-grow">
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-2/3" />
-                        </div>
-                        <div className="mt-4 flex flex-wrap items-center justify-between">
-                            <div className="flex flex-wrap gap-2">
-                                <Skeleton className="h-6 w-16" />
-                            </div>
-                            <Skeleton className="h-10 w-32" />
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
-        </div>
-      )}
       
-      {!isLoading && gameWorks && (
-        <div className="grid gap-8 md:grid-cols-2">
-          {gameWorks.length === 0 ? (
-            <p className="text-center col-span-full text-muted-foreground">ゲームがありません。</p>
-          ) : gameWorks.map((item) => {
-            const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
-            return (
-              <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                {itemImage ? (
-                   <Link href={`/works/games/${item.slug}`}>
-                      <div className="relative h-64 w-full">
-                      <Image
-                          src={itemImage.imageUrl}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                          data-ai-hint={itemImage.imageHint}
-                      />
-                      </div>
-                  </Link>
-                ) : <Skeleton className="h-64 w-full" />}
-                <CardHeader>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Gamepad2 className="h-4 w-4 text-primary" />
-                      <span className='font-bold text-primary'>{item.category}</span>
-                  </div>
-                   <CardTitle className="font-headline text-2xl pt-2">
-                      <Link href={`/works/games/${item.slug}`} className="hover:text-primary transition-colors">
-                          {item.title}
-                      </Link>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col">
-                  <CardDescription className="flex-grow">{item.description}</CardDescription>
-                  <div className="mt-4 flex flex-wrap items-center justify-between">
-                      <div className='flex flex-wrap gap-2'>
-                          {item.platforms.map((platform) => (
-                              <Badge key={platform.name} variant="secondary">{platform.name}</Badge>
-                          ))}
-                      </div>
-                       <Button asChild variant="link" className="mt-4 sm:mt-0">
-                          <Link href={`/works/games/${item.slug}`}>
-                              詳しく見る <ArrowRight className="ml-2" />
-                          </Link>
-                      </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+      <div className="grid gap-8 md:grid-cols-2">
+        {gameWorks.length === 0 ? (
+          <p className="text-center col-span-full text-muted-foreground">ゲームがありません。</p>
+        ) : gameWorks.map((item) => {
+          const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
+          return (
+            <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+              {itemImage && (
+                 <Link href={`/works/games/${item.slug}`}>
+                    <div className="relative h-64 w-full">
+                    <Image
+                        src={itemImage.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={itemImage.imageHint}
+                    />
+                    </div>
+                </Link>
+              )}
+              <CardHeader>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Gamepad2 className="h-4 w-4 text-primary" />
+                    <span className='font-bold text-primary'>{item.category}</span>
+                </div>
+                 <CardTitle className="font-headline text-2xl pt-2">
+                    <Link href={`/works/games/${item.slug}`} className="hover:text-primary transition-colors">
+                        {item.title}
+                    </Link>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex-grow flex flex-col">
+                <CardDescription className="flex-grow">{item.description}</CardDescription>
+                <div className="mt-4 flex flex-wrap items-center justify-between">
+                    <div className='flex flex-wrap gap-2'>
+                        {item.platforms.map((platform) => (
+                            <Badge key={platform.name} variant="secondary">{platform.name}</Badge>
+                        ))}
+                    </div>
+                     <Button asChild variant="link" className="mt-4 sm:mt-0">
+                        <Link href={`/works/games/${item.slug}`}>
+                            詳しく見る <ArrowRight className="ml-2" />
+                        </Link>
+                    </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

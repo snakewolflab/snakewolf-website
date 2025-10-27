@@ -1,14 +1,13 @@
 
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 import { creatorItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { ExternalLink } from '@/components/external-link';
 
 export const metadata: Metadata = {
   title: 'クリエイター',
@@ -55,11 +54,12 @@ export default function CreatorsPage() {
                         </CardHeader>
                         <CardContent className="flex-grow">
                             <CardDescription>{item.description}</CardDescription>
-                            <Button asChild variant="link" className="p-0 mt-4">
-                                <Link href={item.url}>
-                                    活動を見る <ArrowRight className="ml-2" />
-                                </Link>
-                            </Button>
+                            <ExternalLink 
+                                href={item.url}
+                                className="p-0 mt-4 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary underline-offset-4 hover:underline"
+                            >
+                                活動を見る <ArrowRight className="ml-2 h-4 w-4" />
+                            </ExternalLink>
                         </CardContent>
                     </div>
                 </div>

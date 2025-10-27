@@ -165,7 +165,7 @@ export const creatorItems: CreatorItem[] = [
     name: "Alpha Creative",
     description: "美麗なイラストと独特の世界観でファンを魅了するイラストレーター。キャラクターデザインやコンセプトアートを手掛ける。",
     imageId: "creator-alpha",
-    url: "#",
+    url: "https://twitter.com",
     tags: ["イラスト", "キャラクターデザイン"]
   },
   {
@@ -173,7 +173,7 @@ export const creatorItems: CreatorItem[] = [
     name: "Beta Illustrations",
     description: "ゲーム実況を中心に活動する人気ストリーマー。視聴者との一体感あふれる配信が持ち味。",
     imageId: "creator-beta",
-    url: "#",
+    url: "https://www.twitch.tv/example",
     tags: ["ストリーマー", "ゲーム実況"]
   },
 ];

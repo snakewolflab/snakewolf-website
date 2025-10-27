@@ -34,9 +34,9 @@ export default function NewsPage() {
 
     const lowercasedTerm = searchTerm.toLowerCase();
     return articles.filter(article =>
-      article.title.toLowerCase().includes(lowercasedTerm) ||
-      article.contentSummary.toLowerCase().includes(lowercasedTerm) ||
-      article.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm))
+      (article.title && article.title.toLowerCase().includes(lowercasedTerm)) ||
+      (article.contentSummary && article.contentSummary.toLowerCase().includes(lowercasedTerm)) ||
+      (article.tags && article.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm)))
     );
   }, [articles, searchTerm]);
 

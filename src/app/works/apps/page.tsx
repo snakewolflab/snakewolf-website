@@ -35,8 +35,8 @@ export default function AppsPage() {
 
     const lowercasedTerm = searchTerm.toLowerCase();
     return appWorks.filter(item =>
-      item.title.toLowerCase().includes(lowercasedTerm) ||
-      item.description.toLowerCase().includes(lowercasedTerm)
+      (item.title && item.title.toLowerCase().includes(lowercasedTerm)) ||
+      (item.description && item.description.toLowerCase().includes(lowercasedTerm))
     );
   }, [appWorks, searchTerm]);
 

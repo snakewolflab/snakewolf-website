@@ -37,16 +37,16 @@ function SearchResults() {
         const lowercasedQuery = q.toLowerCase();
 
         const filteredNews = (news || []).filter(item => 
-            item.title.toLowerCase().includes(lowercasedQuery) || 
-            item.contentSummary.toLowerCase().includes(lowercasedQuery)
+            (item.title && item.title.toLowerCase().includes(lowercasedQuery)) || 
+            (item.contentSummary && item.contentSummary.toLowerCase().includes(lowercasedQuery))
         );
         const filteredWorks = (works || []).filter(item => 
-            item.title.toLowerCase().includes(lowercasedQuery) || 
-            item.description.toLowerCase().includes(lowercasedQuery)
+            (item.title && item.title.toLowerCase().includes(lowercasedQuery)) || 
+            (item.description && item.description.toLowerCase().includes(lowercasedQuery))
         );
         const filteredCreators = (creators || []).filter(item => 
-            item.name.toLowerCase().includes(lowercasedQuery) || 
-            item.description.toLowerCase().includes(lowercasedQuery)
+            (item.name && item.name.toLowerCase().includes(lowercasedQuery)) || 
+            (item.description && item.description.toLowerCase().includes(lowercasedQuery))
         );
 
         return { news: filteredNews, works: filteredWorks, creators: filteredCreators };

@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { collection, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { CreatorItem, MediaItem } from '@/lib/firebase-data';
@@ -30,9 +30,9 @@ export default function CreatorsPage() {
 
     const lowercasedTerm = searchTerm.toLowerCase();
     return creators.filter(creator =>
-      creator.name.toLowerCase().includes(lowercasedTerm) ||
-      creator.description.toLowerCase().includes(lowercasedTerm) ||
-      creator.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm))
+      (creator.name && creator.name.toLowerCase().includes(lowercasedTerm)) ||
+      (creator.description && creator.description.toLowerCase().includes(lowercasedTerm)) ||
+      (creator.tags && creator.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm)))
     );
   }, [creators, searchTerm]);
 

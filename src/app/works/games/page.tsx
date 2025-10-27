@@ -35,8 +35,8 @@ export default function GamesPage() {
 
     const lowercasedTerm = searchTerm.toLowerCase();
     return gameWorks.filter(item =>
-      item.title.toLowerCase().includes(lowercasedTerm) ||
-      item.description.toLowerCase().includes(lowercasedTerm)
+      (item.title && item.title.toLowerCase().includes(lowercasedTerm)) ||
+      (item.description && item.description.toLowerCase().includes(lowercasedTerm))
     );
   }, [gameWorks, searchTerm]);
 

@@ -6,10 +6,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
+import { collection, doc } from 'firebase/firestore';
 
 import { NewsArticle } from '@/lib/data';
-import { addArticle, updateArticle } from '../actions';
+import { revalidateArticlePath, revalidateNewsPaths } from '../actions';
 import { useToast } from '@/hooks/use-toast';
+import { useFirestore } from '@/firebase';
+import { addDocumentNonBlocking, updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import {
   Form,
   FormControl,
@@ -41,6 +44,8 @@ interface NewsFormProps {
 
 export function NewsForm({ article, onSuccess }: NewsFormProps) {
   const { toast } = useToast();
+  const firestore = useFirestore();
+
   const form = useForm<NewsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,20 +83,31 @@ export function NewsForm({ article, onSuccess }: NewsFormProps) {
   }, [article, reset]);
 
   const onSubmit = async (data: NewsFormValues) => {
+    if (!firestore) {
+        toast({
+            variant: 'destructive',
+            title: 'エラー',
+            description: 'データベースに接続できませんでした。',
+        });
+        return;
+    }
+    
     try {
       const articleData = {
         ...data,
         tags: data.tags.split(',').map(tag => tag.trim()),
-        date: article?.date || format(new Date(), 'yyyy年M月d日'),
+        date: article?.date || format(new Date(), 'yyyy/MM/dd'),
       };
 
       if (article && article.id) {
-        // Update existing article
-        await updateArticle(article.id, articleData);
+        const articleRef = doc(firestore, 'news_articles', article.id);
+        updateDocumentNonBlocking(articleRef, articleData);
+        await revalidateArticlePath(articleData.slug);
         toast({ title: '成功', description: '記事を更新しました。' });
       } else {
-        // Create new article
-        await addArticle(articleData);
+        const collectionRef = collection(firestore, 'news_articles');
+        addDocumentNonBlocking(collectionRef, articleData);
+        await revalidateNewsPaths();
         toast({ title: '成功', description: '記事を追加しました。' });
       }
       onSuccess();

@@ -2,7 +2,7 @@
 'use client';
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Tag, ArrowLeft } from 'lucide-react';
@@ -42,7 +42,8 @@ type Props = {
 //   }));
 // }
 
-export default function NewsArticlePage({ params }: Props) {
+export default function NewsArticlePage() {
+  const params = useParams<{ slug: string }>();
   const article = newsArticlesData.find((a) => a.slug === params.slug);
 
   if (!article) {

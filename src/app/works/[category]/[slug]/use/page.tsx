@@ -2,7 +2,7 @@
 'use client';
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
 import { workItemsData, type WorkItem } from '@/lib/data';
@@ -74,7 +74,8 @@ type Props = {
 //   }));
 // }
 
-export default function UsePage({ params }: Props) {
+export default function UsePage() {
+  const params = useParams<{ category: 'apps' | 'games'; slug: string }>();
   const item = workItemsData.find(i => i.slug === params.slug);
 
   if (!item) {

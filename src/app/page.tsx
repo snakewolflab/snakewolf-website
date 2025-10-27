@@ -6,12 +6,14 @@ import { ArrowRight, Newspaper, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { newsArticles } from "@/lib/data";
+import { newsArticlesData } from '@/lib/data';
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 
 import Snewol1 from '../character/1.png';
 import Wallpaper from './wallpaper.png';
+
+const newsArticles = newsArticlesData.map((article, index) => ({ ...article, id: `${index + 1}`}));
 
 export default function HomePage() {
   const latestNews = newsArticles.slice(0, 3);

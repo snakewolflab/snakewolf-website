@@ -1,9 +1,10 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Newspaper } from 'lucide-react';
 import type { Metadata } from 'next';
 
-import { newsArticles } from '@/lib/data';
+import { newsArticlesData } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
   title: 'ニュース',
   description: 'SnakeWolfに関する最新情報をお届けします。',
 };
+
+const newsArticles = newsArticlesData.map((article, index) => ({ ...article, id: `${index + 1}`}));
 
 export default function NewsPage() {
   return (

@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, AppWindow } from 'lucide-react';
 
-import { workItems } from '@/lib/data';
+import { workItemsData } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   title: 'アプリ実績',
   description: 'SnakeWolfが開発したアプリの実績一覧です。',
 };
+
+const workItems = workItemsData.map((item, index) => ({...item, id: `${index + 1}`}));
 
 export default function AppsPage() {
   const appWorks = workItems.filter(item => item.category === 'App');

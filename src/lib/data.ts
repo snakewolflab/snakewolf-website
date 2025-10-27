@@ -1,4 +1,5 @@
 
+
 export type NewsArticle = {
   id?: string; // Firestore ID will be string
   slug: string;
@@ -153,6 +154,9 @@ export const workItemsData: Omit<WorkItem, 'id'>[] = [
     galleryImageIds: ["work-pixel-painters", "work-cosmic-explorer", "creator-alpha"],
   },
 ];
+// TODO: Remove this once all pages are migrated to firestore
+export const workItems = workItemsData.map((item, index) => ({...item, id: `${index + 1}`}));
+
 
 export const creatorItemsData: Omit<CreatorItem, 'id'>[] = [
   {

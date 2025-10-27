@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
 
-import { creatorItems } from '@/lib/data';
+import { creatorItemsData } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,10 +25,10 @@ export default function CreatorsPage() {
       </header>
 
       <div className="grid gap-12 md:grid-cols-2">
-        {creatorItems.map((item) => {
+        {creatorItemsData.map((item, index) => {
           const itemImage = PlaceHolderImages.find(p => p.id === item.imageId);
           return (
-            <Card key={item.id} className="overflow-hidden group">
+            <Card key={index} className="overflow-hidden group">
                 <div className="md:flex">
                     <div className="md:w-1/3 p-4">
                         {itemImage && (

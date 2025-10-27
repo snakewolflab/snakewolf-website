@@ -1,16 +1,19 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Tag, ArrowLeft } from 'lucide-react';
 import type { Metadata, ResolvingMetadata } from 'next';
 
-import { newsArticles } from '@/lib/data';
+import { newsArticlesData } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ShareMenu } from './_components/share-button';
 import Wallpaper from '../../wallpaper.png';
+
+const newsArticles = newsArticlesData.map((article, index) => ({ ...article, id: `${index + 1}`}));
 
 type Props = {
   params: { slug: string };

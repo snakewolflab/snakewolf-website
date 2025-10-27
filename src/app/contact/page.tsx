@@ -4,6 +4,8 @@
 import type { Metadata } from 'next';
 import { ContactForm } from './_components/contact-form';
 import { Mail, Phone } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 // export const metadata: Metadata = {
 //   title: 'お問い合わせ',
@@ -34,7 +36,7 @@ export default function ContactPage() {
                 <div>
                     <h4 className="font-bold">メール</h4>
                     <p className="text-muted-foreground">一般的なお問い合わせはこちら</p>
-                    <a href="mailto:contact@snakewolf.dev" className="text-primary hover:underline">contact@snakewolf.dev</a>
+                    <a href="mailto:snakewolf.info@gmail.com" className="text-primary hover:underline">snakewolf.info@gmail.com</a>
                 </div>
             </div>
             <div className="flex items-start gap-4">
@@ -42,9 +44,11 @@ export default function ContactPage() {
                     <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                    <h4 className="font-bold">電話</h4>
+                    <h4 className="font-bold">サポートサーバー</h4>
                     <p className="text-muted-foreground">お急ぎの場合</p>
-                    <a href="tel:+81-3-1234-5678" className="text-primary hover:underline">03-1234-5678</a>
+                    <Button asChild>
+                        <Link href="https://discord.gg/your-discord-invite" target="_blank" rel="noopener noreferrer">Join Discord</Link>
+                    </Button>
                 </div>
             </div>
         </div>

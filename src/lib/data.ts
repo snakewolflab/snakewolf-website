@@ -3,7 +3,7 @@ export const serviceItems = [
   {
     id: 'app-game-dev',
     title: 'アプリ・ゲーム開発',
-    description: '企画から開発、運用までワンストップでサポート。あなたのアイデアを世界を魅了する体験へ。',
+    description: '企画から開発、運用まで一貫。なので、僕たちのアイデアを世界を魅了する体験へ。',
     imageId: 'service-app-game.png',
   },
   {

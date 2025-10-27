@@ -35,7 +35,7 @@ export default function ServicesPage() {
       <header className="text-center mb-12">
         <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">サービス</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          私たちは、AIとデータを活用した革新的なソリューションでお客様のビジネスを成功に導きます。
+          私たちは、様々な技術とデータを活用した革新的なソリューションで未来を切り開いていきます。
         </p>
       </header>
 

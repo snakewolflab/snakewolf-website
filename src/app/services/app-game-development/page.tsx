@@ -22,7 +22,7 @@ export default function AppGameDevelopmentPage() {
         {
             icon: Gamepad2,
             title: '魅力的なゲーム体験',
-            description: 'UnityやUnreal Engineを駆使し、プレイヤーを夢中にさせる高品質なゲームを開発します。',
+            description: 'UnityやUnreal Engineなどを駆使し、プレイヤーを夢中にさせる高品質なゲームを開発します。',
         },
         {
             icon: Code,
@@ -52,9 +52,9 @@ export default function AppGameDevelopmentPage() {
             <section className="py-16 md:py-24">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-3xl mx-auto">
-                        <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">企画から運用までワンストップで</h2>
+                        <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">企画から運用まで一貫</h2>
                         <p className="mt-4 text-lg text-muted-foreground">
-                            SnakeWolfは、単なる開発会社ではありません。お客様のビジョンを深く理解し、企画、デザイン、開発、そしてリリース後の運用・改善まで、一貫したパートナーとしてプロジェクトを成功に導きます。
+                            SnakeWolfは、単なる開発会社ではありません。未来まで本気で楽しんでもらうために、企画、デザイン、開発、そしてリリース後の運用・改善まで、一貫してプロジェクトを成長させています。
                         </p>
                     </div>
 

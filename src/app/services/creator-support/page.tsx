@@ -17,8 +17,8 @@ export default function CreatorSupportPage() {
     const supportMenu = [
         {
             icon: Mic,
-            title: 'コンテンツ制作サポート',
-            description: '企画立案、機材選定、撮影・編集技術の向上まで、質の高いコンテンツ作りを支援します。'
+            title: 'AIによるコンテンツ制作サポート',
+            description: '企画立案、機材選定、撮影・編集技術の向上まで、AIを駆使し質の高いコンテンツ作りを支援します。'
         },
         {
             icon: Users,

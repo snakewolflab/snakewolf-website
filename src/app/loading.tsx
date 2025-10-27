@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
-const GITHUB_CHARACTER_BASE_URL = 'https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/suneuru-kun/';
+const GITHUB_CHARACTER_BASE_URL = 'https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/suneuru-kun/';
 
 const characterImageCount = 20;
 

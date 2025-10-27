@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
-const GITHUB_CHARACTER_BASE_URL = 'https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/suneuru-kun/';
+const GITHUB_CHARACTER_BASE_URL = 'https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/suneuru-kun/';
 const characterImageCount = 20;
 const characterImages = Array.from({ length: characterImageCount }, (_, i) => `${GITHUB_CHARACTER_BASE_URL}${i + 1}.png`);
 

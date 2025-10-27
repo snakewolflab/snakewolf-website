@@ -1,10 +1,12 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: '皆さんへのお願い',
-  description: 'SnakeWolfコミュニティへのお願いです。',
-};
+// export const metadata: Metadata = {
+//   title: '皆さんへのお願い',
+//   description: 'SnakeWolfコミュニティへのお願いです。',
+// };
 
 export default function RequestPage() {
   return (

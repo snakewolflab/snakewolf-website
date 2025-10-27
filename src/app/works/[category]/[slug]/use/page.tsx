@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -45,31 +48,31 @@ type Props = {
   };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const item = workItemsData.find(i => i.slug === params.slug);
+// export async function generateMetadata(
+//   { params }: Props,
+//   parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   const item = workItemsData.find(i => i.slug === params.slug);
 
-  if (!item) {
-    return {
-      title: '見つかりません',
-    };
-  }
+//   if (!item) {
+//     return {
+//       title: '見つかりません',
+//     };
+//   }
 
-  const ctaText = item.category === 'App' ? 'を入手する' : 'をプレイする';
-  return {
-    title: `${item.title} ${ctaText}`,
-    description: `${item.title}の利用・ダウンロードはこちらから。`,
-  };
-}
+//   const ctaText = item.category === 'App' ? 'を入手する' : 'をプレイする';
+//   return {
+//     title: `${item.title} ${ctaText}`,
+//     description: `${item.title}の利用・ダウンロードはこちらから。`,
+//   };
+// }
 
-export async function generateStaticParams() {
-  return workItemsData.map((item) => ({
-    category: `${item.category.toLowerCase()}s`,
-    slug: item.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   return workItemsData.map((item) => ({
+//     category: `${item.category.toLowerCase()}s`,
+//     slug: item.slug,
+//   }));
+// }
 
 export default function UsePage({ params }: Props) {
   const item = workItemsData.find(i => i.slug === params.slug);

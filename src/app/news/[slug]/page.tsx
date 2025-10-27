@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -15,29 +18,29 @@ type Props = {
   params: { slug: string };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const article = newsArticlesData.find((a) => a.slug === params.slug);
+// export async function generateMetadata(
+//   { params }: Props,
+//   parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   const article = newsArticlesData.find((a) => a.slug === params.slug);
 
-  if (!article) {
-    return {
-      title: '記事が見つかりません',
-    };
-  }
+//   if (!article) {
+//     return {
+//       title: '記事が見つかりません',
+//     };
+//   }
 
-  return {
-    title: article.title,
-    description: article.summary,
-  };
-}
+//   return {
+//     title: article.title,
+//     description: article.summary,
+//   };
+// }
 
-export async function generateStaticParams() {
-  return newsArticlesData.map((article) => ({
-    slug: article.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   return newsArticlesData.map((article) => ({
+//     slug: article.slug,
+//   }));
+// }
 
 export default function NewsArticlePage({ params }: Props) {
   const article = newsArticlesData.find((a) => a.slug === params.slug);

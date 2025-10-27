@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -25,30 +28,30 @@ type Props = {
   };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
+// export async function generateMetadata(
+//   { params }: Props,
+//   parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));
 
-  if (!item) {
-    return {
-      title: '作品が見つかりません',
-    };
-  }
+//   if (!item) {
+//     return {
+//       title: '作品が見つかりません',
+//     };
+//   }
 
-  return {
-    title: item.title,
-    description: item.description,
-  };
-}
+//   return {
+//     title: item.title,
+//     description: item.description,
+//   };
+// }
 
-export async function generateStaticParams() {
-  return workItemsData.map((item) => ({
-    category: `${item.category.toLowerCase()}s`,
-    slug: item.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   return workItemsData.map((item) => ({
+//     category: `${item.category.toLowerCase()}s`,
+//     slug: item.slug,
+//   }));
+// }
 
 export default function WorkDetailPage({ params }: Props) {
   const item = workItemsData.find(i => i.slug === params.slug && i.category.toLowerCase() === params.category.slice(0, -1));

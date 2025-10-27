@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { serviceItems } from '@/lib/data';
@@ -8,10 +10,10 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Gamepad2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-export const metadata: Metadata = {
-  title: 'サービス',
-  description: 'SnakeWolfが提供する最先端のテクノロジーサービス一覧です。',
-};
+// export const metadata: Metadata = {
+//   title: 'サービス',
+//   description: 'SnakeWolfが提供する最先端のテクノロジーサービス一覧です。',
+// };
 
 const serviceDetails = [
   {

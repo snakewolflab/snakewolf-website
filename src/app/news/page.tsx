@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,10 +11,10 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-export const metadata: Metadata = {
-  title: 'ニュース',
-  description: 'SnakeWolfの最新の活動、製品リリース、イベント情報などをお届けします。',
-};
+// export const metadata: Metadata = {
+//   title: 'ニュース',
+//   description: 'SnakeWolfの最新の活動、製品リリース、イベント情報などをお届けします。',
+// };
 
 export default function NewsPage() {
   const articles = [...newsArticlesData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

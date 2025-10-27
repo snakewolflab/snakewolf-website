@@ -1,11 +1,13 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: '誹謗中傷への対応について',
-  description: 'SnakeWolfのコミュニティにおける誹謗中傷への対応方針について。',
-};
+// export const metadata: Metadata = {
+//   title: '誹謗中傷への対応について',
+//   description: 'SnakeWolfのコミュニティにおける誹謗中傷への対応方針について。',
+// };
 
 export default function DefamationPage() {
   return (

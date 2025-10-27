@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,10 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-export const metadata: Metadata = {
-  title: 'ゲーム実績',
-  description: '私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。',
-};
+// export const metadata: Metadata = {
+//   title: 'ゲーム実績',
+//   description: '私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。',
+// };
 
 export default function GamesPage() {
   const gameWorks = workItemsData.filter(item => item.category === 'Game');

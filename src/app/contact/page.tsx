@@ -1,11 +1,14 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import { ContactForm } from './_components/contact-form';
 import { Mail, Phone } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'お問い合わせ',
-  description: 'SnakeWolfへのご質問、ご意見、ビジネスに関するお問い合わせはこちらから。',
-};
+// export const metadata: Metadata = {
+//   title: 'お問い合わせ',
+//   description: 'SnakeWolfへのご質問、ご意見、ビジネスに関するお問い合わせはこちらから。',
+// };
 
 export default function ContactPage() {
   return (

@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Building, Globe, Target, Briefcase, TrendingUp } from 'lucide-react';
@@ -8,10 +10,10 @@ import Wallpaper from '../wallpaper.png';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: '企業情報',
-  description: 'SnakeWolfの企業概要、ビジョン、沿革について。',
-};
+// export const metadata: Metadata = {
+//   title: '企業情報',
+//   description: 'SnakeWolfの企業概要、ビジョン、沿革について。',
+// };
 
 export default function AboutPage() {
   const companyInfo = [

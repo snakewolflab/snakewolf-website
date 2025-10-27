@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Heart, Mic, Users, DollarSign } from 'lucide-react';
@@ -7,10 +9,10 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Wallpaper from '../../wallpaper.png';
 
-export const metadata: Metadata = {
-    title: 'クリエイター支援',
-    description: 'コンテンツ制作から収益化まで、あなたのクリエイティブ活動を全面的にバックアップします。',
-};
+// export const metadata: Metadata = {
+//     title: 'クリエイター支援',
+//     description: 'コンテンツ制作から収益化まで、あなたのクリエイティブ活動を全面的にバックアップします。',
+// };
 
 export default function CreatorSupportPage() {
     const supportMenu = [

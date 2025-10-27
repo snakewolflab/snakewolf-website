@@ -1,11 +1,13 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import { Gift, Mail, Ban, AlertTriangle } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: '書簡について',
-  description: 'ファンレターやプレゼントに関するガイドライン。',
-};
+// export const metadata: Metadata = {
+//   title: '書簡について',
+//   description: 'ファンレターやプレゼントに関するガイドライン。',
+// };
 
 export default function LettersPage() {
   return (

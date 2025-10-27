@@ -1,11 +1,13 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: 'プライバシーポリシー',
-  description: 'SnakeWolfのプライバシーポリシーです。個人情報の取り扱いについて説明します。',
-};
+// export const metadata: Metadata = {
+//   title: 'プライバシーポリシー',
+//   description: 'SnakeWolfのプライバシーポリシーです。個人情報の取り扱いについて説明します。',
+// };
 
 export default function PrivacyPage() {
   return (

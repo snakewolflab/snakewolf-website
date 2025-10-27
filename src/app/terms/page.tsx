@@ -1,11 +1,13 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: '利用規約',
-  description: 'SnakeWolfのサービス利用規約です。',
-};
+// export const metadata: Metadata = {
+//   title: '利用規約',
+//   description: 'SnakeWolfのサービス利用規約です。',
+// };
 
 export default function TermsPage() {
   return (

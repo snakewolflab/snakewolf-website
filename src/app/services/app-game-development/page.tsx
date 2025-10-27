@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { CheckCircle, Code, Gamepad2, Smartphone } from 'lucide-react';
@@ -6,10 +8,10 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Wallpaper from '../../wallpaper.png';
 
-export const metadata: Metadata = {
-    title: 'アプリ・ゲーム開発',
-    description: '企画から開発、運用までワンストップでサポート。あなたのアイデアを形にします。',
-};
+// export const metadata: Metadata = {
+//     title: 'アプリ・ゲーム開発',
+//     description: '企画から開発、運用までワンストップでサポート。あなたのアイデアを形にします。',
+// };
 
 export default function AppGameDevelopmentPage() {
     const features = [

@@ -1,0 +1,221 @@
+{
+  "entities": {
+    "NewsArticle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "NewsArticle",
+      "type": "object",
+      "description": "Represents a news article on the SnakeWolf website.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the NewsArticle entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the news article."
+        },
+        "publicationDate": {
+          "type": "string",
+          "description": "Date and time when the news article was published.",
+          "format": "date-time"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Brief summary or excerpt of the news article."
+        },
+        "content": {
+          "type": "string",
+          "description": "Full content of the news article."
+        },
+        "tagIds": {
+          "type": "array",
+          "description": "References to Tags. (Relationship: Tag N:N NewsArticle)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "publicationDate",
+        "summary",
+        "content"
+      ]
+    },
+    "Tag": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Tag",
+      "type": "object",
+      "description": "Represents a tag or category associated with news articles.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Tag entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the tag or category."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "ContactFormSubmission": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContactFormSubmission",
+      "type": "object",
+      "description": "Represents a submission from the contact form.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ContactFormSubmission entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the person submitting the form."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the person submitting the form.",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "The message content from the contact form."
+        },
+        "submissionDate": {
+          "type": "string",
+          "description": "Date and time when the form was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "message",
+        "submissionDate"
+      ]
+    },
+    "MediaItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MediaItem",
+      "type": "object",
+      "description": "Represents a media item (image or video) in the media gallery.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MediaItem entity."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Name of the media file."
+        },
+        "fileType": {
+          "type": "string",
+          "description": "Type of the media file (e.g., image/jpeg, video/mp4)."
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "Size of the media file in bytes."
+        },
+        "uploadDate": {
+          "type": "string",
+          "description": "Date and time when the media file was uploaded.",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string",
+          "description": "URL of the media file.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "fileName",
+        "fileType",
+        "fileSize",
+        "uploadDate",
+        "url"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/news_articles/{newsArticleId}",
+        "definition": {
+          "entityName": "NewsArticle",
+          "schema": {
+            "$ref": "#/backend/entities/NewsArticle"
+          },
+          "description": "Stores news articles with their titles, publication dates, summaries, content, and associated tag IDs.",
+          "params": [
+            {
+              "name": "newsArticleId",
+              "description": "Unique identifier for the news article."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tags/{tagId}",
+        "definition": {
+          "entityName": "Tag",
+          "schema": {
+            "$ref": "#/backend/entities/Tag"
+          },
+          "description": "Stores tags or categories associated with news articles.",
+          "params": [
+            {
+              "name": "tagId",
+              "description": "Unique identifier for the tag."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/contact_form_submissions/{contactFormSubmissionId}",
+        "definition": {
+          "entityName": "ContactFormSubmission",
+          "schema": {
+            "$ref": "#/backend/entities/ContactFormSubmission"
+          },
+          "description": "Stores contact form submissions with details like name, email, message, and submission date.",
+          "params": [
+            {
+              "name": "contactFormSubmissionId",
+              "description": "Unique identifier for the contact form submission."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/media_items/{mediaItemId}",
+        "definition": {
+          "entityName": "MediaItem",
+          "schema": {
+            "$ref": "#/backend/entities/MediaItem"
+          },
+          "description": "Stores media items (images or videos) with details like file name, file type, file size, upload date, and URL.",
+          "params": [
+            {
+              "name": "mediaItemId",
+              "description": "Unique identifier for the media item."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to accommodate the SnakeWolf website's requirements, focusing on news articles, media items, contact form submissions, and tags. It prioritizes security, scalability, and ease of debugging by adhering to the core design principles, especially Authorization Independence. News articles and media items are stored in top-level collections for easy querying and management. Contact form submissions are also placed in a top-level collection to segregate it. Tags are stored in a separate collection, and a many-to-many relationship between NewsArticle and Tag is implemented by storing tag IDs in the NewsArticle document. This design supports efficient list operations (QAPs) and avoids hierarchical authorization dependencies."
+  }
+}

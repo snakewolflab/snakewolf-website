@@ -33,22 +33,28 @@ export default function AppsPage() {
           return (
             <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {itemImage && (
-                <div className="relative h-64 w-full">
-                  <Image
-                    src={itemImage.imageUrl}
-                    alt={item.title}
-                    fill
-                    className="object-cover"
-                    data-ai-hint={itemImage.imageHint}
-                  />
-                </div>
+                <Link href={`/works/apps/${item.slug}`}>
+                  <div className="relative h-64 w-full">
+                    <Image
+                      src={itemImage.imageUrl}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      data-ai-hint={itemImage.imageHint}
+                    />
+                  </div>
+                </Link>
               )}
               <CardHeader>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <AppWindow className="h-4 w-4 text-primary" />
                     <span className='font-bold text-primary'>{item.category}</span>
                 </div>
-                <CardTitle className="font-headline text-2xl pt-2">{item.title}</CardTitle>
+                <CardTitle className="font-headline text-2xl pt-2">
+                  <Link href={`/works/apps/${item.slug}`} className="hover:text-primary transition-colors">
+                    {item.title}
+                  </Link>
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col">
                 <CardDescription className="flex-grow">{item.description}</CardDescription>
@@ -59,7 +65,7 @@ export default function AppsPage() {
                         ))}
                     </div>
                      <Button asChild variant="link" className="mt-4 sm:mt-0">
-                        <Link href={item.url}>
+                        <Link href={`/works/apps/${item.slug}`}>
                             詳しく見る <ArrowRight className="ml-2" />
                         </Link>
                     </Button>

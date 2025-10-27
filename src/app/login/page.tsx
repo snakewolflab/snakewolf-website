@@ -27,6 +27,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuthRedirect } from '@/hooks/use-auth-redirect';
+import { LoadingScreen } from '@/components/layout/loading-screen';
 
 const loginSchema = z.object({
   email: z.string().email({ message: '有効なメールアドレスを入力してください。' }),
@@ -36,6 +38,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  useAuthRedirect();
   const router = useRouter();
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
@@ -46,10 +49,6 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
-
-  if (user) {
-    router.replace('/admin/news');
-  }
 
   const onSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true);
@@ -79,7 +78,7 @@ export default function LoginPage() {
   
   if (isUserLoading || user) {
     // Prevent flash of login form while redirecting
-    return null;
+    return <LoadingScreen />;
   }
 
   return (

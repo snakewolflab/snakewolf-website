@@ -2,60 +2,75 @@
  * @fileoverview Firestore Security Rules for SnakeWolf website.
  *
  * Core Philosophy:
- * This ruleset allows any signed-in user to create news articles, work items and creator items.
+ * This ruleset allows public read access to news articles, work items, and creator items, but restricts write access to authenticated users only.
  *
  * Data Structure:
- * The database consists of three top-level collections: `news_articles`, `work_items`, and `creator_items`.
+ * - /news_articles/{newsArticleId}: Stores news articles.
+ * - /work_items/{workItemId}: Stores portfolio work items.
+ * - /creator_items/{creatorItemId}: Stores creator information.
  *
  * Key Security Decisions:
- * - All `list` operations are publicly accessible.
- * - Data shape validation is not enforced in this prototype.
- * - Missing ownership field leads to insecure writes.
+ * - Public read access for all collections.
+ * - Authenticated user required for create, update, and delete operations.
+ * - No specific role-based access control implemented in this version.
+ * - No listing restrictions.
+ *
+ * Denormalization for Authorization:
+ *  - No specific denormalization required, as write access is based solely on authentication status.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Controls access to the 'news_articles' collection.
-     * @path /databases/{database}/documents/news_articles/{newsArticleId}
-     * @allow (create) Signed-in user can create news articles.
-     * @deny (create) User attempts to create a news article without being signed in.
-     * @principle Allows signed-in users to create news articles.
+     * @description Allows public read access to news articles and restricts write access to authenticated users.
+     * @path /news_articles/{newsArticleId}
+     * @allow (get, list): Any user can read news articles.
+     * @allow (create, update, delete): Authenticated users can create, update, and delete news articles.
+     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete news articles.
+     * @principle Allows public read access with authenticated write access.
      */
     match /news_articles/{newsArticleId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if isSignedIn();
-      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Controls access to the 'work_items' collection.
-     * @path /databases/{database}/documents/work_items/{workItemId}
-     * @allow (create) Signed-in user can create work items.
-     * @deny (create) User attempts to create a work item without being signed in.
-     * @principle Allows signed-in users to create work items.
+     * @description Allows public read access to work items and restricts write access to authenticated users.
+     * @path /work_items/{workItemId}
+     * @allow (get, list): Any user can read work items.
+     * @allow (create, update, delete): Authenticated users can create, update, and delete work items.
+     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete work items.
+     * @principle Allows public read access with authenticated write access.
      */
     match /work_items/{workItemId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if isSignedIn();
-      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
     /**
-     * @description Controls access to the 'creator_items' collection.
-     * @path /databases/{database}/documents/creator_items/{creatorItemId}
-     * @allow (create) Signed-in user can create creator items.
-     * @deny (create) User attempts to create a creator item without being signed in.
-     * @principle Allows signed-in users to create creator items.
+     * @description Allows public read access to creator items and restricts write access to authenticated users.
+     * @path /creator_items/{creatorItemId}
+     * @allow (get, list): Any user can read creator items.
+     * @allow (create, update, delete): Authenticated users can create, update, and delete creator items.
+     * @deny (create, update, delete): Unauthenticated users cannot create, update, or delete creator items.
+     * @principle Allows public read access with authenticated write access.
      */
     match /creator_items/{creatorItemId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if isSignedIn();
-      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
     }
 
-    // Helper function to determine if a user is signed in.
+    // Helper function to check if the user is signed in
     function isSignedIn() {
       return request.auth != null;
     }

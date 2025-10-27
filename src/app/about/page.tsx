@@ -142,7 +142,7 @@ export default function AboutPage() {
             現在、SnakeWolfDeveloperメンバーを募集しています。ご興味のある方は、以下の専用フォームよりご応募ください。
           </p>
           <Button asChild className="mt-8">
-            <Link href="https://example.com/recruitment" target="_blank" rel="noopener noreferrer">応募フォームへ</Link>
+            <Link href="https://forms.gle/uEsmNjqm8He5RMEf8" target="_blank" rel="noopener noreferrer">応募フォームへ</Link>
           </Button>
         </div>
       </section>

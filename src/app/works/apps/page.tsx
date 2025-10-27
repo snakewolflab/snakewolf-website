@@ -61,7 +61,7 @@ export default function AppsPage() {
                 <div className="mt-4 flex flex-wrap items-center justify-between">
                     <div className='flex flex-wrap gap-2'>
                         {item.platforms.map((platform) => (
-                            <Badge key={platform} variant="secondary">{platform}</Badge>
+                            <Badge key={platform.name} variant="secondary">{platform.name}</Badge>
                         ))}
                     </div>
                      <Button asChild variant="link" className="mt-4 sm:mt-0">

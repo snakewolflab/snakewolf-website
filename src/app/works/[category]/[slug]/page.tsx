@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { AppWindow, ArrowLeft, Gamepad2, Layers, ExternalLink } from 'lucide-react';
+import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
 
 import { workItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -71,6 +71,7 @@ export default function WorkDetailPage({ params }: Props) {
   const categoryName = item.category === 'App' ? 'アプリ実績' : 'ゲーム実績';
   const categoryUrl = `/works/${item.category.toLowerCase()}s`;
   const Icon = item.category === 'App' ? AppWindow : Gamepad2;
+  const ctaText = item.category === 'App' ? 'アプリを入手する' : 'ゲームをプレイする';
 
   const galleryImages = item.galleryImageIds.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean);
 
@@ -90,23 +91,21 @@ export default function WorkDetailPage({ params }: Props) {
             <Icon className="h-5 w-5" />
             <span>{item.category}</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">{item.title}</h1>
-            {item.url && item.url !== "#" && (
-                <Button asChild variant="outline" size="icon">
-                    <Link href={item.url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-5 w-5" />
-                        <span className="sr-only">Open link</span>
-                    </Link>
-                </Button>
-            )}
+            <Button asChild size="lg">
+                <Link href={`/works/${params.category}/${params.slug}/use`}>
+                    <Download className="mr-2 h-5 w-5" />
+                    {ctaText}
+                </Link>
+            </Button>
         </div>
          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground mt-4">
             <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4" />
                 <div className="flex flex-wrap gap-2">
                 {item.platforms.map((platform) => (
-                    <Badge key={platform} variant="secondary">{platform}</Badge>
+                    <Badge key={platform.name} variant="secondary">{platform.name}</Badge>
                 ))}
                 </div>
             </div>

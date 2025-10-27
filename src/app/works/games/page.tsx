@@ -1,10 +1,11 @@
+
 'use client';
 
-import type { Metadata } from 'next';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Gamepad2 } from 'lucide-react';
-import { collection, query, where } from 'firebase/firestore';
+import { ArrowRight, Gamepad2, Search } from 'lucide-react';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem, MediaItem } from '@/lib/firebase-data';
@@ -13,23 +14,31 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-
-// export const metadata: Metadata = {
-//   title: 'ゲーム実績',
-//   description: '私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。',
-// };
+import { Input } from '@/components/ui/input';
 
 export default function GamesPage() {
   const firestore = useFirestore();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const worksQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('category', '==', 'Game')),
+    query(collection(firestore, 'works'), where('category', '==', 'Game'), orderBy('title')),
     [firestore]
   );
   const { data: gameWorks, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
 
   const isLoading = worksLoading || mediaLoading;
+
+  const filteredWorks = useMemo(() => {
+    if (!gameWorks) return [];
+    if (!searchTerm) return gameWorks;
+
+    const lowercasedTerm = searchTerm.toLowerCase();
+    return gameWorks.filter(item =>
+      item.title.toLowerCase().includes(lowercasedTerm) ||
+      item.description.toLowerCase().includes(lowercasedTerm)
+    );
+  }, [gameWorks, searchTerm]);
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -39,6 +48,19 @@ export default function GamesPage() {
           私たちが情熱を注いで開発した、没入感あふれるゲームの数々をご覧ください。
         </p>
       </header>
+      
+      <div className="mb-8 max-w-md mx-auto">
+        <div className="relative">
+          <Input
+            type="search"
+            placeholder="ゲームを検索..."
+            className="w-full pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+        </div>
+      </div>
       
       <div className="grid gap-8 md:grid-cols-2">
         {isLoading ? (
@@ -61,9 +83,11 @@ export default function GamesPage() {
                     </CardContent>
                 </Card>
             ))
-        ) : gameWorks && gameWorks.length === 0 ? (
-          <p className="text-center col-span-full text-muted-foreground">ゲームがありません。</p>
-        ) : gameWorks?.map((item) => {
+        ) : filteredWorks.length === 0 ? (
+          <p className="text-center col-span-full text-muted-foreground">
+             {searchTerm ? '検索結果が見つかりませんでした。' : 'ゲームがありません。'}
+          </p>
+        ) : filteredWorks.map((item) => {
           const itemImage = mediaItems?.find(p => p.id === item.imageId);
           return (
             <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">

@@ -1,30 +1,40 @@
+
 'use client';
 
-import type { Metadata } from 'next';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { collection } from 'firebase/firestore';
+import { collection, orderBy } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { CreatorItem, MediaItem } from '@/lib/firebase-data';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { ExternalLink } from '@/components/external-link';
 import { Skeleton } from '@/components/ui/skeleton';
-
-// export const metadata: Metadata = {
-//   title: 'クリエイター',
-//   description: '私たちは、才能あふれるクリエイターの活動を支援しています。',
-// };
+import { Input } from '@/components/ui/input';
 
 export default function CreatorsPage() {
   const firestore = useFirestore();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: creators, isLoading: creatorsLoading } = useCollection<CreatorItem>(useMemoFirebase(() => collection(firestore, 'creators'), [firestore]));
+  const { data: creators, isLoading: creatorsLoading } = useCollection<CreatorItem>(useMemoFirebase(() => query(collection(firestore, 'creators'), orderBy('name')), [firestore]));
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
   
   const isLoading = creatorsLoading || mediaLoading;
+
+  const filteredCreators = useMemo(() => {
+    if (!creators) return [];
+    if (!searchTerm) return creators;
+
+    const lowercasedTerm = searchTerm.toLowerCase();
+    return creators.filter(creator =>
+      creator.name.toLowerCase().includes(lowercasedTerm) ||
+      creator.description.toLowerCase().includes(lowercasedTerm) ||
+      creator.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm))
+    );
+  }, [creators, searchTerm]);
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -34,6 +44,19 @@ export default function CreatorsPage() {
           私たちは、才能あふれるクリエイターの活動を支援しています。
         </p>
       </header>
+
+      <div className="mb-8 max-w-md mx-auto">
+        <div className="relative">
+          <Input
+            type="search"
+            placeholder="クリエイターを検索..."
+            className="w-full pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+        </div>
+      </div>
       
       <div className="grid gap-12 md:grid-cols-2">
         {isLoading ? (
@@ -55,14 +78,16 @@ export default function CreatorsPage() {
               </div>
             </Card>
           ))
-        ) : creators && creators.length === 0 ? (
-          <p className='text-center col-span-2 text-muted-foreground'>クリエイターがいません。</p>
-        ) : creators?.map((item) => {
+        ) : filteredCreators.length === 0 ? (
+          <p className='text-center col-span-2 text-muted-foreground'>
+            {searchTerm ? '検索結果が見つかりませんでした。' : 'クリエイターがいません。'}
+          </p>
+        ) : filteredCreators.map((item) => {
           const itemImage = mediaItems?.find(p => p.id === item.imageId);
           return (
             <Card key={item.id} className="overflow-hidden group">
                 <div className="md:flex">
-                    <div className="md:w-1/3 p-4">
+                    <div className="md:w-1/3 p-4 flex-shrink-0">
                         {itemImage && (
                         <div className="relative aspect-square">
                             <Image

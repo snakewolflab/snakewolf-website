@@ -1,12 +1,13 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Favicon from "@/app/favicon.png";
@@ -20,6 +21,32 @@ const navLinks = [
   { href: "/creators", label: "クリエイター" },
   { href: "/news", label: "ニュース" },
 ];
+
+function SiteSearch() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+  };
+
+  return (
+    <form onSubmit={handleSearch} className="relative w-full max-w-xs">
+      <Input
+        type="search"
+        placeholder="サイト内を検索..."
+        className="w-full pl-10"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+    </form>
+  );
+}
+
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -35,7 +62,7 @@ export function Header() {
         
         <div className="flex flex-1 items-center justify-end gap-2 sm:gap-6">
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+          <nav className="hidden lg:flex items-center space-x-4 text-sm font-medium">
             {navLinks.slice(1).map((link) => ( // ホームを除外
               <Link
                 key={link.href}
@@ -59,9 +86,13 @@ export function Header() {
               お問い合わせ
             </Link>
           </nav>
+          
+          <div className="hidden sm:block">
+            <SiteSearch />
+          </div>
 
           {/* Mobile Navigation */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -79,6 +110,9 @@ export function Header() {
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-6">
+                  <div className="sm:hidden">
+                     <SiteSearch />
+                  </div>
                   <nav className="flex flex-col gap-4 text-lg font-medium">
                     {navLinks.map((link) => (
                       <Link key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === link.href ? "text-primary" : "text-foreground")}>

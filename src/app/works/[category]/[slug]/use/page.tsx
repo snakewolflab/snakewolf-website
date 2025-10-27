@@ -4,12 +4,13 @@
 import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
-import Image from 'next/image';
+import { collection, query, where, limit } from 'firebase/firestore';
 
-import { workItems, type Platform } from '@/lib/data';
+import { type WorkItem } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Platform icons mapping
 const platformIcons: { [key: string]: React.ElementType } = {
@@ -47,7 +48,33 @@ export default function UsePage() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const category = Array.isArray(params.category) ? params.category[0] : params.category;
-  const item = workItems.find((w) => w.slug === slug);
+  
+  const firestore = useFirestore();
+
+  const itemQuery = useMemoFirebase(() => {
+    if (!firestore || !slug) return null;
+    return query(collection(firestore, 'work_items'), where('slug', '==', slug), limit(1));
+  }, [firestore, slug]);
+  
+  const { data: items, isLoading } = useCollection<WorkItem>(itemQuery);
+  const item = items?.[0];
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-2xl">
+        <div className="mb-8"><Skeleton className="h-10 w-40" /></div>
+        <header className="text-center mb-12">
+            <Skeleton className="h-10 w-3/4 mx-auto mb-4" />
+            <Skeleton className="h-6 w-1/2 mx-auto" />
+        </header>
+        <div className="grid grid-cols-1 gap-4">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   if (!item) {
     notFound();

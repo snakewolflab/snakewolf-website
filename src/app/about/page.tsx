@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Building, Globe, Target, Gamepad2, Users, Mail, Briefcase, TrendingUp } from 'lucide-react';
+import { Building, Globe, Target, Briefcase, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Wallpaper from '../wallpaper.png';
@@ -114,34 +114,21 @@ export default function AboutPage() {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">プロジェクト概要</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-12 items-start">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">プロジェクト情報</CardTitle>
-                </CardHeader>
-                <CardContent>
-                <ul className="space-y-4">
-                    {projectInfo.map((info) => (
-                    <li key={info.label} className="flex flex-col">
-                        <span className="font-bold">{info.label}</span>
-                        <span className="text-muted-foreground">{info.value}</span>
-                    </li>
-                    ))}
-                </ul>
-                </CardContent>
-            </Card>
-             <div className="space-y-6">
-                <Card>
-                    <CardHeader className="flex-row items-center gap-4">
-                        <Mail className="w-8 h-8 text-primary" />
-                        <CardTitle className="font-headline">連絡先</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p>プロジェクトに関するお問い合わせは、<a href="/contact" className="text-primary underline hover:no-underline">お問い合わせフォーム</a>よりご連絡ください。</p>
-                    </CardContent>
-                </Card>
-            </div>
-          </div>
+          <Card className="max-w-2xl mx-auto">
+            <CardHeader>
+                <CardTitle className="font-headline">プロジェクト情報</CardTitle>
+            </CardHeader>
+            <CardContent>
+            <ul className="space-y-4">
+                {projectInfo.map((info) => (
+                <li key={info.label} className="flex flex-col">
+                    <span className="font-bold">{info.label}</span>
+                    <span className="text-muted-foreground">{info.value}</span>
+                </li>
+                ))}
+            </ul>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -152,10 +139,10 @@ export default function AboutPage() {
           <Briefcase className="mx-auto h-12 w-12 text-primary mb-4" />
           <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">採用情報</h2>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            現在、SnakeWolfDeveloperメンバーを募集しています。ご興味のある方は、お問い合わせフォームよりご連絡ください。
+            現在、SnakeWolfDeveloperメンバーを募集しています。ご興味のある方は、以下の専用フォームよりご応募ください。
           </p>
           <Button asChild className="mt-8">
-            <Link href="/contact">採用について問い合わせる</Link>
+            <Link href="https://example.com/recruitment" target="_blank" rel="noopener noreferrer">応募フォームへ</Link>
           </Button>
         </div>
       </section>

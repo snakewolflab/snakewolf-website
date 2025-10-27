@@ -62,11 +62,17 @@ function GalleryUploader({ onUpload, initialImageIds = [] }: { onUpload: (imageI
     const [uploading, setUploading] = useState(false);
     
     const fetchImageUrls = useCallback(async (imageIds: string[]) => {
+        if (!firebaseApp) return;
         const storage = getStorage(firebaseApp);
-        const urls = await Promise.all(
-            imageIds.map(id => getDownloadURL(ref(storage, `images/${id}`)))
-        );
-        setImagePreviews(urls);
+        try {
+            const urls = await Promise.all(
+                imageIds.map(id => getDownloadURL(ref(storage, `images/${id}`)))
+            );
+            setImagePreviews(urls);
+        } catch (error) {
+            console.error("Failed to fetch gallery image URLs", error);
+            setImagePreviews([]);
+        }
     }, [firebaseApp]);
 
     useEffect(() => {
@@ -80,21 +86,27 @@ function GalleryUploader({ onUpload, initialImageIds = [] }: { onUpload: (imageI
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         setUploading(true);
         const storage = getStorage(firebaseApp);
-        const newImageIds = [...initialImageIds];
-        const newImagePreviews = [...imagePreviews];
         
-        await Promise.all(acceptedFiles.map(async (file) => {
+        const uploadPromises = acceptedFiles.map(async (file) => {
             const fileId = `${Date.now()}-${file.name}`;
             const storageRef = ref(storage, `images/${fileId}`);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
-            newImageIds.push(fileId);
-            newImagePreviews.push(downloadURL);
-        }));
+            return { fileId, downloadURL };
+        });
 
-        setImagePreviews(newImagePreviews);
-        onUpload(newImageIds);
-        setUploading(false);
+        try {
+            const uploadedImages = await Promise.all(uploadPromises);
+            const newImageIds = [...initialImageIds, ...uploadedImages.map(img => img.fileId)];
+            const newImagePreviews = [...imagePreviews, ...uploadedImages.map(img => img.downloadURL)];
+            
+            setImagePreviews(newImagePreviews);
+            onUpload(newImageIds);
+        } catch (error) {
+            console.error("Gallery upload failed", error);
+        } finally {
+            setUploading(false);
+        }
 
     }, [firebaseApp, onUpload, initialImageIds, imagePreviews]);
 
@@ -318,3 +330,5 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
     </Dialog>
   );
 }
+
+    

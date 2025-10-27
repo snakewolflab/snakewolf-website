@@ -116,7 +116,7 @@ export const workItems: WorkItem[] = [
     category: "Game",
     description: "広大な宇宙を探索するオープンワールドRPG。未知の惑星を発見し、独自のストーリーを紡ぎます。",
     longDescription: "<p>Cosmic Explorerは、プレイヤーが宇宙船のキャプテンとなり、銀河系を自由に旅する壮大なオープンワールドRPGです。</p><p>プロシージャル生成によって生み出される無数の星系には、それぞれ独自の環境、生態系、そして文明が存在します。資源を採掘し、他の船と交易を行い、時には危険な宇宙海賊との戦闘を繰り広げながら、あなたは自分だけの物語を紡いでいきます。メインストーリーの謎を追うもよし、未踏の惑星を探検するもよし。宇宙での生き方は、すべてあなた次第です。</p>",
-    platforms: ["PC", "Console"],
+    platforms: ["Steam", "Epic Games Store", "Console"],
     imageId: "work-cosmic-explorer",
     galleryImageIds: ["work-cosmic-explorer", "work-pixel-painters", "news-1"],
     url: "https://example.com"
@@ -128,7 +128,7 @@ export const workItems: WorkItem[] = [
     category: "App",
     description: "チームの生産性を最大化するためのプロジェクト管理ツール。直感的なUIでタスクを効率的に整理します。",
     longDescription: "<p>TaskMaster Proは、現代のチームが必要とするすべての機能を備えた、オールインワンのプロジェクト管理アプリケーションです。</p><p>カンバンボード、ガントチャート、カレンダービューなど、プロジェクトの状況に合わせて最適な表示方法を選択できます。タスクの依存関係設定、担当者の割り当て、進捗状況のリアルタイム追跡により、チーム全体の透明性を高め、ボトルネックを解消します。SlackやGoogle Driveとの連携もスムーズで、既存のワークフローを妨げることなく、シームレスな導入が可能です。</p>",
-    platforms: ["iOS", "Android", "Web"],
+    platforms: ["App Store", "Google Play", "Web"],
     imageId: "work-taskmaster-pro",
     galleryImageIds: ["work-taskmaster-pro", "news-2", "news-3"],
     url: "https://example.com"
@@ -140,7 +140,7 @@ export const workItems: WorkItem[] = [
     category: "Game",
     description: "友達と協力して楽しむ、お絵かきパズルゲーム。創造力を発揮して、数々のお題に挑戦しよう。",
     longDescription: "<p>Pixel Paintersは、年齢を問わず誰でも楽しめる、協力型のお絵かきパズルゲームです。</p><p>最大4人のプレイヤーでチームを組み、出題されるお題をドット絵で表現します。限られた時間の中で、仲間とコミュニケーションを取りながら一枚の絵を完成させる達成感は格別です。豊富なカラーパレットとキャンバスサイズ、そしてユニークなお題の数々が、あなたの創造性を刺激します。完成したアートはコレクションして、友達に自慢することもできます。</p>",
-    platforms: ["Mobile", "Web"],
+    platforms: ["App Store", "Google Play", "Web"],
     imageId: "work-pixel-painters",
     galleryImageIds: ["work-pixel-painters", "work-cosmic-explorer", "creator-alpha"],
     url: "https://example.com"

@@ -47,7 +47,7 @@ export default function ContactPage() {
                     <h4 className="font-bold">サポートサーバー</h4>
                     <p className="text-muted-foreground">お急ぎの場合</p>
                     <Button asChild>
-                        <Link href="https://discord.gg/your-discord-invite" target="_blank" rel="noopener noreferrer">Join Discord</Link>
+                        <Link href="https://discord.gg/CEYmfyQQ2y" target="_blank" rel="noopener noreferrer">Join Discord</Link>
                     </Button>
                 </div>
             </div>

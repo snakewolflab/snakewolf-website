@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from "next/image";
@@ -15,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 
 import Snewol1 from '../character/1.png';
 import Wallpaper from './wallpaper.png';
-import type { NewsArticle, MediaItem, Tag } from "@/lib/firebase-data";
+import type { NewsArticle, MediaItem } from "@/lib/firebase-data";
 
 export default function HomePage() {
   const firestore = useFirestore();
@@ -27,13 +28,7 @@ export default function HomePage() {
   const { data: latestNews, isLoading: newsLoading } = useCollection<NewsArticle>(newsQuery);
   
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
-  const { data: tags, isLoading: tagsLoading } = useCollection<Tag>(useMemoFirebase(() => collection(firestore, 'tags'), [firestore]));
 
-  const getArticleTags = (article: NewsArticle) => {
-    if (!article.tagIds || !tags) return [];
-    return tags.filter(tag => article.tagIds.includes(tag.id));
-  };
-  
   const getMediaUrl = (imageId: string | undefined) => {
       if(!imageId || !mediaItems) return '';
       return mediaItems.find(m => m.id === imageId)?.fileUrl ?? '';
@@ -97,7 +92,7 @@ export default function HomePage() {
               <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
             ) : latestNews?.map((article) => {
               const articleImage = mediaItems?.find(p => p.id === article.imageId);
-              const articleTags = getArticleTags(article);
+              const articleTags = article.tags || [];
               return (
                 <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                   {articleImage && (
@@ -126,7 +121,7 @@ export default function HomePage() {
                     <p className="text-muted-foreground line-clamp-3">{article.contentSummary}</p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {articleTags.map((tag) => (
-                        <Badge key={tag.id} variant="secondary">{tag.name}</Badge>
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
                       ))}
                     </div>
                   </CardContent>

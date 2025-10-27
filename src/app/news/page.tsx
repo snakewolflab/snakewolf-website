@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Metadata } from 'next';
@@ -27,14 +28,8 @@ export default function NewsPage() {
   );
   const { data: articles, isLoading: articlesLoading } = useCollection<NewsArticle>(newsQuery);
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
-  const { data: tags, isLoading: tagsLoading } = useCollection<Tag>(useMemoFirebase(() => collection(firestore, 'tags'), [firestore]));
-
-  const isLoading = articlesLoading || mediaLoading || tagsLoading;
-
-  const getArticleTags = (article: NewsArticle) => {
-    if (!article.tagIds || !tags) return [];
-    return tags.filter(tag => article.tagIds.includes(tag.id));
-  };
+  
+  const isLoading = articlesLoading || mediaLoading;
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -67,7 +62,7 @@ export default function NewsPage() {
             <p className="text-center col-span-full text-muted-foreground">記事がありません。</p>
         ) : articles?.map((article) => {
           const articleImage = mediaItems?.find(p => p.id === article.imageId);
-          const articleTags = getArticleTags(article);
+          const articleTags = article.tags || [];
           return (
             <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {articleImage && (
@@ -96,7 +91,7 @@ export default function NewsPage() {
                 <p className="text-muted-foreground line-clamp-3 flex-grow">{article.contentSummary}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {articleTags.map((tag) => (
-                    <Badge key={tag.id} variant="secondary">{tag.name}</Badge>
+                    <Badge key={tag} variant="secondary">{tag}</Badge>
                   ))}
                 </div>
               </CardContent>

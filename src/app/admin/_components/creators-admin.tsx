@@ -73,7 +73,7 @@ export function CreatorsAdmin() {
       description: data.description,
       imageId: data.imageId,
       url: data.url,
-      tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+      tags: data.tags,
     };
     
     setDocumentNonBlocking(docRef, creatorData, { merge: true });

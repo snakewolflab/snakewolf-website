@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -29,9 +30,8 @@ export default function NewsArticlePage() {
   const article = articles?.[0];
 
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
-  const { data: tags, isLoading: tagsLoading } = useCollection<TagType>(useMemoFirebase(() => collection(firestore, 'tags'), [firestore]));
   
-  const isLoading = articleLoading || mediaLoading || tagsLoading;
+  const isLoading = articleLoading || mediaLoading;
 
   if (isLoading) {
     return (
@@ -54,7 +54,7 @@ export default function NewsArticlePage() {
   }
 
   const articleImage = mediaItems?.find(p => p.id === article.imageId);
-  const articleTags = tags?.filter(t => article.tagIds?.includes(t.id)) || [];
+  const articleTags = article.tags || [];
 
   return (
     <article className="container mx-auto px-4 py-16 max-w-4xl">
@@ -79,7 +79,7 @@ export default function NewsArticlePage() {
                     <Tag className="h-4 w-4" />
                     <div className="flex flex-wrap gap-2">
                     {articleTags.map((tag) => (
-                        <Badge key={tag.id} variant="secondary">{tag.name}</Badge>
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
                     ))}
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
@@ -29,19 +29,17 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { useCollection, useFirestore, useMemoFirebase, useFirebaseApp } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useFirebaseApp } from '@/firebase';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import type { Tag } from '@/lib/firebase-data';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ImageUploader } from './image-uploader';
+import { TagInput } from './tag-input';
 
 const newsFormSchema = z.object({
   title: z.string().min(1, 'タイトルは必須です。'),
   publicationDate: z.date({ required_error: '公開日は必須です。' }),
   contentSummary: z.string().min(1, '概要は必須です。'),
   content: z.string().min(1, '本文は必須です。'),
-  tagIds: z.array(z.string()).min(1, '少なくとも1つのタグを選択してください。'),
+  tags: z.array(z.string()).min(1, '少なくとも1つのタグを入力してください。'),
   imageId: z.string().optional(),
 });
 
@@ -55,10 +53,7 @@ interface NewsFormProps {
 }
 
 export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: NewsFormProps) {
-  const firestore = useFirestore();
   const firebaseApp = useFirebaseApp();
-  const tagsQuery = useMemoFirebase(() => collection(firestore, 'tags'), [firestore]);
-  const { data: tags, isLoading: tagsLoading } = useCollection<Tag>(tagsQuery);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const form = useForm<NewsFormValues>({
@@ -68,7 +63,7 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
       publicationDate: new Date(),
       contentSummary: '',
       content: '',
-      tagIds: [],
+      tags: [],
       imageId: '',
     },
   });
@@ -81,7 +76,7 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
         publicationDate: pubDate,
         contentSummary: defaultValues?.contentSummary || '',
         content: defaultValues?.content || '',
-        tagIds: defaultValues?.tagIds || [],
+        tags: defaultValues?.tags || [],
         imageId: defaultValues?.imageId || '',
       });
       setImageUrl(null);
@@ -187,30 +182,16 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
             />
             <FormField
               control={form.control}
-              name="tagIds"
+              name="tags"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>タグ</FormLabel>
-                  <div className="grid grid-cols-3 gap-2">
-                    {tags?.map((tag) => (
-                      <FormItem key={tag.id} className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(tag.id)}
-                            onCheckedChange={(checked) => {
-                              const currentTagIds = field.value || [];
-                              if (checked) {
-                                field.onChange([...currentTagIds, tag.id]);
-                              } else {
-                                field.onChange(currentTagIds.filter(value => value !== tag.id));
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">{tag.name}</FormLabel>
-                      </FormItem>
-                    ))}
-                  </div>
+                  <FormControl>
+                    <TagInput
+                      {...field}
+                      placeholder="タグを入力してEnter"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

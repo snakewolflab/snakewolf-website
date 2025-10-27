@@ -27,12 +27,13 @@ import { useEffect, useState } from 'react';
 import { ImageUploader } from './image-uploader';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { useFirebaseApp } from '@/firebase';
+import { TagInput } from './tag-input';
 
 const creatorFormSchema = z.object({
   name: z.string().min(1, '名前は必須です。'),
   description: z.string().min(1, '説明は必須です。'),
   url: z.string().url('有効なURLを入力してください。'),
-  tags: z.string().min(1, '少なくとも1つのタグを入力してください。'),
+  tags: z.array(z.string()).min(1, '少なくとも1つのタグを入力してください。'),
   imageId: z.string().min(1, '画像は必須です。'),
 });
 
@@ -42,7 +43,7 @@ interface CreatorFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onSubmit: (data: CreatorFormValues) => void;
-  defaultValues: Partial<CreatorFormValues> & { tags?: string[] | string } | null;
+  defaultValues: Partial<CreatorFormValues> & { id?: string } | null;
 }
 
 export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: CreatorFormProps) {
@@ -55,19 +56,18 @@ export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: C
       name: '',
       description: '',
       url: '',
-      tags: '',
+      tags: [],
       imageId: '',
     },
   });
 
   useEffect(() => {
     if (isOpen) {
-      const tagsString = Array.isArray(defaultValues?.tags) ? defaultValues.tags.join(', ') : (defaultValues?.tags || '');
       form.reset({
         name: defaultValues?.name || '',
         description: defaultValues?.description || '',
         url: defaultValues?.url || '',
-        tags: tagsString,
+        tags: defaultValues?.tags || [],
         imageId: defaultValues?.imageId || '',
       });
       setImageUrl(null);
@@ -144,7 +144,10 @@ export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: C
                 <FormItem>
                   <FormLabel>タグ</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="カンマ区切りで入力 (例: VTuber, イラストレーター)" />
+                    <TagInput
+                      {...field}
+                      placeholder="タグを入力してEnter"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

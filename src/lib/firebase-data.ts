@@ -5,7 +5,7 @@ export type NewsArticle = {
   publicationDate: string; // ISO String
   contentSummary: string;
   content: string; // Can be HTML
-  tagIds: string[];
+  tags: string[];
   imageId?: string;
   slug: string;
 };

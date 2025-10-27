@@ -76,7 +76,7 @@ export function NewsAdmin() {
       publicationDate: data.publicationDate.toISOString(),
       contentSummary: data.contentSummary,
       content: data.content,
-      tagIds: data.tagIds,
+      tags: data.tags,
       imageId: data.imageId,
     };
     

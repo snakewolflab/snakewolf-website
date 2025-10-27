@@ -16,7 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { PlusCircle, Edit, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Loader2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { WorkForm, type WorkFormValues } from './work-form';
-import { ImageWithUrl } from './image-with-url';
+import Image from 'next/image';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 interface WorksAdminProps {
   category: 'App' | 'Game';
@@ -45,7 +46,6 @@ export function WorksAdmin({ category }: WorksAdminProps) {
 
   const sortedWorks = useMemo(() => {
     if (!works) return [];
-    // Firestoreの複合インデックスを回避するため、クライアントサイドでソート
     return [...works].sort((a, b) => a.title.localeCompare(b.title));
   }, [works]);
 
@@ -136,7 +136,9 @@ export function WorksAdmin({ category }: WorksAdminProps) {
                 {sortedWorks?.map((work) => (
                     <TableRow key={work.id}>
                       <TableCell>
-                        <ImageWithUrl imageId={work.imageId} alt={work.title} />
+                        <div className="w-16 h-10 relative bg-muted rounded-md overflow-hidden">
+                          <Image src={getGitHubImageUrl(work.imageId)} alt={work.title} fill className="object-cover" />
+                        </div>
                       </TableCell>
                       <TableCell className="font-medium">{work.title}</TableCell>
                       <TableCell className="text-muted-foreground text-xs">{work.platforms.map(p => p.name).join(', ')}</TableCell>

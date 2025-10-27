@@ -24,17 +24,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useEffect, useState } from 'react';
-import { ImageUploader } from './image-uploader';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import { useFirebaseApp } from '@/firebase';
 import { TagInput } from './tag-input';
+import Image from 'next/image';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 const creatorFormSchema = z.object({
   name: z.string().min(1, '名前は必須です。'),
   description: z.string().min(1, '説明は必須です。'),
   url: z.string().url('有効なURLを入力してください。'),
   tags: z.array(z.string()).min(1, '少なくとも1つのタグを入力してください。'),
-  imageId: z.string().min(1, '画像は必須です。'),
+  imageId: z.string().min(1, '画像ファイル名は必須です。'),
 });
 
 export type CreatorFormValues = z.infer<typeof creatorFormSchema>;
@@ -47,9 +46,6 @@ interface CreatorFormProps {
 }
 
 export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: CreatorFormProps) {
-  const firebaseApp = useFirebaseApp();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
   const form = useForm<CreatorFormValues>({
     resolver: zodResolver(creatorFormSchema),
     defaultValues: {
@@ -61,6 +57,9 @@ export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: C
     },
   });
 
+  const imageId = form.watch('imageId');
+  const imageUrl = getGitHubImageUrl(imageId);
+
   useEffect(() => {
     if (isOpen) {
       form.reset({
@@ -70,20 +69,8 @@ export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: C
         tags: defaultValues?.tags || [],
         imageId: defaultValues?.imageId || '',
       });
-      setImageUrl(null);
-      if (defaultValues?.imageId) {
-        const storage = getStorage(firebaseApp);
-        getDownloadURL(ref(storage, `images/${defaultValues.imageId}`))
-          .then(setImageUrl)
-          .catch(console.error);
-      }
     }
-  }, [isOpen, defaultValues, form, firebaseApp]);
-
-  const handleImageUpload = (fileId: string, downloadUrl: string) => {
-    form.setValue('imageId', fileId, { shouldValidate: true });
-    setImageUrl(downloadUrl);
-  };
+  }, [isOpen, defaultValues, form]);
   
   const isEditing = !!defaultValues?.id;
 
@@ -156,13 +143,18 @@ export function CreatorForm({ isOpen, onOpenChange, onSubmit, defaultValues }: C
             <FormField
               control={form.control}
               name="imageId"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>プロフィール画像</FormLabel>
+                  <FormLabel>画像ファイル名</FormLabel>
                   <FormControl>
-                    <ImageUploader onUpload={handleImageUpload} initialImageUrl={imageUrl}/>
+                    <Input {...field} placeholder="example.png" />
                   </FormControl>
                   <FormMessage />
+                   {imageUrl && (
+                    <div className="mt-4 relative w-40 h-40">
+                      <Image src={imageUrl} alt="画像プレビュー" fill className="object-cover rounded-md"/>
+                    </div>
+                  )}
                 </FormItem>
               )}
             />

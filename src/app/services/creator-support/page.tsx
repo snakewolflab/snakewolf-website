@@ -7,7 +7,6 @@ import { Heart, Mic, Users, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Wallpaper from '../../wallpaper.png';
 
 // export const metadata: Metadata = {
 //     title: 'クリエイター支援',
@@ -42,7 +41,7 @@ export default function CreatorSupportPage() {
         <div>
             <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
                 <Image
-                    src={Wallpaper}
+                    src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
                     alt="クリエイター支援"
                     fill
                     className="object-cover"

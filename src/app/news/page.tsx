@@ -8,7 +8,8 @@ import { Newspaper, Search } from 'lucide-react';
 import { collection, query, orderBy } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { NewsArticle, MediaItem } from '@/lib/firebase-data';
+import type { NewsArticle } from '@/lib/firebase-data';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,9 +25,8 @@ export default function NewsPage() {
     [firestore]
   );
   const { data: articles, isLoading: articlesLoading } = useCollection<NewsArticle>(newsQuery);
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
   
-  const isLoading = articlesLoading || mediaLoading;
+  const isLoading = articlesLoading;
 
   const filteredArticles = useMemo(() => {
     if (!articles) return [];
@@ -85,18 +85,17 @@ export default function NewsPage() {
               {searchTerm ? '検索結果が見つかりませんでした。' : '記事がありません。'}
             </p>
         ) : filteredArticles.map((article) => {
-          const articleImage = mediaItems?.find(p => p.id === article.imageId);
+          const articleImage = getGitHubImageUrl(article.imageId);
           const articleTags = article.tags || [];
           return (
             <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {articleImage && (
                 <Link href={`/news/${article.slug}`} className="block relative h-56 w-full">
                   <Image
-                    src={articleImage.fileUrl}
+                    src={articleImage}
                     alt={article.title}
                     fill
                     className="object-cover"
-                    data-ai-hint={articleImage.imageHint}
                   />
                 </Link>
               )}

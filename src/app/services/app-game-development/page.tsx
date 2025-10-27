@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { CheckCircle, Code, Gamepad2, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Wallpaper from '../../wallpaper.png';
 
 // export const metadata: Metadata = {
 //     title: 'アプリ・ゲーム開発',
@@ -36,7 +35,7 @@ export default function AppGameDevelopmentPage() {
         <div>
             <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
                 <Image
-                    src={Wallpaper}
+                    src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
                     alt="アプリ・ゲーム開発"
                     fill
                     className="object-cover"

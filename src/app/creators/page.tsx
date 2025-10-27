@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { collection, query, orderBy } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { CreatorItem, MediaItem } from '@/lib/firebase-data';
+import type { CreatorItem } from '@/lib/firebase-data';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,9 +21,8 @@ export default function CreatorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const { data: creators, isLoading: creatorsLoading } = useCollection<CreatorItem>(useMemoFirebase(() => query(collection(firestore, 'creators'), orderBy('name')), [firestore]));
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
   
-  const isLoading = creatorsLoading || mediaLoading;
+  const isLoading = creatorsLoading;
 
   const filteredCreators = useMemo(() => {
     if (!creators) return [];
@@ -83,7 +83,7 @@ export default function CreatorsPage() {
             {searchTerm ? '検索結果が見つかりませんでした。' : 'クリエイターがいません。'}
           </p>
         ) : filteredCreators.map((item) => {
-          const itemImage = mediaItems?.find(p => p.id === item.imageId);
+          const itemImage = getGitHubImageUrl(item.imageId);
           return (
             <Card key={item.id} className="overflow-hidden group">
                 <div className="md:flex">
@@ -91,11 +91,10 @@ export default function CreatorsPage() {
                         {itemImage && (
                         <div className="relative aspect-square">
                             <Image
-                                src={itemImage.fileUrl}
+                                src={itemImage}
                                 alt={item.name}
                                 fill
                                 className="object-cover rounded-full border-4 border-primary/20 group-hover:scale-105 transition-transform duration-300"
-                                data-ai-hint={itemImage.imageHint}
                             />
                         </div>
                         )}

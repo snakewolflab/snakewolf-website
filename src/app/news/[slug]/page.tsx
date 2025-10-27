@@ -9,7 +9,8 @@ import { Calendar, Tag, ArrowLeft } from 'lucide-react';
 import { collection, query, where, limit } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { NewsArticle, MediaItem, Tag as TagType } from '@/lib/firebase-data';
+import type { NewsArticle } from '@/lib/firebase-data';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -28,10 +29,8 @@ export default function NewsArticlePage() {
   
   const { data: articles, isLoading: articleLoading } = useCollection<NewsArticle>(articleQuery);
   const article = articles?.[0];
-
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
   
-  const isLoading = articleLoading || mediaLoading;
+  const isLoading = articleLoading;
 
   if (isLoading) {
     return (
@@ -53,7 +52,7 @@ export default function NewsArticlePage() {
     notFound();
   }
 
-  const articleImage = mediaItems?.find(p => p.id === article.imageId);
+  const articleImage = getGitHubImageUrl(article.imageId);
   const articleTags = article.tags || [];
 
   return (
@@ -91,11 +90,10 @@ export default function NewsArticlePage() {
       {articleImage && (
         <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden mb-8 shadow-lg">
           <Image
-            src={articleImage.fileUrl}
+            src={articleImage}
             alt={article.title}
             fill
             className="object-cover"
-            data-ai-hint={articleImage.imageHint}
             priority
           />
         </div>

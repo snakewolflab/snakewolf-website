@@ -6,33 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
-import Snewol1 from '../../character/1.png';
-import Snewol2 from '../../character/2.png';
-import Snewol3 from '../../character/3.png';
-import Snewol4 from '../../character/4.png';
-import Snewol5 from '../../character/5.png';
-import Snewol6 from '../../character/6.png';
-import Snewol7 from '../../character/7.png';
-import Snewol8 from '../../character/8.png';
-import Snewol9 from '../../character/9.png';
-import Snewol10 from '../../character/10.png';
-import Snewol11 from '../../character/11.png';
-import Snewol12 from '../../character/12.png';
-import Snewol13 from '../../character/13.png';
-import Snewol14 from '../../character/14.png';
-import Snewol15 from '../../character/15.png';
-import Snewol16 from '../../character/16.png';
-import Snewol17 from '../../character/17.png';
-import Snewol18 from '../../character/18.png';
-import Snewol19 from '../../character/19.png';
-import Snewol20 from '../../character/20.png';
-
-const characterImages = [
-    Snewol1, Snewol2, Snewol3, Snewol4, Snewol5,
-    Snewol6, Snewol7, Snewol8, Snewol9, Snewol10,
-    Snewol11, Snewol12, Snewol13, Snewol14, Snewol15,
-    Snewol16, Snewol17, Snewol18, Snewol19, Snewol20
-];
+const GITHUB_CHARACTER_BASE_URL = 'https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/suneuru-kun/';
+const characterImageCount = 20;
+const characterImages = Array.from({ length: characterImageCount }, (_, i) => `${GITHUB_CHARACTER_BASE_URL}${i + 1}.png`);
 
 
 // export const metadata: Metadata = {
@@ -70,8 +46,11 @@ export default function SuneuruKunPage() {
                                     <Image
                                         src={img}
                                         alt={`スネウル君 スタイル ${index + 1}`}
+                                        width={500}
+                                        height={500}
                                         className="object-contain w-full h-full"
                                         data-ai-hint="wolf mascot"
+                                        unoptimized
                                     />
                                 </CardContent>
                             </Card>

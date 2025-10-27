@@ -8,7 +8,8 @@ import { ArrowRight, Gamepad2, Search } from 'lucide-react';
 import { collection, query, where } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+import type { WorkItem } from '@/lib/firebase-data';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,9 +26,8 @@ export default function GamesPage() {
     [firestore]
   );
   const { data: gameWorks, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
 
-  const isLoading = worksLoading || mediaLoading;
+  const isLoading = worksLoading;
 
   const sortedWorks = useMemo(() => {
     if (!gameWorks) return [];
@@ -93,18 +93,17 @@ export default function GamesPage() {
              {searchTerm ? '検索結果が見つかりませんでした。' : 'ゲームがありません。'}
           </p>
         ) : filteredWorks.map((item) => {
-          const itemImage = mediaItems?.find(p => p.id === item.imageId);
+          const itemImage = getGitHubImageUrl(item.imageId);
           return (
             <Card key={item.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               {itemImage && (
                  <Link href={`/works/games/${item.slug}`}>
                     <div className="relative h-64 w-full">
                     <Image
-                        src={itemImage.fileUrl}
+                        src={itemImage}
                         alt={item.title}
                         fill
                         className="object-cover"
-                        data-ai-hint={itemImage.imageHint}
                     />
                     </div>
                 </Link>

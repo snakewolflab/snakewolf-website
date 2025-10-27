@@ -8,6 +8,7 @@ import { collection, query, where, limit } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,9 +30,7 @@ export default function WorkDetailPage() {
   const { data: items, isLoading: itemLoading } = useCollection<WorkItem>(itemQuery);
   const item = items?.[0];
 
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
-
-  const isLoading = itemLoading || mediaLoading;
+  const isLoading = itemLoading;
   
   if(isLoading) {
       return (
@@ -62,7 +61,7 @@ export default function WorkDetailPage() {
   const Icon = item.category === 'App' ? AppWindow : Gamepad2;
   const ctaText = item.category === 'App' ? 'アプリを入手する' : 'ゲームをプレイする';
 
-  const galleryImages = item.galleryImageIds?.map(id => mediaItems?.find(p => p.id === id)).filter(Boolean) as MediaItem[];
+  const galleryImages = item.galleryImageIds?.map(id => getGitHubImageUrl(id)).filter(Boolean) as string[];
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-5xl">
@@ -104,18 +103,17 @@ export default function WorkDetailPage() {
       {galleryImages && galleryImages.length > 0 && (
         <Carousel className="w-full mb-8" opts={{ loop: true }}>
           <CarouselContent>
-            {galleryImages.map((img, index) => (
+            {galleryImages.map((imgUrl, index) => (
               <CarouselItem key={index}>
                 <div className="p-1">
                   <Card className="overflow-hidden">
                     <CardContent className="flex aspect-video items-center justify-center p-0">
-                       {img && (
+                       {imgUrl && (
                          <Image
-                          src={img.fileUrl}
+                          src={imgUrl}
                           alt={`${item.title} gallery image ${index + 1}`}
                           fill
                           className="object-cover"
-                          data-ai-hint={img.imageHint}
                         />
                        )}
                     </CardContent>

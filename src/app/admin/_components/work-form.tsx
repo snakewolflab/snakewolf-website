@@ -23,14 +23,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { useEffect, useState, useCallback } from 'react';
-import { useFirebaseApp } from '@/firebase';
-import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
-import { ImageUploader } from './image-uploader';
+import { useEffect, useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import { useDropzone } from 'react-dropzone';
-import { UploadCloud, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { getGitHubImageUrl } from '@/lib/utils';
+
 
 const platformSchema = z.object({
   name: z.string().min(1, 'プラットフォーム名は必須です。'),
@@ -56,97 +53,8 @@ interface WorkFormProps {
   category: 'App' | 'Game';
 }
 
-function GalleryUploader({ onUpload, initialImageIds = [] }: { onUpload: (imageIds: string[]) => void, initialImageIds: string[] }) {
-    const firebaseApp = useFirebaseApp();
-    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-    const [uploading, setUploading] = useState(false);
-    
-    const fetchImageUrls = useCallback(async (imageIds: string[]) => {
-        if (!firebaseApp) return;
-        const storage = getStorage(firebaseApp);
-        try {
-            const urls = await Promise.all(
-                imageIds.map(id => getDownloadURL(ref(storage, `images/${id}`)))
-            );
-            setImagePreviews(urls);
-        } catch (error) {
-            console.error("Failed to fetch gallery image URLs", error);
-            setImagePreviews([]);
-        }
-    }, [firebaseApp]);
-
-    useEffect(() => {
-        if (initialImageIds.length > 0) {
-            fetchImageUrls(initialImageIds);
-        } else {
-            setImagePreviews([]);
-        }
-    }, [initialImageIds, fetchImageUrls]);
-
-    const onDrop = useCallback(async (acceptedFiles: File[]) => {
-        setUploading(true);
-        const storage = getStorage(firebaseApp);
-        
-        const uploadPromises = acceptedFiles.map(async (file) => {
-            const fileId = `${Date.now()}-${file.name}`;
-            const storageRef = ref(storage, `images/${fileId}`);
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            return { fileId, downloadURL };
-        });
-
-        try {
-            const uploadedImages = await Promise.all(uploadPromises);
-            const newImageIds = [...initialImageIds, ...uploadedImages.map(img => img.fileId)];
-            const newImagePreviews = [...imagePreviews, ...uploadedImages.map(img => img.downloadURL)];
-            
-            setImagePreviews(newImagePreviews);
-            onUpload(newImageIds);
-        } catch (error) {
-            console.error("Gallery upload failed", error);
-        } finally {
-            setUploading(false);
-        }
-
-    }, [firebaseApp, onUpload, initialImageIds, imagePreviews]);
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: {'image/*': []} });
-
-    const removeImage = (index: number) => {
-        const newImageIds = [...initialImageIds];
-        newImageIds.splice(index, 1);
-        const newImagePreviews = [...imagePreviews];
-        newImagePreviews.splice(index, 1);
-        
-        setImagePreviews(newImagePreviews);
-        onUpload(newImageIds);
-    };
-
-    return (
-        <div>
-            <div className="grid grid-cols-3 gap-2 mb-2">
-                {imagePreviews.map((src, index) => (
-                    <div key={index} className="relative aspect-video">
-                        <Image src={src} alt={`Gallery image ${index + 1}`} fill className="object-cover rounded-md" />
-                        <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6" onClick={() => removeImage(index)}>
-                            <Trash2 className="h-3 w-3" />
-                        </Button>
-                    </div>
-                ))}
-            </div>
-            <div {...getRootProps()} className={`w-full h-24 rounded-md border-2 border-dashed flex flex-col justify-center items-center text-muted-foreground cursor-pointer hover:border-primary ${isDragActive ? 'border-primary bg-primary/10' : ''}`}>
-                <input {...getInputProps()} />
-                {uploading ? <Loader2 className="h-8 w-8 animate-spin" /> : <UploadCloud className="h-8 w-8" />}
-                <p className="text-xs mt-1">画像を追加</p>
-            </div>
-        </div>
-    );
-}
 
 export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, category }: WorkFormProps) {
-  const firebaseApp = useFirebaseApp();
-  const [mainImageUrl, setMainImageUrl] = useState<string | null>(null);
-
   const form = useForm<WorkFormValues>({
     resolver: zodResolver(workFormSchema),
     defaultValues: {
@@ -164,6 +72,12 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
     name: 'platforms',
   });
 
+  const mainImageId = form.watch('imageId');
+  const mainImageUrl = getGitHubImageUrl(mainImageId);
+
+  const galleryImageIds = form.watch('galleryImageIds');
+  const galleryImageUrls = galleryImageIds.map(id => getGitHubImageUrl(id)).filter(Boolean);
+
   useEffect(() => {
     if (isOpen) {
       form.reset({
@@ -174,25 +88,9 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
         galleryImageIds: defaultValues?.galleryImageIds || [],
         platforms: defaultValues?.platforms && defaultValues.platforms.length > 0 ? defaultValues.platforms : [{ name: '', url: '#' }],
       });
-      setMainImageUrl(null);
-      if (defaultValues?.imageId) {
-        const storage = getStorage(firebaseApp);
-        getDownloadURL(ref(storage, `images/${defaultValues.imageId}`))
-          .then(setMainImageUrl)
-          .catch(console.error);
-      }
     }
-  }, [isOpen, defaultValues, form, firebaseApp]);
-
-  const handleMainImageUpload = (fileId: string, downloadUrl: string) => {
-    form.setValue('imageId', fileId, { shouldValidate: true });
-    setMainImageUrl(downloadUrl);
-  };
+  }, [isOpen, defaultValues, form]);
   
-  const handleGalleryUpload = (imageIds: string[]) => {
-      form.setValue('galleryImageIds', imageIds, { shouldValidate: true });
-  }
-
   const isEditing = !!defaultValues?.id;
   const categoryName = category === 'App' ? 'アプリ' : 'ゲーム';
 
@@ -249,13 +147,18 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
             <FormField
               control={form.control}
               name="imageId"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>メイン画像</FormLabel>
+                  <FormLabel>メイン画像ファイル名</FormLabel>
                   <FormControl>
-                    <ImageUploader onUpload={handleMainImageUpload} initialImageUrl={mainImageUrl}/>
+                    <Input {...field} placeholder="main-image.png" />
                   </FormControl>
                   <FormMessage />
+                  {mainImageUrl && (
+                    <div className="mt-4 relative w-full aspect-video">
+                      <Image src={mainImageUrl} alt="メイン画像プレビュー" fill className="object-contain rounded-md" />
+                    </div>
+                  )}
                 </FormItem>
               )}
             />
@@ -264,11 +167,25 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
               name="galleryImageIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ギャラリー画像</FormLabel>
+                  <FormLabel>ギャラリー画像ファイル名 (改行区切り)</FormLabel>
                   <FormControl>
-                    <GalleryUploader onUpload={handleGalleryUpload} initialImageIds={field.value} />
+                    <Textarea
+                      placeholder="image1.png&#x000A;image2.png&#x000A;image3.png"
+                      rows={4}
+                      value={field.value.join('\n')}
+                      onChange={(e) => field.onChange(e.target.value.split('\n'))}
+                    />
                   </FormControl>
-                  <FormMessage />
+                   <FormMessage />
+                  {galleryImageUrls.length > 0 && (
+                    <div className="mt-4 grid grid-cols-3 gap-2">
+                      {galleryImageUrls.map((url, index) => (
+                        <div key={index} className="relative aspect-video">
+                          <Image src={url} alt={`ギャラリー画像 ${index + 1}`} fill className="object-cover rounded-md" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </FormItem>
               )}
             />
@@ -330,5 +247,3 @@ export function WorkForm({ isOpen, onOpenChange, onSubmit, defaultValues, catego
     </Dialog>
   );
 }
-
-    

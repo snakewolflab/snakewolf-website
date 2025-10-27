@@ -28,11 +28,10 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { useFirebaseApp } from '@/firebase';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import { ImageUploader } from './image-uploader';
+import { useEffect } from 'react';
 import { TagInput } from './tag-input';
+import Image from 'next/image';
+import { getGitHubImageUrl } from '@/lib/utils';
 
 const newsFormSchema = z.object({
   title: z.string().min(1, 'タイトルは必須です。'),
@@ -53,9 +52,6 @@ interface NewsFormProps {
 }
 
 export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: NewsFormProps) {
-  const firebaseApp = useFirebaseApp();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
   const form = useForm<NewsFormValues>({
     resolver: zodResolver(newsFormSchema),
     defaultValues: {
@@ -68,6 +64,9 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
     },
   });
 
+  const imageId = form.watch('imageId');
+  const imageUrl = getGitHubImageUrl(imageId);
+
   useEffect(() => {
     if (isOpen) {
       const pubDate = defaultValues?.publicationDate ? new Date(defaultValues.publicationDate) : new Date();
@@ -79,20 +78,8 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
         tags: defaultValues?.tags || [],
         imageId: defaultValues?.imageId || '',
       });
-      setImageUrl(null);
-      if (defaultValues?.imageId) {
-        const storage = getStorage(firebaseApp);
-        getDownloadURL(ref(storage, `images/${defaultValues.imageId}`))
-          .then(setImageUrl)
-          .catch(console.error);
-      }
     }
-  }, [isOpen, defaultValues, form, firebaseApp]);
-
-  const handleImageUpload = (fileId: string, downloadUrl: string) => {
-    form.setValue('imageId', fileId, { shouldValidate: true });
-    setImageUrl(downloadUrl);
-  };
+  }, [isOpen, defaultValues, form]);
 
   const isEditing = !!defaultValues?.id;
 
@@ -200,13 +187,18 @@ export function NewsForm({ isOpen, onOpenChange, onSubmit, defaultValues }: News
             <FormField
               control={form.control}
               name="imageId"
-              render={() => (
-                <FormItem>
-                  <FormLabel>メイン画像</FormLabel>
+              render={({ field }) => (
+                 <FormItem>
+                  <FormLabel>メイン画像ファイル名</FormLabel>
                   <FormControl>
-                    <ImageUploader onUpload={handleImageUpload} initialImageUrl={imageUrl}/>
+                    <Input {...field} placeholder="example.png" />
                   </FormControl>
                   <FormMessage />
+                   {imageUrl && (
+                    <div className="mt-4 relative w-full aspect-video">
+                      <Image src={imageUrl} alt="画像プレビュー" fill className="object-contain rounded-md"/>
+                    </div>
+                  )}
                 </FormItem>
               )}
             />

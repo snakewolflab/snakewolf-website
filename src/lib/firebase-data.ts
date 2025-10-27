@@ -29,7 +29,6 @@ export type CreatorItem = {
   name: string;
   description: string;
   imageId: string;
-  imageUrl?: string; // This might be populated on the client
   url: string;
   tags: string[];
 };

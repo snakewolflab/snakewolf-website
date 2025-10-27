@@ -14,9 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-import Snewol1 from '../character/1.png';
-import Wallpaper from './wallpaper.png';
-import type { NewsArticle, MediaItem } from "@/lib/firebase-data";
+import type { NewsArticle } from "@/lib/firebase-data";
+import { getGitHubImageUrl } from "@/lib/utils";
 
 export default function HomePage() {
   const firestore = useFirestore();
@@ -27,19 +26,13 @@ export default function HomePage() {
   );
   const { data: latestNews, isLoading: newsLoading } = useCollection<NewsArticle>(newsQuery);
   
-  const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]));
-
-  const getMediaUrl = (imageId: string | undefined) => {
-      if(!imageId || !mediaItems) return '';
-      return mediaItems.find(m => m.id === imageId)?.fileUrl ?? '';
-  }
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[400px] w-full flex items-center justify-center text-center text-white overflow-hidden">
         <Image
-          src={Wallpaper}
+          src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
           alt="ヒーロー背景画像"
           fill
           className="object-cover"
@@ -91,18 +84,17 @@ export default function HomePage() {
             ) : latestNews && latestNews.length === 0 ? (
               <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
             ) : latestNews?.map((article) => {
-              const articleImage = mediaItems?.find(p => p.id === article.imageId);
               const articleTags = article.tags || [];
+              const imageUrl = getGitHubImageUrl(article.imageId);
               return (
                 <Card key={article.id} className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                  {articleImage && (
+                  {imageUrl && (
                     <div className="relative h-48 w-full">
                       <Image
-                        src={getMediaUrl(article.imageId)}
+                        src={imageUrl}
                         alt={article.title}
                         fill
                         className="object-cover"
-                        data-ai-hint={articleImage.imageHint}
                       />
                     </div>
                   )}
@@ -153,7 +145,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center">
           <div className="relative w-32 h-32 mx-auto mb-4">
               <Image
-                src={Snewol1}
+                src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/suneuru-kun/1.png"
                 alt="スネウル君"
                 fill
                 className="object-contain"

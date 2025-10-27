@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Building, Globe, Target, Briefcase, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import Wallpaper from '../wallpaper.png';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -33,7 +32,7 @@ export default function AboutPage() {
     <div>
       <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
         <Image
-          src={Wallpaper}
+          src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
           alt="企業情報"
           fill
           className="object-cover"

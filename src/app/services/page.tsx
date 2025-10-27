@@ -4,11 +4,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { serviceItems } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Gamepad2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { getGitHubImageUrl } from '@/lib/utils';
+
 
 // export const metadata: Metadata = {
 //   title: 'サービス',
@@ -40,7 +41,7 @@ export default function ServicesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {serviceDetails.map((item) => {
-          const serviceImage = PlaceHolderImages.find(p => p.id === item.imageId);
+          const serviceImage = getGitHubImageUrl(item.imageId);
           const Icon = item.icon;
 
           return (
@@ -48,11 +49,10 @@ export default function ServicesPage() {
               <div className="w-full h-56 relative">
                 {serviceImage && (
                   <Image
-                    src={serviceImage.imageUrl}
+                    src={serviceImage}
                     alt={item.title}
                     fill
                     className="object-cover"
-                    data-ai-hint={serviceImage.imageHint}
                   />
                 )}
               </div>

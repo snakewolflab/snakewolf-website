@@ -2,10 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, orderBy, query } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
-import { type NewsArticle } from '@/lib/data';
+import { type CreatorItem } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -22,9 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { NewsForm } from './_components/news-form';
-import { deleteArticle } from './actions';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,52 +32,55 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { LoadingScreen } from '@/components/layout/loading-screen';
+import { CreatorForm } from './_components/creator-form';
+import { deleteCreator } from './actions';
 import Link from 'next/link';
 
-export default function NewsAdminPage() {
+export default function CreatorsAdminPage() {
   useAuthRedirect();
   const { user, isUserLoading } = useUser();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [selectedCreator, setSelectedCreator] = useState<CreatorItem | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [articleToDelete, setArticleToDelete] = useState<NewsArticle | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<CreatorItem | null>(null);
   
   const firestore = useFirestore();
 
-  const newsQuery = useMemoFirebase(() => {
+  const creatorsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'news_articles'), orderBy('date', 'desc'));
+    return query(collection(firestore, 'creator_items'), orderBy('name', 'asc'));
   }, [firestore]);
 
-  const { data: articles, isLoading } = useCollection<NewsArticle>(newsQuery);
+  const { data: creators, isLoading } = useCollection<CreatorItem>(creatorsQuery);
 
   const handleAddNew = () => {
-    setSelectedArticle(null);
+    setSelectedCreator(null);
     setDialogOpen(true);
   };
 
-  const handleEdit = (article: NewsArticle) => {
-    setSelectedArticle(article);
+  const handleEdit = (item: CreatorItem) => {
+    setSelectedCreator(item);
     setDialogOpen(true);
   };
 
-  const handleDeleteClick = (article: NewsArticle) => {
-    setArticleToDelete(article);
+  const handleDeleteClick = (item: CreatorItem) => {
+    setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (articleToDelete && articleToDelete.id) {
-      await deleteArticle(articleToDelete.id);
+    if (itemToDelete && itemToDelete.id) {
+      await deleteCreator(itemToDelete.id);
     }
     setDeleteDialogOpen(false);
-    setArticleToDelete(null);
+    setItemToDelete(null);
   };
 
   const handleFormSuccess = () => {
     setDialogOpen(false);
-    setSelectedArticle(null);
+    setSelectedCreator(null);
   };
   
   if (isUserLoading || !user) {
@@ -95,7 +95,7 @@ export default function NewsAdminPage() {
         </Button>
       </div>
       <header className="flex justify-between items-center mb-8">
-        <h1 className="font-headline text-3xl md:text-4xl font-bold">ニュース管理</h1>
+        <h1 className="font-headline text-3xl md:text-4xl font-bold">クリエイター管理</h1>
         <Button onClick={handleAddNew}>
           <PlusCircle className="mr-2 h-4 w-4" />
           新規追加
@@ -106,37 +106,35 @@ export default function NewsAdminPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>タイトル</TableHead>
-              <TableHead className="w-[150px]">公開日</TableHead>
+              <TableHead>名前</TableHead>
               <TableHead className="w-[120px]">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={3} className="text-center">
+                <TableCell colSpan={2} className="text-center">
                   読み込み中...
                 </TableCell>
               </TableRow>
             )}
-            {!isLoading && articles?.length === 0 && (
+            {!isLoading && creators?.length === 0 && (
                 <TableRow>
-                    <TableCell colSpan={3} className="text-center">
-                    記事がありません。
+                    <TableCell colSpan={2} className="text-center">
+                    クリエイターがいません。
                     </TableCell>
                 </TableRow>
             )}
-            {articles?.map((article) => (
-              <TableRow key={article.id}>
-                <TableCell className="font-medium">{article.title}</TableCell>
-                <TableCell>{article.date}</TableCell>
+            {creators?.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="font-medium">{item.name}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleEdit(article)}>
+                    <Button variant="outline" size="icon" onClick={() => handleEdit(item)}>
                       <Edit className="h-4 w-4" />
                       <span className="sr-only">編集</span>
                     </Button>
-                    <Button variant="destructive" size="icon" onClick={() => handleDeleteClick(article)}>
+                    <Button variant="destructive" size="icon" onClick={() => handleDeleteClick(item)}>
                       <Trash2 className="h-4 w-4" />
                       <span className="sr-only">削除</span>
                     </Button>
@@ -151,13 +149,10 @@ export default function NewsAdminPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>{selectedArticle ? '記事を編集' : '記事を新規作成'}</DialogTitle>
-            <DialogDescription>
-              {selectedArticle ? '記事の内容を更新します。' : '新しい記事を作成します。'}
-            </DialogDescription>
+            <DialogTitle>{selectedCreator ? 'クリエイターを編集' : 'クリエイターを新規作成'}</DialogTitle>
           </DialogHeader>
-          <NewsForm
-            article={selectedArticle}
+          <CreatorForm
+            creator={selectedCreator}
             onSuccess={handleFormSuccess}
           />
         </DialogContent>
@@ -168,7 +163,7 @@ export default function NewsAdminPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
             <AlertDialogDescription>
-              この記事「{articleToDelete?.title}」を削除します。この操作は元に戻せません。
+              このクリエイター「{itemToDelete?.name}」を削除します。この操作は元に戻せません。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

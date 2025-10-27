@@ -4,12 +4,13 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LogOut, Menu, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Favicon from "@/app/favicon.png";
+import { useAuth, useUser } from "@/firebase";
 
 const navLinks = [
   { href: "/", label: "ホーム" },
@@ -24,6 +25,14 @@ const navLinks = [
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const auth = useAuth();
+  const { user } = useUser();
+
+  const handleLogout = async () => {
+    await auth?.signOut();
+    router.push('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -33,7 +42,7 @@ export function Header() {
           <span className="font-headline">SnakeWolf</span>
         </Link>
         
-        <div className="flex flex-1 items-center justify-end gap-6">
+        <div className="flex flex-1 items-center justify-end gap-2 sm:gap-6">
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navLinks.slice(1).map((link) => ( // ホームを除外
@@ -58,10 +67,32 @@ export function Header() {
             >
               お問い合わせ
             </Link>
+            {user && (
+              <>
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "transition-colors hover:text-primary",
+                    pathname.startsWith('/admin') ? "text-primary" : "text-foreground/60"
+                  )}
+                >
+                  管理画面
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </>
+            )}
           </nav>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
+            {user && (
+              <Button variant="ghost" size="icon" onClick={() => router.push('/admin')}>
+                <UserCog className="h-5 w-5" />
+                <span className="sr-only">管理画面</span>
+              </Button>
+            )}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -88,6 +119,17 @@ export function Header() {
                      <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname === "/contact" ? "text-primary" : "text-foreground")}>
                         お問い合わせ
                       </Link>
+                      {user && (
+                        <>
+                          <hr className="my-2" />
+                          <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className={cn("transition-colors hover:text-primary", pathname.startsWith('/admin') ? "text-primary" : "text-foreground")}>
+                            管理画面
+                          </Link>
+                          <Button variant="ghost" onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="justify-start text-lg p-0 h-auto">
+                            ログアウト
+                          </Button>
+                        </>
+                      )}
                   </nav>
                 </div>
               </SheetContent>

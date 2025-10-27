@@ -2,10 +2,10 @@
 'use client';
 
 import { useState } from 'react';
-import { collection, orderBy, query } from 'firebase/firestore';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
-import { type NewsArticle } from '@/lib/data';
+import { type WorkItem } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -22,9 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
-import { NewsForm } from './_components/news-form';
-import { deleteArticle } from './actions';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,52 +32,59 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { LoadingScreen } from '@/components/layout/loading-screen';
+import { WorkForm } from '../works/_components/work-form';
+import { deleteWorkItem } from '../works/actions';
 import Link from 'next/link';
 
-export default function NewsAdminPage() {
+export default function GamesAdminPage() {
   useAuthRedirect();
   const { user, isUserLoading } = useUser();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [selectedWorkItem, setSelectedWorkItem] = useState<WorkItem | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [articleToDelete, setArticleToDelete] = useState<NewsArticle | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<WorkItem | null>(null);
   
   const firestore = useFirestore();
 
-  const newsQuery = useMemoFirebase(() => {
+  const gamesQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'news_articles'), orderBy('date', 'desc'));
+    return query(
+      collection(firestore, 'work_items'), 
+      where('category', '==', 'Game'),
+      orderBy('title', 'asc')
+    );
   }, [firestore]);
 
-  const { data: articles, isLoading } = useCollection<NewsArticle>(newsQuery);
+  const { data: games, isLoading } = useCollection<WorkItem>(gamesQuery);
 
   const handleAddNew = () => {
-    setSelectedArticle(null);
+    setSelectedWorkItem(null);
     setDialogOpen(true);
   };
 
-  const handleEdit = (article: NewsArticle) => {
-    setSelectedArticle(article);
+  const handleEdit = (item: WorkItem) => {
+    setSelectedWorkItem(item);
     setDialogOpen(true);
   };
 
-  const handleDeleteClick = (article: NewsArticle) => {
-    setArticleToDelete(article);
+  const handleDeleteClick = (item: WorkItem) => {
+    setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (articleToDelete && articleToDelete.id) {
-      await deleteArticle(articleToDelete.id);
+    if (itemToDelete && itemToDelete.id) {
+      await deleteWorkItem(itemToDelete.id);
     }
     setDeleteDialogOpen(false);
-    setArticleToDelete(null);
+    setItemToDelete(null);
   };
 
   const handleFormSuccess = () => {
     setDialogOpen(false);
-    setSelectedArticle(null);
+    setSelectedWorkItem(null);
   };
   
   if (isUserLoading || !user) {
@@ -95,7 +99,7 @@ export default function NewsAdminPage() {
         </Button>
       </div>
       <header className="flex justify-between items-center mb-8">
-        <h1 className="font-headline text-3xl md:text-4xl font-bold">ニュース管理</h1>
+        <h1 className="font-headline text-3xl md:text-4xl font-bold">ゲーム管理</h1>
         <Button onClick={handleAddNew}>
           <PlusCircle className="mr-2 h-4 w-4" />
           新規追加
@@ -107,7 +111,7 @@ export default function NewsAdminPage() {
           <TableHeader>
             <TableRow>
               <TableHead>タイトル</TableHead>
-              <TableHead className="w-[150px]">公開日</TableHead>
+              <TableHead>カテゴリー</TableHead>
               <TableHead className="w-[120px]">操作</TableHead>
             </TableRow>
           </TableHeader>
@@ -119,24 +123,24 @@ export default function NewsAdminPage() {
                 </TableCell>
               </TableRow>
             )}
-            {!isLoading && articles?.length === 0 && (
+            {!isLoading && games?.length === 0 && (
                 <TableRow>
                     <TableCell colSpan={3} className="text-center">
-                    記事がありません。
+                    ゲームがありません。
                     </TableCell>
                 </TableRow>
             )}
-            {articles?.map((article) => (
-              <TableRow key={article.id}>
-                <TableCell className="font-medium">{article.title}</TableCell>
-                <TableCell>{article.date}</TableCell>
+            {games?.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="font-medium">{item.title}</TableCell>
+                <TableCell>{item.category}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleEdit(article)}>
+                    <Button variant="outline" size="icon" onClick={() => handleEdit(item)}>
                       <Edit className="h-4 w-4" />
                       <span className="sr-only">編集</span>
                     </Button>
-                    <Button variant="destructive" size="icon" onClick={() => handleDeleteClick(article)}>
+                    <Button variant="destructive" size="icon" onClick={() => handleDeleteClick(item)}>
                       <Trash2 className="h-4 w-4" />
                       <span className="sr-only">削除</span>
                     </Button>
@@ -151,14 +155,12 @@ export default function NewsAdminPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>{selectedArticle ? '記事を編集' : '記事を新規作成'}</DialogTitle>
-            <DialogDescription>
-              {selectedArticle ? '記事の内容を更新します。' : '新しい記事を作成します。'}
-            </DialogDescription>
+            <DialogTitle>{selectedWorkItem ? 'ゲームを編集' : 'ゲームを新規作成'}</DialogTitle>
           </DialogHeader>
-          <NewsForm
-            article={selectedArticle}
+          <WorkForm
+            workItem={selectedWorkItem}
             onSuccess={handleFormSuccess}
+            category="Game"
           />
         </DialogContent>
       </Dialog>
@@ -168,7 +170,7 @@ export default function NewsAdminPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
             <AlertDialogDescription>
-              この記事「{articleToDelete?.title}」を削除します。この操作は元に戻せません。
+              このアイテム「{itemToDelete?.title}」を削除します。この操作は元に戻せません。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

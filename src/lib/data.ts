@@ -50,7 +50,7 @@ export const newsArticlesData: Omit<NewsArticle, 'id'>[] = [
   {
     slug: 'new-product-launch-2024',
     title: '革新的な新製品「Project G」を発表',
-    date: '2024年7月15日',
+    date: '2024/07/15',
     tags: ['新製品', 'テクノロジー'],
     summary: 'SnakeWolfは本日、次世代AIアシスタント「Project G」を発表しました。これにより、ビジネスの生産性が飛躍的に向上します。',
     content: `
@@ -69,7 +69,7 @@ export const newsArticlesData: Omit<NewsArticle, 'id'>[] = [
   {
     slug: 'partnership-with-tech-giant',
     title: '大手テクノロジー企業との戦略的提携を発表',
-    date: '2024年6月28日',
+    date: '2024/06/28',
     tags: ['提携', 'ビジネス'],
     summary: 'グローバルな展開を加速するため、業界をリードするTechCorpとの戦略的パートナーシップを締結しました。',
     content: `
@@ -82,7 +82,7 @@ export const newsArticlesData: Omit<NewsArticle, 'id'>[] = [
   {
     slug: 'annual-tech-conference-2024',
     title: '年次技術カンファレンス「Innovate 2024」開催',
-    date: '2024年5月20日',
+    date: '2024/05/20',
     tags: ['イベント', 'コミュニティ'],
     summary: '「Innovate 2024」が大成功のうちに閉幕。最新の研究成果や今後のロードマップが公開されました。',
     content: `
@@ -154,7 +154,6 @@ export const workItemsData: Omit<WorkItem, 'id'>[] = [
     galleryImageIds: ["work-pixel-painters", "work-cosmic-explorer", "creator-alpha"],
   },
 ];
-// TODO: Remove this once all pages are migrated to firestore
 export const workItems = workItemsData.map((item, index) => ({...item, id: `${index + 1}`}));
 
 

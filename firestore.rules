@@ -1,120 +1,63 @@
 /**
- * @fileoverview Firestore Security Rules for the SnakeWolf website.
+ * @fileoverview Firestore Security Rules for SnakeWolf website.
  *
  * Core Philosophy:
- * This ruleset is designed for rapid prototyping and enforces a public-read, owner-write security model
- * for the main content collections (news_articles, media_items, tags). Contact form submissions
- * can be created by anyone, but not read or modified.  This model is meant to be extended in later
- * development phases, with stricter role-based access control for content management.
+ * This ruleset allows any signed-in user to create news articles, work items and creator items.
  *
  * Data Structure:
- * The Firestore database consists of four top-level collections:
- * - /news_articles/{newsArticleId}: Stores news articles.
- * - /tags/{tagId}: Stores tags associated with news articles.
- * - /contact_form_submissions/{contactFormSubmissionId}: Stores contact form submissions.
- * - /media_items/{mediaItemId}: Stores media items (images or videos).
+ * The database consists of three top-level collections: `news_articles`, `work_items`, and `creator_items`.
  *
  * Key Security Decisions:
- * - Public Read Access: The news_articles, tags, and media_items collections are publicly readable
- *   to allow for open content consumption.
- * - Owner-Only Writes: Create, update, and delete operations on news_articles, tags, and media_items
- *   are restricted to the owner of the document. The 'id' field is used as the implicit owner ID and
- *   must match the authenticated user's UID.
- * - Contact Form Submissions: Anyone can submit a contact form, but submissions cannot be read or modified.
- * - No User Listing: There are no user-specific collections or list operations that require protection.
- *
- * Denormalization for Authorization:
- * The 'id' field of each document in news_articles, tags, and media_items is used as the owner ID.
- * This simplifies authorization checks by avoiding the need for separate user collections or complex queries.
- *
- * Structural Segregation:
- * Contact form submissions are placed in a separate top-level collection to isolate them from other data
- * and to simplify security rules.
+ * - All `list` operations are publicly accessible.
+ * - Data shape validation is not enforced in this prototype.
+ * - Missing ownership field leads to insecure writes.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access and owner-only write access to news articles.
-     * @path /news_articles/{newsArticleId}
-     * @allow get, list: Allows any user to read news articles.
-     * @allow create: Allows a user to create a news article if the 'id' field matches their auth UID.
-     * @allow update: Allows a user to update a news article if they own it (based on the 'id' field).
-     * @allow delete: Allows a user to delete a news article if they own it (based on the 'id' field).
-     * @deny create: Denies a user to create a news article if the 'id' field does not match their auth UID.
-     * @deny update: Denies a user to update a news article if they don't own it.
-     * @deny delete: Denies a user to delete a news article if they don't own it.
-     * @principle Enforces public read access and document ownership for writes.
+     * @description Controls access to the 'news_articles' collection.
+     * @path /databases/{database}/documents/news_articles/{newsArticleId}
+     * @allow (create) Signed-in user can create news articles.
+     * @deny (create) User attempts to create a news article without being signed in.
+     * @principle Allows signed-in users to create news articles.
      */
     match /news_articles/{newsArticleId} {
       allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == request.auth.uid;
-      allow update: if isSignedIn() && isExistingOwner(resource.data.id);
-      allow delete: if isSignedIn() && isExistingOwner(resource.data.id);
+      allow create: if isSignedIn();
+      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Grants public read access and owner-only write access to tags.
-     * @path /tags/{tagId}
-     * @allow get, list: Allows any user to read tags.
-     * @allow create: Allows a user to create a tag if the 'id' field matches their auth UID.
-     * @allow update: Allows a user to update a tag if they own it (based on the 'id' field).
-     * @allow delete: Allows a user to delete a tag if they own it (based on the 'id' field).
-     * @deny create: Denies a user to create a tag if the 'id' field does not match their auth UID.
-     * @deny update: Denies a user to update a tag if they don't own it.
-     * @deny delete: Denies a user to delete a tag if they don't own it.
-     * @principle Enforces public read access and document ownership for writes.
+     * @description Controls access to the 'work_items' collection.
+     * @path /databases/{database}/documents/work_items/{workItemId}
+     * @allow (create) Signed-in user can create work items.
+     * @deny (create) User attempts to create a work item without being signed in.
+     * @principle Allows signed-in users to create work items.
      */
-    match /tags/{tagId} {
+    match /work_items/{workItemId} {
       allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == request.auth.uid;
-      allow update: if isSignedIn() && isExistingOwner(resource.data.id);
-      allow delete: if isSignedIn() && isExistingOwner(resource.data.id);
+      allow create: if isSignedIn();
+      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
     /**
-     * @description Allows anyone to create a contact form submission, but denies reading or modifying existing submissions.
-     * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow create: Allows any authenticated user to create a contact form submission.
-     * @deny get, list, update, delete: Prevents any user from reading, listing, updating, or deleting contact form submissions.
-     * @principle Allows public creation of contact form submissions while restricting access to them.
+     * @description Controls access to the 'creator_items' collection.
+     * @path /databases/{database}/documents/creator_items/{creatorItemId}
+     * @allow (create) Signed-in user can create creator items.
+     * @deny (create) User attempts to create a creator item without being signed in.
+     * @principle Allows signed-in users to create creator items.
      */
-    match /contact_form_submissions/{contactFormSubmissionId} {
-      allow create: if isSignedIn() ;
-      allow get, list, update, delete: if false;
-    }
-
-    /**
-     * @description Grants public read access and owner-only write access to media items.
-     * @path /media_items/{mediaItemId}
-     * @allow get, list: Allows any user to read media items.
-     * @allow create: Allows a user to create a media item if the 'id' field matches their auth UID.
-     * @allow update: Allows a user to update a media item if they own it (based on the 'id' field).
-     * @allow delete: Allows a user to delete a media item if they own it (based on the 'id' field).
-     * @deny create: Denies a user to create a media item if the 'id' field does not match their auth UID.
-     * @deny update: Denies a user to update a media item if they don't own it.
-     * @deny delete: Denies a user to delete a media item if they don't own it.
-     * @principle Enforces public read access and document ownership for writes.
-     */
-    match /media_items/{mediaItemId} {
+    match /creator_items/{creatorItemId} {
       allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == request.auth.uid;
-      allow update: if isSignedIn() && isExistingOwner(resource.data.id);
-      allow delete: if isSignedIn() && isExistingOwner(resource.data.id);
+      allow create: if isSignedIn();
+      allow update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
-    // Helper functions
+    // Helper function to determine if a user is signed in.
     function isSignedIn() {
       return request.auth != null;
-    }
-
-    function isOwner(userId) {
-      return request.auth.uid == userId;
-    }
-
-    function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
     }
   }
 }

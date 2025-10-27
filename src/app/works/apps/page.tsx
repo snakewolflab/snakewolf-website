@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, AppWindow, Search } from 'lucide-react';
-import { collection, query, where, orderBy } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem, MediaItem } from '@/lib/firebase-data';
@@ -21,7 +21,7 @@ export default function AppsPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const worksQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('category', '==', 'App'), orderBy('title')),
+    query(collection(firestore, 'works'), where('category', '==', 'App')),
     [firestore]
   );
   const { data: appWorks, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
@@ -29,16 +29,21 @@ export default function AppsPage() {
 
   const isLoading = worksLoading || mediaLoading;
 
-  const filteredWorks = useMemo(() => {
+  const sortedWorks = useMemo(() => {
     if (!appWorks) return [];
-    if (!searchTerm) return appWorks;
+    return [...appWorks].sort((a, b) => a.title.localeCompare(b.title));
+  }, [appWorks]);
+
+  const filteredWorks = useMemo(() => {
+    if (!sortedWorks) return [];
+    if (!searchTerm) return sortedWorks;
 
     const lowercasedTerm = searchTerm.toLowerCase();
-    return appWorks.filter(item =>
+    return sortedWorks.filter(item =>
       (item.title && item.title.toLowerCase().includes(lowercasedTerm)) ||
       (item.description && item.description.toLowerCase().includes(lowercasedTerm))
     );
-  }, [appWorks, searchTerm]);
+  }, [sortedWorks, searchTerm]);
 
   return (
     <div className="container mx-auto px-4 py-16">

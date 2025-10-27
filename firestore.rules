@@ -1,32 +1,35 @@
 /**
- * @fileOverview Firestore Security Rules for the SnakeWolf website.
+ * @fileoverview Firestore Security Rules for the SnakeWolf website.
  *
  * Core Philosophy:
- * This ruleset prioritizes public readability for core content (news articles, tags, media items)
- * while requiring authentication for write operations, specifically for contact form submissions.
+ * This ruleset prioritizes public read access for certain collections
+ * (`news_articles`, `tags`, `media_items`) while restricting write access
+ * to authenticated users only for `contact_form_submissions`.
  *
  * Data Structure:
- * - /news_articles/{newsArticleId}: Stores news articles. Publicly readable.
- * - /tags/{tagId}: Stores tags for news articles. Publicly readable.
- * - /contact_form_submissions/{contactFormSubmissionId}: Stores contact form submissions. Requires authentication to create.
- * - /media_items/{mediaItemId}: Stores media items. Publicly readable.
+ * The Firestore database contains the following top-level collections:
+ * - `/news_articles/{newsArticleId}`: Stores news articles. Publicly readable.
+ * - `/tags/{tagId}`: Stores tags for news articles. Publicly readable.
+ * - `/contact_form_submissions/{contactFormSubmissionId}`: Stores contact form submissions.
+ *   Requires authentication to create.
+ * - `/media_items/{mediaItemId}`: Stores media items. Publicly readable.
  *
  * Key Security Decisions:
- * - Public Read Access: The `news_articles`, `tags`, and `media_items` collections are publicly readable to support unauthenticated users.
- * - Authentication Required for Contact Form Submissions: Only authenticated users can create contact form submissions.
- * - No Ownership Model: There is no concept of user-specific ownership for any documents.
+ * - Public read access is granted to `news_articles`, `tags`, and `media_items`.
+ * - Only authenticated users can create `contact_form_submissions`.
+ * - Listing of `contact_form_submissions` is denied to all users.
+ * - There is no data ownership in this application, so no denormalization is required.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to news articles and requires authentication for writes.
+     * @description Allows anyone to read news articles.
      * @path /news_articles/{newsArticleId}
-     * @allow (get, list): Any user can read news articles, regardless of authentication status.
-     * @allow (create, update, delete): No one can write to the news_articles collection.
-     * @deny (create): An unauthenticated user attempts to create a news article.
-     * @principle Allows public read access to news articles.
+     * @allow (get, list) Any user can read any news article.
+     * @deny (create, update, delete) No one can create, update, or delete news articles.
+     * @principle Grants public read access.
      */
     match /news_articles/{newsArticleId} {
       allow get, list: if true;
@@ -34,12 +37,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to tags and requires authentication for writes.
+     * @description Allows anyone to read tags.
      * @path /tags/{tagId}
-     * @allow (get, list): Any user can read tags, regardless of authentication status.
-     * @allow (create, update, delete): No one can write to the tags collection.
-     * @deny (create): An unauthenticated user attempts to create a tag.
-     * @principle Allows public read access to tags.
+     * @allow (get, list) Any user can read any tag.
+     * @deny (create, update, delete) No one can create, update, or delete tags.
+     * @principle Grants public read access.
      */
     match /tags/{tagId} {
       allow get, list: if true;
@@ -47,32 +49,31 @@ service cloud.firestore {
     }
 
     /**
-     * @description Requires authentication to create contact form submissions.
+     * @description Allows authenticated users to create contact form submissions.
      * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow (create): An authenticated user creates a contact form submission.
-     * @allow (get, list, update, delete): No one can get, list, update, or delete contact form submissions.
-     * @deny (create): An unauthenticated user attempts to create a contact form submission.
-     * @principle Requires authentication for writing contact form submissions.
+     * @allow (create) An authenticated user can create a contact form submission.
+     * @deny (get, update, delete) No one can get, update, or delete contact form submissions.
+     * @deny (list) No one can list contact form submissions.
+     * @principle Requires authentication for writes.
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
       allow create: if isSignedIn();
-      allow get, list, update, delete: if false;
+      allow get, update, delete: if false;
+      allow list: if false;
     }
 
     /**
-     * @description Grants public read access to media items and requires authentication for writes.
+     * @description Allows anyone to read media items.
      * @path /media_items/{mediaItemId}
-     * @allow (get, list): Any user can read media items, regardless of authentication status.
-     * @allow (create, update, delete): No one can write to the media_items collection.
-     * @deny (create): An unauthenticated user attempts to create a media item.
-     * @principle Allows public read access to media items.
+     * @allow (get, list) Any user can read any media item.
+     * @deny (create, update, delete) No one can create, update, or delete media items.
+     * @principle Grants public read access.
      */
     match /media_items/{mediaItemId} {
       allow get, list: if true;
       allow create, update, delete: if false;
     }
 
-    // Helper function to determine if a user is signed in
     function isSignedIn() {
       return request.auth != null;
     }

@@ -1,35 +1,29 @@
 /**
- * @fileoverview Firestore Security Rules for SnakeWolf website.
+ * @file Firestore Security Rules
+ * @description This ruleset configures access control for the SnakeWolf website's Firestore database.
  *
  * Core Philosophy:
- * This ruleset allows public read access to news articles, tags, media items, creators, and work items.
- * Contact form submissions require authentication to create.
+ * The security model prioritizes public read access for most content (news articles, tags, media items, creators, and works) while requiring authentication for specific actions like submitting contact forms.
  *
  * Data Structure:
- * The database contains several top-level collections:
- * - /news_articles/{newsArticleId}: Stores news articles.
- * - /tags/{tagId}: Stores tags for news articles.
- * - /contact_form_submissions/{contactFormSubmissionId}: Stores contact form submissions.
- * - /media_items/{mediaItemId}: Stores media items.
- * - /creators/{creatorId}: Stores creators.
- * - /works/{workId}: Stores work items (apps and games).
+ * The database consists of several top-level collections: `news_articles`, `tags`, `contact_form_submissions`, `media_items`, `creators`, and `works`. Each collection stores data related to its name.
  *
  * Key Security Decisions:
- * - Public read access is granted to news articles, tags, media items, creators, and work items.
- * - Contact form submissions require user authentication.
- * - No listing restrictions are present as all collections are readable.
- * - No data ownership model is enforced.
+ * - Public Read Access: `news_articles`, `tags`, `media_items`, `creators`, and `works` collections are publicly readable to allow unauthenticated users to view website content.
+ * - Authentication Required for Contact Forms: The `contact_form_submissions` collection requires users to be authenticated before submitting a form, preventing anonymous submissions.
+ * - No User Listing: There are no rules granting access to lists of users.
+ * - Data Validation: Data validation is relaxed to allow for rapid prototyping.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows anyone to read news articles, but no one to modify them.
+     * @description Allows anyone to read news articles, but no one to create, update, or delete them.
      * @path /news_articles/{newsArticleId}
-     * @allow (get, list)
-     * @deny (create, update, delete)
-     * @principle Allows public read access, with no modification.
+     * @allow (get, list): if true
+     * @deny (create, update, delete): Always
+     * @principle Allows public read access.
      */
     match /news_articles/{newsArticleId} {
       allow get, list: if true;
@@ -37,11 +31,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows anyone to read tags, but no one to modify them.
+     * @description Allows anyone to read tags, but no one to create, update, or delete them.
      * @path /tags/{tagId}
-     * @allow (get, list)
-     * @deny (create, update, delete)
-     * @principle Allows public read access, with no modification.
+     * @allow (get, list): if true
+     * @deny (create, update, delete): Always
+     * @principle Allows public read access.
      */
     match /tags/{tagId} {
       allow get, list: if true;
@@ -49,23 +43,23 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows authenticated users to create contact form submissions, but no one to read, modify, or delete.
+     * @description Allows only authenticated users to create contact form submissions. No one can read, update, or delete them.
      * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow (create)
-     * @deny (get, list, update, delete)
-     * @principle Requires authentication to submit contact form.
+     * @allow create: if isSignedIn();
+     * @deny (get, list, update, delete): Always
+     * @principle Requires authentication for creating contact form submissions.
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
-      allow create: if isSignedIn();
       allow get, list, update, delete: if false;
+      allow create: if isSignedIn();
     }
 
     /**
-     * @description Allows anyone to read media items, but no one to modify them.
+     * @description Allows anyone to read media items, but no one to create, update, or delete them.
      * @path /media_items/{mediaItemId}
-     * @allow (get, list)
-     * @deny (create, update, delete)
-     * @principle Allows public read access, with no modification.
+     * @allow (get, list): if true
+     * @deny (create, update, delete): Always
+     * @principle Allows public read access.
      */
     match /media_items/{mediaItemId} {
       allow get, list: if true;
@@ -73,11 +67,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows anyone to read creators, but no one to modify them.
+     * @description Allows anyone to read creators, but no one to create, update, or delete them.
      * @path /creators/{creatorId}
-     * @allow (get, list)
-     * @deny (create, update, delete)
-     * @principle Allows public read access, with no modification.
+     * @allow (get, list): if true
+     * @deny (create, update, delete): Always
+     * @principle Allows public read access.
      */
     match /creators/{creatorId} {
       allow get, list: if true;
@@ -85,18 +79,17 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows anyone to read works, but no one to modify them.
+     * @description Allows anyone to read works, but no one to create, update, or delete them.
      * @path /works/{workId}
-     * @allow (get, list)
-     * @deny (create, update, delete)
-     * @principle Allows public read access, with no modification.
+     * @allow (get, list): if true
+     * @deny (create, update, delete): Always
+     * @principle Allows public read access.
      */
     match /works/{workId} {
       allow get, list: if true;
       allow create, update, delete: if false;
     }
 
-    // Helper function to determine if a user is signed in.
     function isSignedIn() {
       return request.auth != null;
     }

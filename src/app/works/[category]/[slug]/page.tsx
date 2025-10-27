@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { AppWindow, ArrowLeft, Gamepad2, Layers } from 'lucide-react';
+import { AppWindow, ArrowLeft, Gamepad2, Layers, ExternalLink } from 'lucide-react';
 
 import { workItems } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -90,8 +90,18 @@ export default function WorkDetailPage({ params }: Props) {
             <Icon className="h-5 w-5" />
             <span>{item.category}</span>
         </div>
-        <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4">{item.title}</h1>
-         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
+        <div className="flex items-center gap-4">
+            <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">{item.title}</h1>
+            {item.url && item.url !== "#" && (
+                <Button asChild variant="outline" size="icon">
+                    <Link href={item.url} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-5 w-5" />
+                        <span className="sr-only">Open link</span>
+                    </Link>
+                </Button>
+            )}
+        </div>
+         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground mt-4">
             <div className="flex items-center gap-2">
                 <Layers className="h-4 w-4" />
                 <div className="flex flex-wrap gap-2">

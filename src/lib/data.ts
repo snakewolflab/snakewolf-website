@@ -119,7 +119,7 @@ export const workItems: WorkItem[] = [
     platforms: ["PC", "Console"],
     imageId: "work-cosmic-explorer",
     galleryImageIds: ["work-cosmic-explorer", "work-pixel-painters", "news-1"],
-    url: "#"
+    url: "https://example.com"
   },
   {
     id: 2,
@@ -131,7 +131,7 @@ export const workItems: WorkItem[] = [
     platforms: ["iOS", "Android", "Web"],
     imageId: "work-taskmaster-pro",
     galleryImageIds: ["work-taskmaster-pro", "news-2", "news-3"],
-    url: "#"
+    url: "https://example.com"
   },
   {
     id: 3,
@@ -143,7 +143,7 @@ export const workItems: WorkItem[] = [
     platforms: ["Mobile", "Web"],
     imageId: "work-pixel-painters",
     galleryImageIds: ["work-pixel-painters", "work-cosmic-explorer", "creator-alpha"],
-    url: "#"
+    url: "https://example.com"
   },
 ];
 

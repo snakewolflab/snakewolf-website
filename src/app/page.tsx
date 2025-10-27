@@ -32,7 +32,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[400px] w-full flex items-center justify-center text-center text-white overflow-hidden">
         <Image
-          src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
+          src="https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/wallpaper.png"
           alt="ヒーロー背景画像"
           fill
           className="object-cover"

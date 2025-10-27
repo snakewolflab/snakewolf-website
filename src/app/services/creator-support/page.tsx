@@ -41,7 +41,7 @@ export default function CreatorSupportPage() {
         <div>
             <section className="relative h-[50vh] min-h-[300px] w-full flex items-center justify-center text-center text-white">
                 <Image
-                    src="https://raw.githubusercontent.com/snakewolf-dev/snakewolf-media/main/web-images/wallpaper.png"
+                    src="https://raw.githubusercontent.com/snakewolflab/snakewolf-website/refs/heads/assets/wallpaper.png"
                     alt="クリエイター支援"
                     fill
                     className="object-cover"

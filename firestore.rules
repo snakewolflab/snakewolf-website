@@ -1,28 +1,8 @@
-/**
- * @fileoverview Firestore Security Rules for SnakeWolf website.
- *
- * Core Philosophy:
- * This ruleset allows public read access to news articles, tags, and media items,
- * while requiring authentication for creating contact form submissions.
- *
- * Data Structure:
- * - /news_articles/{newsArticleId}: Stores news articles. Publicly readable.
- * - /tags/{tagId}: Stores tags for news articles. Publicly readable.
- * - /contact_form_submissions/{contactFormSubmissionId}: Stores contact form submissions. Authentication required for create.
- * - /media_items/{mediaItemId}: Stores media items. Publicly readable.
- *
- * Key Security Decisions:
- * - Public read access for news articles, tags, and media items.
- * - Authentication is required to submit contact forms.
- * - No user ownership or roles are defined in the data model.
- * - Denormalization is not used because there are no ownership checks or role-based access control.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
     /**
-     * @description Grants public read access to news articles and requires no authentication for get or list.
+     * @description Grants public read access to news articles and denies all write operations.
      * @path /news_articles/{newsArticleId}
      * @allow (get, list) User can read any news article.
      * @deny (create, update, delete) Users cannot create, update, or delete news articles.
@@ -34,7 +14,7 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to tags and requires no authentication for get or list.
+     * @description Grants public read access to tags and denies all write operations.
      * @path /tags/{tagId}
      * @allow (get, list) User can read any tag.
      * @deny (create, update, delete) Users cannot create, update, or delete tags.
@@ -46,12 +26,11 @@ service cloud.firestore {
     }
 
     /**
-     * @description Requires authentication to create contact form submissions. Public read is disallowed.
+     * @description Allows authenticated users to create contact form submissions, but denies all other access.
      * @path /contact_form_submissions/{contactFormSubmissionId}
-     * @allow (create) Authenticated user can create a contact form submission.
+     * @allow (create) User can create a contact form submission if signed in.
      * @deny (get, list, update, delete) Users cannot read, list, update, or delete contact form submissions.
-     * @deny (create) Unauthenticated user cannot create a contact form submission.
-     * @principle Requires authentication for create operations.
+     * @principle Requires authentication for writes.
      */
     match /contact_form_submissions/{contactFormSubmissionId} {
       allow create: if isSignedIn();
@@ -59,13 +38,37 @@ service cloud.firestore {
     }
 
     /**
-     * @description Grants public read access to media items and requires no authentication for get or list.
+     * @description Grants public read access to media items and denies all write operations.
      * @path /media_items/{mediaItemId}
      * @allow (get, list) User can read any media item.
      * @deny (create, update, delete) Users cannot create, update, or delete media items.
      * @principle Allows public read access.
      */
     match /media_items/{mediaItemId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Grants public read access to creators and denies all write operations.
+     * @path /creators/{creatorId}
+     * @allow (get, list) User can read any creator.
+     * @deny (create, update, delete) Users cannot create, update, or delete creators.
+     * @principle Allows public read access.
+     */
+    match /creators/{creatorId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Grants public read access to works and denies all write operations.
+     * @path /works/{workId}
+     * @allow (get, list) User can read any work.
+     * @deny (create, update, delete) Users cannot create, update, or delete works.
+     * @principle Allows public read access.
+     */
+    match /works/{workId} {
       allow get, list: if true;
       allow create, update, delete: if false;
     }

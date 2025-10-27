@@ -152,8 +152,11 @@ export default function AboutPage() {
           <Briefcase className="mx-auto h-12 w-12 text-primary mb-4" />
           <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">採用情報</h2>
           <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            現在、採用活動は行っておりません。募集を開始する際は、本ページにてお知らせいたします。
+            現在、SnakeWolfDeveloperメンバーを募集しています。ご興味のある方は、お問い合わせフォームよりご連絡ください。
           </p>
+          <Button asChild className="mt-8">
+            <Link href="/contact">採用について問い合わせる</Link>
+          </Button>
         </div>
       </section>
       

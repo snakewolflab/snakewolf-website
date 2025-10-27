@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import Favicon from '@/app/favicon.png';
 
 export function Footer() {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());

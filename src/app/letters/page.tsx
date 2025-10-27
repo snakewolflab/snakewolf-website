@@ -25,6 +25,14 @@ export default function LettersPage() {
         </div>
 
         <div>
+            <h2 className="font-headline flex items-center gap-2"><Mail />封筒によるお知らせ</h2>
+            <p>当プロジェクトから封筒によりお知らせを送付する場合がございます。それぞれの内容は以下の通りです。</p>
+            <ul className="list-disc list-inside">
+                <li>白色の封筒：通常のお知らせ</li>
+            </ul>
+        </div>
+
+        <div>
             <h2 className="font-headline flex items-center gap-2"><Gift />プレゼントについて</h2>
             <p>プレゼントをお考えの際は、以下のガイドラインをご一読いただけますようお願いいたします。安全な運営のため、ご理解とご協力をお願いいたします。</p>
         </div>
@@ -54,4 +62,3 @@ export default function LettersPage() {
     </div>
   );
 }
-

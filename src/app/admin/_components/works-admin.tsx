@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { collection, query, where, orderBy, doc } from 'firebase/firestore';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { deleteDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
@@ -38,12 +38,17 @@ export function WorksAdmin({ category }: WorksAdminProps) {
   const firestore = useFirestore();
   
   const worksQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('category', '==', category), orderBy('title')), 
+    query(collection(firestore, 'works'), where('category', '==', category)), 
     [firestore, category]
   );
   const { data: works, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
   const mediaQuery = useMemoFirebase(() => collection(firestore, 'media_items'), [firestore]);
   const { data: mediaItems, isLoading: mediaLoading } = useCollection<MediaItem>(mediaQuery);
+
+  const sortedWorks = useMemo(() => {
+    if (!works) return [];
+    return [...works].sort((a, b) => a.title.localeCompare(b.title));
+  }, [works]);
 
   const isLoading = worksLoading || mediaLoading;
 
@@ -135,7 +140,7 @@ export function WorksAdmin({ category }: WorksAdminProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {works?.map((work) => {
+                {sortedWorks?.map((work) => {
                   const imageUrl = getImageUrl(work.imageId);
                   return (
                     <TableRow key={work.id}>

@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useEffect, useState, useCallback } from 'react';
 import { useFirebaseApp } from '@/firebase';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { ImageUploader } from './image-uploader';
 import { Trash2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';

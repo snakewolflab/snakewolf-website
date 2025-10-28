@@ -4,11 +4,12 @@ import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { WorkItem, MediaItem } from '@/lib/firebase-data';
+import type { WorkItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
+import { initializeFirebase } from '@/firebase';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,19 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
+export async function generateStaticParams() {
+    const { firestore } = initializeFirebase();
+    const worksCollection = collection(firestore, 'works');
+    const worksSnapshot = await getDocs(worksCollection);
+    const paths = worksSnapshot.docs.map(doc => {
+        const work = doc.data() as WorkItem;
+        return {
+            category: work.category === 'App' ? 'apps' : 'games',
+            slug: work.slug,
+        };
+    });
+    return paths;
+}
 
 export default function WorkDetailPage() {
   const params = useParams<{ category: 'apps' | 'games'; slug: string }>();

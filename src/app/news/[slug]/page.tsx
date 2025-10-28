@@ -6,7 +6,7 @@ import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Tag, ArrowLeft } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
+import { collection, query, where, limit, getDocs, getFirestore } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { NewsArticle } from '@/lib/firebase-data';
@@ -17,6 +17,19 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { ShareMenu } from './_components/share-button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { initializeFirebase } from '@/firebase';
+
+// 静的パスを生成
+export async function generateStaticParams() {
+  const { firestore } = initializeFirebase();
+  const articlesCollection = collection(firestore, 'news_articles');
+  const articlesSnapshot = await getDocs(articlesCollection);
+  const paths = articlesSnapshot.docs.map(doc => ({
+    slug: doc.data().slug,
+  }));
+  return paths;
+}
+
 
 export default function NewsArticlePage() {
   const params = useParams<{ slug: string }>();

@@ -3,10 +3,11 @@
 import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem } from '@/lib/firebase-data';
+import { initializeFirebase } from '@/firebase';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -42,6 +43,20 @@ function Gamepad(props: any) {
             <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.01.15v6.52c0 .05-.004.1-.01.15A4 4 0 0 0 6.68 19h10.64a4 4 0 0 0 3.99-3.59c.006-.05.01-.1.01-.15V8.59c0-.05.004-.1.01-.15A4 4 0 0 0 17.32 5z" />
         </svg>
     );
+}
+
+export async function generateStaticParams() {
+    const { firestore } = initializeFirebase();
+    const worksCollection = collection(firestore, 'works');
+    const worksSnapshot = await getDocs(worksCollection);
+    const paths = worksSnapshot.docs.map(doc => {
+        const work = doc.data() as WorkItem;
+        return {
+            category: work.category === 'App' ? 'apps' : 'games',
+            slug: work.slug,
+        };
+    });
+    return paths;
 }
 
 export default function UsePage() {

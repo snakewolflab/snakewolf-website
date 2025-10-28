@@ -1,1 +1,10 @@
-{}
+[
+  {
+    "id": "creator-01",
+    "name": "スネウル君",
+    "description": "SnakeWolfの公式マスコットキャラクター。デジタルワールドに生まれたオオカミの精霊で、みんなの活動をこっそり応援している。",
+    "imageId": "character/1.png",
+    "url": "/suneuru-kun",
+    "tags": ["VTuber", "公式キャラクター"]
+  }
+]

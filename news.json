@@ -1,1 +1,12 @@
-{}
+[
+  {
+    "id": "news-001",
+    "slug": "welcome-to-our-new-website",
+    "title": "ウェブサイトをリニューアルしました！",
+    "publicationDate": "2024-07-28T10:00:00Z",
+    "contentSummary": "SnakeWolfの公式ウェブサイトが新しくなりました。最新の情報はこちらでご確認ください。",
+    "content": "<h1>新しいウェブサイトへようこそ</h1><p>この度、SnakeWolfの公式サイトを全面リニューアルいたしました。今後ともよろしくお願いいたします。</p>",
+    "tags": ["お知らせ", "リニューアル"],
+    "imageId": "renewal-banner.png"
+  }
+]

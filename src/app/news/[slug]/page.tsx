@@ -2,8 +2,11 @@
 import { getNews } from '@/lib/data-loader';
 import NewsArticleClient from './news-article-client';
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const news = await getNews();
+  if (!news) return [];
   return news.map((article) => ({
     slug: article.slug,
   }));

@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Gamepad2, Search } from 'lucide-react';
-import { getWorks } from '@/lib/data-loader';
+import { getWorksClient } from '@/lib/data-loader';
 
 import type { WorkItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
@@ -24,7 +24,7 @@ export default function GamesPage() {
   useEffect(() => {
     async function loadWorks() {
       setIsLoading(true);
-      const allWorks = await getWorks();
+      const allWorks = await getWorksClient();
       const games = allWorks.filter(work => work.category === 'Game');
       setGameWorks(games);
       setIsLoading(false);

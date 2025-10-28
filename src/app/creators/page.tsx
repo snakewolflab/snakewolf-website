@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { getCreators } from '@/lib/data-loader';
+import { getCreatorsClient } from '@/lib/data-loader';
 
 import type { CreatorItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
@@ -23,7 +23,7 @@ export default function CreatorsPage() {
   useEffect(() => {
     async function loadCreators() {
       setIsLoading(true);
-      const creatorsData = await getCreators();
+      const creatorsData = await getCreatorsClient();
       const sortedCreators = creatorsData.sort((a, b) => a.name.localeCompare(b.name));
       setCreators(sortedCreators);
       setIsLoading(false);

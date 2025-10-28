@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Newspaper, Search } from 'lucide-react';
-import { getNews } from '@/lib/data-loader';
+import { getNewsClient } from '@/lib/data-loader';
 
 import type { NewsArticle } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
@@ -23,7 +23,7 @@ export default function NewsPage() {
   useEffect(() => {
     async function loadNews() {
       setIsLoading(true);
-      const newsData = await getNews();
+      const newsData = await getNewsClient();
       const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
       setArticles(sortedNews);
       setIsLoading(false);

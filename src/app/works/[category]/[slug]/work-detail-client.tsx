@@ -1,12 +1,14 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
+import { AppWindow, ArrowLeft, Gamepad2, Layers, Download, Loader2 } from 'lucide-react';
 
 import type { WorkItem } from '@/lib/firebase-data';
+import { getWorkBySlug } from '@/lib/data-loader';
 import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
@@ -15,14 +17,31 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent } from '@/components/ui/card';
 
-interface WorkDetailClientProps {
-    category: 'apps' | 'games';
-    slug: string;
-    item?: WorkItem;
-}
+export default function WorkDetailClient() {
+  const params = useParams();
+  const category = params.category as 'apps' | 'games';
+  const slug = params.slug as string;
+  const [item, setItem] = useState<WorkItem | undefined | null>(undefined);
 
-export default function WorkDetailClient({ category, slug, item }: WorkDetailClientProps) {
-  if (!item) {
+  useEffect(() => {
+    if (slug) {
+      getWorkBySlug(slug).then(data => {
+        setItem(data === undefined ? null : data);
+      });
+    }
+  }, [slug]);
+
+  if (item === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-5xl">
+        <div className="flex justify-center items-center h-96">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  if (item === null) {
     notFound();
   }
 

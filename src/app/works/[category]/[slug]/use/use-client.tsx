@@ -1,11 +1,12 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe, Loader2 } from 'lucide-react';
 import type { WorkItem } from '@/lib/firebase-data';
-
+import { getWorkBySlug } from '@/lib/data-loader';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -42,14 +43,31 @@ function Gamepad(props: any) {
     );
 }
 
-interface UseClientProps {
-    category: 'apps' | 'games';
-    slug: string;
-    item?: WorkItem;
-}
+export default function UseClient() {
+  const params = useParams();
+  const category = params.category as 'apps' | 'games';
+  const slug = params.slug as string;
+  const [item, setItem] = useState<WorkItem | undefined | null>(undefined);
 
-export default function UseClient({ category, slug, item }: UseClientProps) {
-  if (!item) {
+  useEffect(() => {
+    if (slug) {
+      getWorkBySlug(slug).then(data => {
+        setItem(data === undefined ? null : data);
+      });
+    }
+  }, [slug]);
+
+  if (item === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-2xl">
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  if (item === null) {
     notFound();
   }
 

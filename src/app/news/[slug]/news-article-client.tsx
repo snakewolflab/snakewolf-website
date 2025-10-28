@@ -1,12 +1,14 @@
 
 'use client';
 
-import { notFound } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Calendar, Tag, ArrowLeft } from 'lucide-react';
+import { Calendar, Tag, ArrowLeft, Loader2 } from 'lucide-react';
 
 import type { NewsArticle } from '@/lib/firebase-data';
+import { getNewsBySlug } from '@/lib/data-loader';
 import { getGitHubImageUrl } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
@@ -15,12 +17,30 @@ import { Button } from '@/components/ui/button';
 import { ShareMenu } from './_components/share-button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface NewsArticleClientProps {
-    article?: NewsArticle;
-}
+export default function NewsArticleClient() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const [article, setArticle] = useState<NewsArticle | undefined | null>(undefined);
 
-export default function NewsArticleClient({ article }: NewsArticleClientProps) {
-  if (!article) {
+  useEffect(() => {
+    if (slug) {
+      getNewsBySlug(slug).then(data => {
+        setArticle(data === undefined ? null : data);
+      });
+    }
+  }, [slug]);
+
+  if (article === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+  
+  if (article === null) {
     notFound();
   }
 

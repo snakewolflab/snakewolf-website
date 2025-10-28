@@ -3,14 +3,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Newspaper, Wrench } from "lucide-react";
-import { useEffect, useState, useMemo } from 'react';
+import { ArrowRight, Newspaper, Wrench, Loader2 } from "lucide-react";
+import { useEffect, useState } from 'react';
 import { getNews } from '@/lib/data-loader';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import type { NewsArticle } from "@/lib/firebase-data";
 import { getGitHubImageUrl } from "@/lib/utils";
@@ -83,10 +84,21 @@ export default function HomePage() {
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {newsLoading ? (
-                <p className="text-center col-span-full text-muted-foreground">読み込み中...</p>
-            ) : latestNews && latestNews.length === 0 ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="flex flex-col overflow-hidden">
+                    <Skeleton className="h-48 w-full" />
+                    <CardHeader>
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-6 w-full mt-2" />
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <Skeleton className="h-10 w-full" />
+                    </CardContent>
+                  </Card>
+                ))
+            ) : latestNews.length === 0 ? (
               <p className="text-center col-span-full text-muted-foreground">最新ニュースはありません。</p>
-            ) : latestNews?.map((article) => {
+            ) : latestNews.map((article) => {
               const articleTags = article.tags || [];
               const imageUrl = getGitHubImageUrl(article.imageId);
               return (

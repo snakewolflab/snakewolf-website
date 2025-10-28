@@ -3,11 +3,11 @@ import type { NewsArticle, WorkItem, CreatorItem } from '@/lib/firebase-data';
 
 const GITHUB_DATA_BASE_URL = 'https://raw.githubusercontent.com/snakewolflab/snakewolf-website/assets/';
 
-async function fetchData<T>(fileName: string): Promise<T[]> {
+export async function fetchData<T>(fileName: string): Promise<T[]> {
     try {
         const response = await fetch(`${GITHUB_DATA_BASE_URL}${fileName}`, {
-            // Revalidate data every hour
-            next: { revalidate: 3600 } 
+            // Use cache-busting for client-side fetches
+            cache: 'no-store',
         });
         if (!response.ok) {
             console.error(`Failed to fetch ${fileName}: ${response.statusText}`);

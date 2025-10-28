@@ -24,8 +24,10 @@ export default function NewsPage() {
     async function loadNews() {
       setIsLoading(true);
       const newsData = await getNewsClient();
-      const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
-      setArticles(sortedNews);
+      if (Array.isArray(newsData)) {
+        const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
+        setArticles(sortedNews);
+      }
       setIsLoading(false);
     }
     loadNews();

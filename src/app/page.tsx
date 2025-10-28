@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper, Wrench, Loader2 } from "lucide-react";
 import { useEffect, useState } from 'react';
-import { getNews } from '@/lib/data-loader';
+import { getNewsClient } from '@/lib/data-loader';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,9 +23,11 @@ export default function HomePage() {
   useEffect(() => {
     async function loadNews() {
       setNewsLoading(true);
-      const newsData = await getNews();
-      const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
-      setLatestNews(sortedNews.slice(0, 3));
+      const newsData = await getNewsClient();
+      if (Array.isArray(newsData)) {
+        const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
+        setLatestNews(sortedNews.slice(0, 3));
+      }
       setNewsLoading(false);
     }
     loadNews();

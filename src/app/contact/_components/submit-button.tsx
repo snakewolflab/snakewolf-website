@@ -1,15 +1,16 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-export function SubmitButton() {
-  const { pending } = useFormStatus();
+interface SubmitButtonProps {
+  isSubmitting: boolean;
+}
 
+export function SubmitButton({ isSubmitting }: SubmitButtonProps) {
   return (
-    <Button type="submit" disabled={pending} className="w-full">
-      {pending ? (
+    <Button type="submit" disabled={isSubmitting} className="w-full">
+      {isSubmitting ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           送信中...

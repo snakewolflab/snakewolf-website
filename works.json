@@ -1,1 +1,19 @@
-{}
+[
+  {
+    "id": "app-001",
+    "slug": "example-app",
+    "title": "すごいアプリ",
+    "category": "App",
+    "description": "日常を劇的に変える、革新的なすごいアプリです。",
+    "longDescription": "<h2>すごいアプリとは</h2><p>このアプリは、AIと最新技術を駆使してあなたの生活をサポートします。詳細は近日公開！</p>",
+    "platforms": [
+      { "name": "iOS", "url": "https://apps.apple.com" },
+      { "name": "Android", "url": "#" }
+    ],
+    "imageId": "works/app01/main.png",
+    "galleryImageIds": [
+      "works/app01/gallery01.png",
+      "works/app01/gallery02.png"
+    ]
+  }
+]

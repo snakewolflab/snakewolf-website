@@ -2,8 +2,6 @@
 import { getWorks } from '@/lib/data-loader';
 import UseClient from './use-client';
 
-export const dynamicParams = true;
-
 export async function generateStaticParams() {
   const works = await getWorks();
   if (!works) return [];

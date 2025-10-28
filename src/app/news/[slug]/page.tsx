@@ -6,12 +6,6 @@ type Props = {
   params: { slug: string }
 }
 
-export async function generateStaticParams() {
-  // We will not pre-build any pages at build time.
-  // Instead, they will be generated on-demand on the client.
-  return [];
-}
-
 // メタデータはクライアント側でフェッチされるため、この関数は簡略化または削除できます。
 // ただし、基本的なメタデータを提供するために残しておくことも可能です。
 export async function generateMetadata(

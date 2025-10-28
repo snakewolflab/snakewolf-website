@@ -1,10 +1,15 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import type { NewsArticle } from '@/lib/firebase-data';
 import NewsArticleClient from './news-article-client';
 
 type Props = {
   params: { slug: string }
+}
+
+export async function generateStaticParams() {
+  // We will not pre-build any pages at build time.
+  // Instead, they will be generated on-demand on the client.
+  return [];
 }
 
 // メタデータはクライアント側でフェッチされるため、この関数は簡略化または削除できます。

@@ -8,7 +8,6 @@ interface PageProps {
     }
 }
 
-// The page itself is a Server Component, which wraps the Client Component
 export default function WorkDetailPage({ params }: PageProps) {
   return <WorkDetailClient category={params.category} slug={params.slug} />;
 }

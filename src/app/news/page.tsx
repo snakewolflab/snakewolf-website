@@ -1,13 +1,12 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Newspaper, Search } from 'lucide-react';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { getNews } from '@/lib/data-loader';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { NewsArticle } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
 
@@ -17,16 +16,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 
 export default function NewsPage() {
-  const firestore = useFirestore();
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
-  const newsQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'news_articles'), orderBy('publicationDate', 'desc')),
-    [firestore]
-  );
-  const { data: articles, isLoading: articlesLoading } = useCollection<NewsArticle>(newsQuery);
-  
-  const isLoading = articlesLoading;
+  useEffect(() => {
+    async function loadNews() {
+      setIsLoading(true);
+      const newsData = await getNews();
+      const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
+      setArticles(sortedNews);
+      setIsLoading(false);
+    }
+    loadNews();
+  }, []);
 
   const filteredArticles = useMemo(() => {
     if (!articles) return [];

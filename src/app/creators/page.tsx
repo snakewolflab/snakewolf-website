@@ -1,11 +1,10 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { getCreators } from '@/lib/data-loader';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { CreatorItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
 
@@ -17,12 +16,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 
 export default function CreatorsPage() {
-  const firestore = useFirestore();
+  const [creators, setCreators] = useState<CreatorItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: creators, isLoading: creatorsLoading } = useCollection<CreatorItem>(useMemoFirebase(() => query(collection(firestore, 'creators'), orderBy('name')), [firestore]));
-  
-  const isLoading = creatorsLoading;
+  useEffect(() => {
+    async function loadCreators() {
+      setIsLoading(true);
+      const creatorsData = await getCreators();
+      const sortedCreators = creatorsData.sort((a, b) => a.name.localeCompare(b.name));
+      setCreators(sortedCreators);
+      setIsLoading(false);
+    }
+    loadCreators();
+  }, []);
 
   const filteredCreators = useMemo(() => {
     if (!creators) return [];

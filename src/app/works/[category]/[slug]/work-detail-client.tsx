@@ -5,9 +5,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AppWindow, ArrowLeft, Gamepad2, Layers, Download } from 'lucide-react';
-import { collection, query, where, limit } from 'firebase/firestore';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
 
@@ -16,46 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface WorkDetailClientProps {
     category: 'apps' | 'games';
     slug: string;
+    item?: WorkItem;
 }
 
-export default function WorkDetailClient({ category, slug }: WorkDetailClientProps) {
-  const firestore = useFirestore();
-
-  const itemQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('slug', '==', slug), where('category', '==', category === 'apps' ? 'App' : 'Game'), limit(1)),
-    [firestore, slug, category]
-  );
-
-  const { data: items, isLoading: itemLoading } = useCollection<WorkItem>(itemQuery);
-  const item = items?.[0];
-
-  const isLoading = itemLoading;
-  
-  if(isLoading) {
-      return (
-        <div className="container mx-auto px-4 py-16 max-w-5xl">
-            <Skeleton className="h-10 w-48 mb-8" />
-            <div className="mb-8 space-y-4">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-12 w-3/4" />
-                <Skeleton className="h-6 w-1/2" />
-            </div>
-             <Skeleton className="w-full aspect-video mb-8" />
-             <Separator className="my-8" />
-             <div className="space-y-4">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-5/6" />
-             </div>
-        </div>
-      );
-  }
-
+export default function WorkDetailClient({ category, slug, item }: WorkDetailClientProps) {
   if (!item) {
     notFound();
   }

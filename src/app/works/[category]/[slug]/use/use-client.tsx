@@ -1,12 +1,9 @@
 
 'use client';
 
-import { notFound, useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Smartphone, Server, Monitor, Globe } from 'lucide-react';
-import { collection, query, where, limit, getDocs } from 'firebase/firestore';
-
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem } from '@/lib/firebase-data';
 
 import { Button } from '@/components/ui/button';
@@ -48,36 +45,10 @@ function Gamepad(props: any) {
 interface UseClientProps {
     category: 'apps' | 'games';
     slug: string;
+    item?: WorkItem;
 }
 
-export default function UseClient({ category, slug }: UseClientProps) {
-  const firestore = useFirestore();
-
-  const itemQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('slug', '==', slug), limit(1)),
-    [firestore, slug]
-  );
-  const { data: items, isLoading } = useCollection<WorkItem>(itemQuery);
-  const item = items?.[0];
-
-
-  if(isLoading) {
-      return (
-        <div className="container mx-auto px-4 py-16 max-w-2xl">
-            <Skeleton className="h-10 w-36 mb-8" />
-            <header className="text-center mb-12 space-y-4">
-                <Skeleton className="h-10 w-3/4 mx-auto" />
-                <Skeleton className="h-6 w-1/2 mx-auto" />
-            </header>
-            <div className="grid grid-cols-1 gap-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-            </div>
-        </div>
-      )
-  }
-
+export default function UseClient({ category, slug, item }: UseClientProps) {
   if (!item) {
     notFound();
   }

@@ -1,13 +1,12 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, AppWindow, Search } from 'lucide-react';
-import { collection, query, where } from 'firebase/firestore';
+import { getWorks } from '@/lib/data-loader';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import type { WorkItem } from '@/lib/firebase-data';
 import { getGitHubImageUrl } from '@/lib/utils';
 
@@ -18,16 +17,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 
 export default function AppsPage() {
-  const firestore = useFirestore();
+  const [appWorks, setAppWorks] = useState<WorkItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const worksQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'works'), where('category', '==', 'App')),
-    [firestore]
-  );
-  const { data: appWorks, isLoading: worksLoading } = useCollection<WorkItem>(worksQuery);
-
-  const isLoading = worksLoading;
+  useEffect(() => {
+    async function loadWorks() {
+      setIsLoading(true);
+      const allWorks = await getWorks();
+      const apps = allWorks.filter(work => work.category === 'App');
+      setAppWorks(apps);
+      setIsLoading(false);
+    }
+    loadWorks();
+  }, []);
 
   const sortedWorks = useMemo(() => {
     if (!appWorks) return [];

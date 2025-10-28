@@ -5,9 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Newspaper, Wrench } from "lucide-react";
 import { useEffect, useState, useMemo } from 'react';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
-
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { getNews } from '@/lib/data-loader';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,14 +16,19 @@ import type { NewsArticle } from "@/lib/firebase-data";
 import { getGitHubImageUrl } from "@/lib/utils";
 
 export default function HomePage() {
-  const firestore = useFirestore();
+  const [latestNews, setLatestNews] = useState<NewsArticle[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
 
-  const newsQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'news_articles'), orderBy('publicationDate', 'desc'), limit(3)),
-    [firestore]
-  );
-  const { data: latestNews, isLoading: newsLoading } = useCollection<NewsArticle>(newsQuery);
-  
+  useEffect(() => {
+    async function loadNews() {
+      setNewsLoading(true);
+      const newsData = await getNews();
+      const sortedNews = newsData.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
+      setLatestNews(sortedNews.slice(0, 3));
+      setNewsLoading(false);
+    }
+    loadNews();
+  }, []);
 
   return (
     <div className="flex flex-col">

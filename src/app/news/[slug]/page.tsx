@@ -1,123 +1,58 @@
 
-'use client';
-
 import type { Metadata, ResolvingMetadata } from 'next';
-import { notFound, useParams } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Calendar, Tag, ArrowLeft } from 'lucide-react';
-import { collection, query, where, limit, getDocs, getFirestore } from 'firebase/firestore';
-
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import type { NewsArticle } from '@/lib/firebase-data';
-import { getGitHubImageUrl } from '@/lib/utils';
-
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { ShareMenu } from './_components/share-button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
+import type { NewsArticle } from '@/lib/firebase-data';
+import NewsArticleClient from './news-article-client';
+
+type Props = {
+  params: { slug: string }
+}
 
 // 静的パスを生成
 export async function generateStaticParams() {
+  // Note: This function cannot use hooks, so we initialize a temporary client.
   const { firestore } = initializeFirebase();
   const articlesCollection = collection(firestore, 'news_articles');
   const articlesSnapshot = await getDocs(articlesCollection);
-  const paths = articlesSnapshot.docs.map(doc => ({
-    slug: doc.data().slug,
-  }));
+  const paths = articlesSnapshot.docs
+    .map(doc => ({ slug: doc.data().slug }))
+    .filter(p => p.slug); // Filter out any articles that might not have a slug
   return paths;
 }
 
-
-export default function NewsArticlePage() {
-  const params = useParams<{ slug: string }>();
-  const firestore = useFirestore();
-
-  const articleQuery = useMemoFirebase(() => 
-    query(collection(firestore, 'news_articles'), where('slug', '==', params.slug), limit(1)),
-    [firestore, params.slug]
-  );
-  
-  const { data: articles, isLoading: articleLoading } = useCollection<NewsArticle>(articleQuery);
-  const article = articles?.[0];
-  
-  const isLoading = articleLoading;
-
-  if (isLoading) {
-    return (
-        <div className="container mx-auto px-4 py-16 max-w-4xl">
-             <Skeleton className="h-10 w-48 mb-8" />
-             <Skeleton className="h-12 w-full mb-4" />
-             <Skeleton className="h-8 w-3/4 mb-8" />
-             <Skeleton className="aspect-video w-full rounded-lg mb-8" />
-             <div className="space-y-4">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-6 w-5/6" />
-             </div>
-        </div>
-    );
-  }
+// メタデータを生成
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { firestore } = initializeFirebase();
+  const articleQuery = query(collection(firestore, 'news_articles'), where('slug', '==', params.slug), limit(1));
+  const articleSnapshot = await getDocs(articleQuery);
+  const article = articleSnapshot.docs[0]?.data() as NewsArticle;
 
   if (!article) {
-    notFound();
+    return {
+      title: '記事が見つかりません',
+    }
   }
 
-  const articleImage = getGitHubImageUrl(article.imageId);
-  const articleTags = article.tags || [];
+  const previousImages = (await parent).openGraph?.images || []
 
-  return (
-    <article className="container mx-auto px-4 py-16 max-w-4xl">
-      <div className="mb-8">
-        <Button asChild variant="ghost">
-          <Link href="/news">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            ニュース一覧に戻る
-          </Link>
-        </Button>
-      </div>
+  return {
+    title: article.title,
+    description: article.contentSummary,
+    openGraph: {
+      title: article.title,
+      description: article.contentSummary,
+      // You might want to add an image from the article here
+      // images: [article.imageUrl, ...previousImages],
+    },
+  }
+}
 
-      <header className="mb-8">
-        <h1 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4">{article.title}</h1>
-        <div className="flex flex-wrap items-center justify-between gap-y-4">
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{new Date(article.publicationDate).toLocaleDateString('ja-JP')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Tag className="h-4 w-4" />
-                    <div className="flex flex-wrap gap-2">
-                    {articleTags.map((tag) => (
-                        <Badge key={tag} variant="secondary">{tag}</Badge>
-                    ))}
-                    </div>
-                </div>
-            </div>
-            <ShareMenu title={article.title} />
-        </div>
-      </header>
-
-      {articleImage && (
-        <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden mb-8 shadow-lg">
-          <Image
-            src={articleImage}
-            alt={article.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-      )}
-
-      <Separator className="my-8" />
-
-      <div
-        className="prose prose-lg dark:prose-invert max-w-none space-y-4"
-        dangerouslySetInnerHTML={{ __html: article.content }}
-      />
-    </article>
-  );
+// ページコンポーネント
+export default function NewsArticlePage({ params }: Props) {
+  // The client component will handle data fetching via hooks and rendering
+  return <NewsArticleClient slug={params.slug} />;
 }

@@ -1,7 +1,5 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
 import type { NewsArticle } from '@/lib/firebase-data';
 import NewsArticleClient from './news-article-client';
 
@@ -9,44 +7,26 @@ type Props = {
   params: { slug: string }
 }
 
-// 静的パスを生成
-export async function generateStaticParams() {
-  // Note: This function cannot use hooks, so we initialize a temporary client.
-  const { firestore } = initializeFirebase();
-  const articlesCollection = collection(firestore, 'news_articles');
-  const articlesSnapshot = await getDocs(articlesCollection);
-  const paths = articlesSnapshot.docs
-    .map(doc => ({ slug: doc.data().slug }))
-    .filter(p => p.slug); // Filter out any articles that might not have a slug
-  return paths;
-}
-
-// メタデータを生成
+// メタデータはクライアント側でフェッチされるため、この関数は簡略化または削除できます。
+// ただし、基本的なメタデータを提供するために残しておくことも可能です。
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { firestore } = initializeFirebase();
-  const articleQuery = query(collection(firestore, 'news_articles'), where('slug', '==', params.slug), limit(1));
-  const articleSnapshot = await getDocs(articleQuery);
-  const article = articleSnapshot.docs[0]?.data() as NewsArticle;
-
-  if (!article) {
-    return {
-      title: '記事が見つかりません',
-    }
-  }
+  
+  // 静的ビルド時にはサーバーサイドでデータを取得できないため、
+  // 固定のタイトルまたは汎用的なタイトルを設定します。
+  // 詳細なタイトルはクライアントコンポーネント側で設定されます（必要であれば）。
 
   const previousImages = (await parent).openGraph?.images || []
 
   return {
-    title: article.title,
-    description: article.contentSummary,
+    title: 'ニュース記事', // 汎用的なタイトル
+    description: 'SnakeWolfの最新ニュース記事です。',
     openGraph: {
-      title: article.title,
-      description: article.contentSummary,
-      // You might want to add an image from the article here
-      // images: [article.imageUrl, ...previousImages],
+      title: 'ニュース記事',
+      description: 'SnakeWolfの最新ニュース記事です。',
+      // images: [...previousImages],
     },
   }
 }
